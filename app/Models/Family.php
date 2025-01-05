@@ -14,5 +14,12 @@ class Family extends Model
     {
         return $this->belongsTo(City::class);
     }
+    public function Disease()
+    {
+        return $this->belongsTo(Disease::class);
+    }
+    public function Brother(){
+        return $this->hasOne(Brother::class);
+    }
 
 }

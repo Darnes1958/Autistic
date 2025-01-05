@@ -8,14 +8,19 @@ use App\Filament\Resources\AutisticResource\RelationManagers;
 use App\Livewire\Traits\PublicTrait;
 use App\Models\Autistic;
 use App\Models\Center;
+use App\Models\Disease;
 use App\Models\Near;
 use App\Models\Street;
 use App\Models\Symptom;
+use Awcodes\TableRepeater\Components\TableRepeater;
+use Awcodes\TableRepeater\Header;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Resources\Resource;
@@ -26,6 +31,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class AutisticResource extends Resource
 {
@@ -146,9 +152,68 @@ class AutisticResource extends Resource
                                      self::getInput('number_of_miscarriages')->numeric()->default(0),
                                  ])->columns(4),
 
-                         ])->columns(4)
+                         ])->columns(4),
+                       Fieldset::make('هل تعرض أحد الوالدين لامراض مزمنة او اصابات اخري')
+                        ->schema([
+                            self::getInput('father_chronic_diseases','الاب'),
+                            self::getInput('mother_chronic_diseases','الأم'),
+                        ])->columns(2),
+                     self::getRadio('is_parent_relationship'),
+                     self::getInput('father_blood_type','فصيلة دم الأب'),
+                     self::getInput('mother_blood_type','فصيلة دم الأم'),
+                     self::getRadio('parent_relationship_nature')->columnSpanFull(),
+                     Section::make()
+                      ->schema([
+                          TableRepeater::make('Brother')
+                              ->columnSpanFull()
+                              ->label('بيانات الاخوة')
+                              ->required()
+                              ->relationship()
+                              ->headers([
+                                  Header::make('الاسم')
+                                      ->width('30%'),
+                                  Header::make('ت.الولادة')
+                                      ->width('10%'),
+                                  Header::make('الجنس')
+                                      ->width('10%'),
+                                  Header::make('الحالة الصحية')
+                                      ->width('10%'),
+                                  Header::make('السبب تدهور الصحة')
+                                      ->width('10%'),
+                                  Header::make('المستوي التعليمي')
+                                      ->width('10%'),
+                                  Header::make('المهنة')
+                                      ->width('10%'),
+                                  Header::make('اتجاه وعلاقته بالطفل')
+                                      ->width('10%'),
+                              ])
+                              ->schema([
+                                  self::getInput('name',' '),
+                                  self::getDate('brother_date',' '),
+                                  self::getRadio('brother_sex',' '),
+                                  self::getRadio('brother_health',' '),
+                                  self::getInput('brother_health_reason',' '),
+                                  self::getSelectEnum('brother_academic',' '),
+                                  self::getInput('brother_jop',' '),
+                                  self::getInput('brother_relation',' '),
+                              ]),
 
-                    ]),
+                      ]),
+
+                    self::getDiseaseSelect(),
+                    self::getSelectEnum('family_salary'),
+                    self::getSelectEnum('family_sources'),
+                    self::getRadio('house_type'),
+                    self::getRadio('house_narrow'),
+                    self::getRadio('house_health'),
+                    self::getRadio('house_old'),
+                    self::getRadio('house_own'),
+                    self::getRadio('is_house_good'),
+                    self::getInput('house_rooms','عدد الحجرات')->numeric()->minValue(1),
+                    self::getRadio('is_room_single'),
+                    Forms\Components\Textarea::make('other_family_notes')
+                     ->label('معلومات أخري')->columnSpanFull(),
+                    ])->columns(4),
             ]);
     }
 

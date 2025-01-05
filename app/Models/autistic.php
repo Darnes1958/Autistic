@@ -28,7 +28,9 @@ class autistic extends Model
     public function Family(){
        return $this->hasOne(Family::class);
     }
-
+    public function Brother(){
+        return $this->hasOne(Brother::class);
+    }
 
     public function Near()
     {

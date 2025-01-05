@@ -5,12 +5,20 @@ namespace App\Livewire\Traits;
 
 use App\Enums\Academic;
 use App\Enums\AccLevel;
+use App\Enums\Health;
+use App\Enums\HouseHealth;
+use App\Enums\HouseNarrow;
+use App\Enums\HouseOld;
+use App\Enums\HouseOwn;
+use App\Enums\HouseType;
 use App\Enums\Person_relationship;
+use App\Enums\Relationship_nature;
 use App\Enums\Sex;
 use App\Enums\Sym_year;
 use App\Enums\Symyear;
 use App\Enums\YesNo;
 use App\Models\City;
+use App\Models\Disease;
 use App\Models\Rent;
 use App\Models\Renttran;
 use App\Models\Salary;
@@ -38,13 +46,24 @@ trait PublicTrait {
 
     protected static function getRadio($name,$label=null): Radio
     {
-        if ($name=='sex') {$label='الجنس';$option=Sex::class;}
-        if ($name=='academic') {$label='المستوي الدراسي';$option=Academic::class;}
-        if ($name=='father_academic') {$label='المستوي الدراسي';$option=Academic::class;}
-        if ($name=='mother_academic') {$label='المستوي الدراسي';$option=Academic::class;}
+        if ($name=='sex' ||  $name=='brother_sex') {$label='الجنس';$option=Sex::class;}
 
-        if ($name=='is_father_life') {$label='علي قيد الحياة';$option=YesNo::class;}
-        if ($name=='is_mother_life') {$label='علي قيد الحياة';$option=YesNo::class;}
+        if ($name=='academic' || $name=='father_academic' || $name=='mother_academic' || $name=='brother_academic')
+           {$label='المستوي الدراسي';$option=Academic::class;}
+        if ($name=='is_father_life' || $name=='is_mother_life') {$label='علي قيد الحياة';$option=YesNo::class;}
+
+        if ($name=='is_parent_relationship') {$label='هل هناك صلة قرابة بين الاب والام ';$option=YesNo::class;}
+        if ($name=='parent_relationship_nature') {$label='ما هي طبيعة العلاقة بين الأب والأم ';$option=Relationship_nature::class;}
+        if ($name=='brother_health' ) {$label='الحالة الصحية';$option=Health::class;}
+        if ($name=='house_type' ) {$label='نوع السكن';$option=HouseType::class;}
+        if ($name=='house_narrow' ) {$label='مساحة السكن';$option=HouseNarrow::class;}
+        if ($name=='house_health' ) {$label='الحالة الصحية للسكن';$option=HouseHealth::class;}
+        if ($name=='house_old' ) {$label='حالة السكن';$option=HouseOld::class;}
+        if ($name=='house_own' ) {$label='ملكية السكن';$option=HouseOwn::class;}
+        if ($name=='is_house_good' ) {$label='هل تتوفر داخل السكن متطلبات الحياة الأساسية';$option=YesNo::class;}
+        if ($name=='is_room_single' ) {$label='هل حجرة الطقل فردية';$option=YesNo::class;}
+
+
         return  Radio::make($name)
             ->options($option)
             ->inline()
@@ -113,8 +132,11 @@ trait PublicTrait {
     }
     protected static function getSelectEnum($name,$label=null): Select
     {
+        if ( $name=='brother_academic')  {$label='المستوي الدراسي';$option=Academic::class;}
         if ($name=='sym_year') {$l=' تمت رؤية الأعراض في العام ';$option=Sym_year::class;}
         if ($name=='person_relationship') {$l='علاقته بالطفل';$option=Person_relationship::class;}
+        if ($name=='family_salary') {$l='الدخل الشهري';$option=\App\Enums\Salary::class;}
+        if ($name=='family_sources') {$l='مصادر دخل الأسرة';$option=\App\Enums\Sources::class;}
         if ($label) $l=$label;
         return Select::make($name)
             ->options($option)
@@ -125,6 +147,32 @@ trait PublicTrait {
             ->required();
     }
 
+    protected static function getDiseaseSelect()
+    {
+        return  Select::make('family_disease')
+            ->options(Disease::all()->pluck('name', 'id'))
+            ->preload()
+            ->required()
+            ->searchable()
+            ->createOptionForm([
+                TextInput::make('name')
+                    ->required()
+                    ->unique()
+                    ->label('اسم المرض'),
+                Hidden::make('user_id')
+                    ->default(Auth::id()),
+            ])
+            ->createOptionUsing(function (array $data): int {
+                return Disease::create($data)->getKey();
+            })
+            ->editOptionForm([
+                TextInput::make('name')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->label('المرض'),
+            ])
+            ->label('هل أصيب أحد أفراد الأسرة بمرض أو حادث معين')->multiple()->columnSpan(2);
+    }
     protected static function getSelect($name,$label=null): Select
     {
         if ($name=='birth_city') {$l='محل الميلاد'; $option='City';$att='name';}
