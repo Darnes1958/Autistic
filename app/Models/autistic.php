@@ -13,7 +13,13 @@ class autistic extends Model
     protected $casts = [
         'symptom_id' => 'array',
     ];
-   public function City()
+    public function Family(){
+        return $this->hasOne(Family::class);
+    }
+    public function Boy(){
+    return $this->hasOne(Boy::class);
+    }
+    public function City()
    {
        return $this->belongsTo(City::class);
    }
@@ -25,9 +31,7 @@ class autistic extends Model
     {
         return $this->belongsTo(Center::class);
     }
-    public function Family(){
-       return $this->hasOne(Family::class);
-    }
+
     public function Brother(){
         return $this->hasOne(Brother::class);
     }
@@ -35,6 +39,10 @@ class autistic extends Model
     public function Near()
     {
         return $this->belongsTo(Near::class);
+    }
+    public function Birth_city()
+    {
+        return $this->belongsTo(City::class, 'birth_city');
     }
     public function Person_city()
     {

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Family extends Model
 {
+    protected $casts = [
+        'family_disease' => 'array',
+    ];
     public function Autistic()
     {
         return $this->belongsTo(Autistic::class);
@@ -20,6 +23,14 @@ class Family extends Model
     }
     public function Brother(){
         return $this->hasOne(Brother::class);
+    }
+    public function Father_city()
+    {
+        return $this->belongsTo(City::class, 'father_city');
+    }
+    public function Mother_city()
+    {
+        return $this->belongsTo(City::class, 'mother_city');
     }
 
 }

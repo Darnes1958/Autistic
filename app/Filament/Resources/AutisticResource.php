@@ -7,8 +7,10 @@ use App\Filament\Resources\AutisticResource\Pages;
 use App\Filament\Resources\AutisticResource\RelationManagers;
 use App\Livewire\Traits\PublicTrait;
 use App\Models\Autistic;
+use App\Models\Brother;
 use App\Models\Center;
 use App\Models\Disease;
+use App\Models\Family;
 use App\Models\Near;
 use App\Models\Street;
 use App\Models\Symptom;
@@ -36,7 +38,7 @@ use Illuminate\Support\Facades\Auth;
 class AutisticResource extends Resource
 {
     use PublicTrait;
-    protected static $city_id;
+
     protected static ?string $model = Autistic::class;
 
 
@@ -126,7 +128,7 @@ class AutisticResource extends Resource
                                     self::getDate('father_date'),
                                     self::getRadio('father_academic')
                                         ->columnSpan(2),
-                                    self::getInput('father_jop'),
+                                    self::getInput('father_job'),
                                     self::getRadio('is_father_life'),
                                     self::getInput('father_dead_reason')
                                      ->visible(function (Get $get){return !$get('is_father_life');}),
@@ -140,7 +142,7 @@ class AutisticResource extends Resource
                                      self::getDate('mother_date'),
                                      self::getRadio('mother_academic')
                                          ->columnSpan(2),
-                                     self::getInput('mother_jop'),
+                                     self::getInput('mother_job'),
                                      self::getRadio('is_mother_life'),
                                      self::getInput('mother_dead_reason')->columnSpan(2)
                                         ->visible(function (Get $get){return !$get('is_mother_life');}),
@@ -155,8 +157,8 @@ class AutisticResource extends Resource
                          ])->columns(4),
                        Fieldset::make('هل تعرض أحد الوالدين لامراض مزمنة او اصابات اخري')
                         ->schema([
-                            self::getInput('father_chronic_diseases','الاب'),
-                            self::getInput('mother_chronic_diseases','الأم'),
+                            self::getInput('father_chronic_diseases','الاب')->required(false),
+                            self::getInput('mother_chronic_diseases','الأم')->required(false),
                         ])->columns(2),
                      self::getRadio('is_parent_relationship'),
                      self::getInput('father_blood_type','فصيلة دم الأب'),
@@ -167,7 +169,6 @@ class AutisticResource extends Resource
                           TableRepeater::make('Brother')
                               ->columnSpanFull()
                               ->label('بيانات الاخوة')
-                              ->required()
                               ->relationship()
                               ->headers([
                                   Header::make('الاسم')
@@ -187,16 +188,26 @@ class AutisticResource extends Resource
                                   Header::make('اتجاه وعلاقته بالطفل')
                                       ->width('10%'),
                               ])
+                              ->live()
+                              ->defaultItems(0)
+                              ->addActionLabel('إضافة أخ / أخت')
                               ->schema([
                                   self::getInput('name',' '),
                                   self::getDate('brother_date',' '),
                                   self::getRadio('brother_sex',' '),
                                   self::getRadio('brother_health',' '),
-                                  self::getInput('brother_health_reason',' '),
+                                  self::getInput('brother_health_reason',' ')->required(false),
                                   self::getSelectEnum('brother_academic',' '),
-                                  self::getInput('brother_jop',' '),
-                                  self::getInput('brother_relation',' '),
-                              ]),
+                                  self::getInput('brother_job',' ')->required(false),
+                                  self::getInput('brother_relation',' ')->required(false),
+                              ])
+                              ->addable(function ($state){
+                                  $flag=true;
+                                  foreach ($state as $item) {
+                                      if (!$item['name'] || !$item['brother_date'] ) {$flag=false; break;}
+                                  }
+                                  return $flag;
+                              }),
 
                       ]),
 
@@ -214,6 +225,36 @@ class AutisticResource extends Resource
                     Forms\Components\Textarea::make('other_family_notes')
                      ->label('معلومات أخري')->columnSpanFull(),
                     ])->columns(4),
+              Grid::make()
+                ->relationship('Boy')
+                ->schema([
+                    Section::make('بيانات عن تاريخ النمو')
+                     ->schema([
+                         self::getInput('as_father_say','كما ورد علي لسان الأب'),
+                         self::getInput('as_mother_say','كما ورد علي لسان الأم'),
+                         self::getRadio('how_past')->live(),
+                         self::getInput('past_problem','الصعوبات التي ظهرت ')->required(false)
+                          ->visible(function (Get $get){return $get('how_past')==0;}),
+                         Fieldset::make('مدي تأثير الإضطرابات علي الطفل')
+                          ->schema([
+                             self::getRadio('with_people'),
+                             self::getRadio('with_motion'),
+                             self::getRadio('with_language'),
+                             self::getRadio('with_personal'),
+                             self::getRadio('with_mind'),
+                          ]),
+                        self::getInput('other_boy_info','معلومات اخري عن الطفل')->required(false)->columnSpanFull(),
+                        self::getSelect('ambitious_id'),
+                        Fieldset::make('ما أساليب التعامل مع الطفل')
+                             ->schema([
+                                 self::getRadio('father_procedure'),
+                                 self::getRadio('mother_procedure'),
+                                 self::getRadio('brother_procedure'),
+                             ]),
+                        self::getRadio('boy_response'),
+
+                     ])->columns(4)
+                ]),
             ]);
     }
 
@@ -241,11 +282,19 @@ class AutisticResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('del')
+                    ->icon('heroicon-o-trash')
+                    ->iconButton()
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->action(function ($record){
+                        Brother::where('autistic_id',$record->id)->delete();
+                        Family::where('autistic_id',$record->id)->delete();
+                        $record->delete();
+                    }),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+               //
             ]);
     }
 

@@ -5,17 +5,25 @@ namespace App\Livewire\Traits;
 
 use App\Enums\Academic;
 use App\Enums\AccLevel;
+use App\Enums\Boy_response;
 use App\Enums\Health;
 use App\Enums\HouseHealth;
 use App\Enums\HouseNarrow;
 use App\Enums\HouseOld;
 use App\Enums\HouseOwn;
 use App\Enums\HouseType;
+use App\Enums\How_past;
 use App\Enums\Person_relationship;
+use App\Enums\procedures;
 use App\Enums\Relationship_nature;
 use App\Enums\Sex;
 use App\Enums\Sym_year;
 use App\Enums\Symyear;
+use App\Enums\With_language;
+use App\Enums\With_mind;
+use App\Enums\With_motion;
+use App\Enums\With_people;
+use App\Enums\With_personal;
 use App\Enums\YesNo;
 use App\Models\City;
 use App\Models\Disease;
@@ -62,7 +70,16 @@ trait PublicTrait {
         if ($name=='house_own' ) {$label='ملكية السكن';$option=HouseOwn::class;}
         if ($name=='is_house_good' ) {$label='هل تتوفر داخل السكن متطلبات الحياة الأساسية';$option=YesNo::class;}
         if ($name=='is_room_single' ) {$label='هل حجرة الطقل فردية';$option=YesNo::class;}
-
+        if ($name=='how_past' ) {$label='كيف كان وضع الطفل في بداية ظهور الاعراض';$option=How_past::class;}
+        if ($name=='with_people' ) {$label='في الجانب الاجتماعي';$option=With_people::class;}
+        if ($name=='with_motion' ) {$label='في الجانب الحركي';$option=With_motion::class;}
+        if ($name=='with_language' ) {$label='في الجانب اللغوي';$option=With_language::class;}
+        if ($name=='with_personal' ) {$label='في جانب العناية الشخصية';$option=With_personal::class;}
+        if ($name=='with_mind' ) {$label='في الجانب المعرفي العقلي';$option=With_mind::class;}
+        if ($name=='father_procedure' ) {$label='الاب';$option=procedures::class;}
+        if ($name=='mother_procedure' ) {$label='الام';$option=procedures::class;}
+        if ($name=='brother_procedure' ) {$label='الاخوة';$option=procedures::class;}
+        if ($name=='boy_response' ) {$label='مدي استجابة الطفل لأسلوب التعامل';$option=Boy_response::class;}
 
         return  Radio::make($name)
             ->options($option)
@@ -91,14 +108,14 @@ trait PublicTrait {
         if ($name=='name') $l='الاسم';
         if ($name=='person_phone') $l='هاتف';
         if ($name=='surname') $l='اسم الأب ثلاثي';
-        if ($name=='city') $l='المدينة';
+
         if ($name=='person_name') $l='الاسم بالكامل';
         if ($name=='person_phone') $l='هاتف';
         if ($name=='father_name') $l='اسم الأب';
-        if ($name=='father_jop') $l='مهنة الوالد';
+        if ($name=='father_job') $l='مهنة الوالد';
         if ($name=='father_dead_reason') $l='سبب الوفاة';
         if ($name=='mother_name') $l='اسم الام';
-        if ($name=='mother_jop') $l='مهنة الام';
+        if ($name=='mother_job') $l='مهنة الام';
         if ($name=='mother_dead_reason') $l='سبب الوفاة';
         if ($name=='number_of_marriages') $l='عدد مرات الزواج';
         if ($name=='number_of_separation') $l='عدد مرات الانفصال';
@@ -152,7 +169,6 @@ trait PublicTrait {
         return  Select::make('family_disease')
             ->options(Disease::all()->pluck('name', 'id'))
             ->preload()
-            ->required()
             ->searchable()
             ->createOptionForm([
                 TextInput::make('name')
@@ -175,15 +191,17 @@ trait PublicTrait {
     }
     protected static function getSelect($name,$label=null): Select
     {
-        if ($name=='birth_city') {$l='محل الميلاد'; $option='City';$att='name';}
+        if ($name=='birth_city') {$l='محل الميلاد'; $option='Birth_city';$att='name';}
         if ($name=='city_id') {$l='المدينه'; $option='City';$att='name';}
         if ($name=='street_id') {$l='الحي'; $option='Street';$att='name';}
         if ($name=='near_id') {$l='نقطة دالة'; $option='Near';$att='name';}
         if ($name=='center_id') {$l='مركز توحد'; $option='Center';$att='name';}
-        if ($name=='person_city') {$l='عنوانه'; $option='City';$att='name';}
+        if ($name=='person_city') {$l='عنوانه'; $option='Person_city';$att='name';}
         if ($name=='symptom_id') {$l='الاعراض والصعوبات'; $option='Symptom';$att='name';}
-        if ($name=='father_city') {$l='محل الميلاد'; $option='City';$att='name';}
-        if ($name=='mother_city') {$l='محل الميلاد'; $option='City';$att='name';}
+        if ($name=='father_city') {$l='محل الميلاد'; $option='Father_city';$att='name';}
+        if ($name=='mother_city') {$l='محل الميلاد'; $option='Mother_city';$att='name';}
+        if ($name=='ambitious_id') {$l='ما هو طموح الأسرة بالنسبة للطفل'; $option='Ambitious';$att='name';}
+
         if ($label) $l=$label;
 
         return Select::make($name)
