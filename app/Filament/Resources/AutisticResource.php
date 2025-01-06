@@ -224,7 +224,8 @@ class AutisticResource extends Resource
                     self::getRadio('is_room_single'),
                     Forms\Components\Textarea::make('other_family_notes')
                      ->label('معلومات أخري')->columnSpanFull(),
-                    ])->columns(4),
+                    ])
+                 ->columns(4),
               Grid::make()
                 ->relationship('Boy')
                 ->schema([
@@ -255,6 +256,8 @@ class AutisticResource extends Resource
 
                      ])->columns(4)
                 ]),
+              Grid::make()
+              ->relationship('Growth')
             ]);
     }
 
