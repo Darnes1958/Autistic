@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('boy_diseases', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(\App\Models\Growth::class);
+            $table->string('name');
+            $table->integer('age');
+            $table->integer('period');
+            $table->integer('intensity');
+            $table->string('Treatment');
             $table->timestamps();
         });
     }

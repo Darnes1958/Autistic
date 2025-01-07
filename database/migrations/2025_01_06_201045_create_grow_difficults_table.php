@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('grow_difficults', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(\App\Models\Growth::class);
+            $table->string('name');
+            $table->integer('age');
+            $table->string('procedures');
             $table->timestamps();
         });
     }

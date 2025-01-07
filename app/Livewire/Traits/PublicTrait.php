@@ -6,6 +6,9 @@ namespace App\Livewire\Traits;
 use App\Enums\Academic;
 use App\Enums\AccLevel;
 use App\Enums\Boy_response;
+use App\Enums\BreastfeedingNatural;
+use App\Enums\ChildWeight;
+use App\Enums\Food;
 use App\Enums\Health;
 use App\Enums\HouseHealth;
 use App\Enums\HouseNarrow;
@@ -14,16 +17,23 @@ use App\Enums\HouseOwn;
 use App\Enums\HouseType;
 use App\Enums\How_past;
 use App\Enums\Person_relationship;
+use App\Enums\PregnancyNormal;
+use App\Enums\PregnancyTime;
 use App\Enums\procedures;
 use App\Enums\Relationship_nature;
 use App\Enums\Sex;
+use App\Enums\Sleap;
 use App\Enums\Sym_year;
 use App\Enums\Symyear;
+use App\Enums\WhenSpeak;
+use App\Enums\WherePregnancy;
 use App\Enums\With_language;
 use App\Enums\With_mind;
 use App\Enums\With_motion;
 use App\Enums\With_people;
 use App\Enums\With_personal;
+use App\Enums\Year;
+use App\Enums\YearAndNot;
 use App\Enums\YesNo;
 use App\Models\City;
 use App\Models\Disease;
@@ -54,32 +64,57 @@ trait PublicTrait {
 
     protected static function getRadio($name,$label=null): Radio
     {
-        if ($name=='sex' ||  $name=='brother_sex') {$label='الجنس';$option=Sex::class;}
+        $option=null;
+        if ($name=='sex' ||  $name=='brother_sex') {$l='الجنس';$option=Sex::class;}
 
         if ($name=='academic' || $name=='father_academic' || $name=='mother_academic' || $name=='brother_academic')
-           {$label='المستوي الدراسي';$option=Academic::class;}
-        if ($name=='is_father_life' || $name=='is_mother_life') {$label='علي قيد الحياة';$option=YesNo::class;}
+           {$l='المستوي الدراسي';$option=Academic::class;}
+        if ($name=='is_father_life' || $name=='is_mother_life') {$l='علي قيد الحياة';$option=YesNo::class;}
 
-        if ($name=='is_parent_relationship') {$label='هل هناك صلة قرابة بين الاب والام ';$option=YesNo::class;}
-        if ($name=='parent_relationship_nature') {$label='ما هي طبيعة العلاقة بين الأب والأم ';$option=Relationship_nature::class;}
-        if ($name=='brother_health' ) {$label='الحالة الصحية';$option=Health::class;}
-        if ($name=='house_type' ) {$label='نوع السكن';$option=HouseType::class;}
-        if ($name=='house_narrow' ) {$label='مساحة السكن';$option=HouseNarrow::class;}
-        if ($name=='house_health' ) {$label='الحالة الصحية للسكن';$option=HouseHealth::class;}
-        if ($name=='house_old' ) {$label='حالة السكن';$option=HouseOld::class;}
-        if ($name=='house_own' ) {$label='ملكية السكن';$option=HouseOwn::class;}
-        if ($name=='is_house_good' ) {$label='هل تتوفر داخل السكن متطلبات الحياة الأساسية';$option=YesNo::class;}
-        if ($name=='is_room_single' ) {$label='هل حجرة الطقل فردية';$option=YesNo::class;}
-        if ($name=='how_past' ) {$label='كيف كان وضع الطفل في بداية ظهور الاعراض';$option=How_past::class;}
-        if ($name=='with_people' ) {$label='في الجانب الاجتماعي';$option=With_people::class;}
-        if ($name=='with_motion' ) {$label='في الجانب الحركي';$option=With_motion::class;}
-        if ($name=='with_language' ) {$label='في الجانب اللغوي';$option=With_language::class;}
-        if ($name=='with_personal' ) {$label='في جانب العناية الشخصية';$option=With_personal::class;}
-        if ($name=='with_mind' ) {$label='في الجانب المعرفي العقلي';$option=With_mind::class;}
-        if ($name=='father_procedure' ) {$label='الاب';$option=procedures::class;}
-        if ($name=='mother_procedure' ) {$label='الام';$option=procedures::class;}
-        if ($name=='brother_procedure' ) {$label='الاخوة';$option=procedures::class;}
-        if ($name=='boy_response' ) {$label='مدي استجابة الطفل لأسلوب التعامل';$option=Boy_response::class;}
+        if ($name=='is_parent_relationship') {$l='هل هناك صلة قرابة بين الاب والام ';$option=YesNo::class;}
+        if ($name=='parent_relationship_nature') {$l='ما هي طبيعة العلاقة بين الأب والأم ';$option=Relationship_nature::class;}
+        if ($name=='brother_health' ) {$l='الحالة الصحية';$option=Health::class;}
+        if ($name=='house_type' ) {$l='نوع السكن';$option=HouseType::class;}
+        if ($name=='house_narrow' ) {$l='مساحة السكن';$option=HouseNarrow::class;}
+        if ($name=='house_health' ) {$l='الحالة الصحية للسكن';$option=HouseHealth::class;}
+        if ($name=='house_old' ) {$l='حالة السكن';$option=HouseOld::class;}
+        if ($name=='house_own' ) {$l='ملكية السكن';$option=HouseOwn::class;}
+        if ($name=='is_house_good' ) {$l='هل تتوفر داخل السكن متطلبات الحياة الأساسية';$option=YesNo::class;}
+        if ($name=='is_room_single' ) {$l='هل حجرة الطقل فردية';$option=YesNo::class;}
+        if ($name=='how_past' ) {$l='كيف كان وضع الطفل في بداية ظهور الاعراض';$option=How_past::class;}
+        if ($name=='with_people' ) {$l='في الجانب الاجتماعي';$option=With_people::class;}
+        if ($name=='with_motion' ) {$l='في الجانب الحركي';$option=With_motion::class;}
+        if ($name=='with_language' ) {$l='في الجانب اللغوي';$option=With_language::class;}
+        if ($name=='with_personal' ) {$l='في جانب العناية الشخصية';$option=With_personal::class;}
+        if ($name=='with_mind' ) {$l='في الجانب المعرفي العقلي';$option=With_mind::class;}
+        if ($name=='father_procedure' ) {$l='الاب';$option=procedures::class;}
+        if ($name=='mother_procedure' ) {$l='الام';$option=procedures::class;}
+        if ($name=='brother_procedure' ) {$l='الاخوة';$option=procedures::class;}
+        if ($name=='boy_response' ) {$l='مدي استجابة الطفل لأسلوب التعامل';$option=Boy_response::class;}
+        if ($name=='mother_p_d_health' ) {$l='حالة الام الصحية اثناء الحمل';$option=Health::class;}
+        if ($name=='is_pregnancy_normal' ) {$l='هل كانت الولادة طبيعية';$option=PregnancyNormal::class;}
+        if ($name=='where_pregnancy_done' ) {$l='اين تمت عملية الولادة';$option=WherePregnancy::class;}
+        if ($name=='pregnancy_time' ) {$l='ما الوقت الذي استغرقته عملية الولادة';$option=PregnancyTime::class;}
+        if ($name=='child_weight' ) {$l='وزن الطفل اثناء الولادة';$option=ChildWeight::class;}
+        if ($name=='is_breastfeeding_natural' ) {$l='هل كانت الرضاعة طبيعية';$option=BreastfeedingNatural::class;}
+        if ($name=='breastfeeding_period' ) {$l='مدة الرضاعة';$option=Year::class;}
+        if ($name=='when_can_set' ) {$l='متي استطاع الجلوس';$option=Year::class;}
+        if ($name=='teeth_appear' ) {$l='متي بدأت الاسنان بالظهور';$option=Year::class;}
+        if ($name=='could_crawl' ) {$l='متي استطاع الحبو (الزحف';$option=Year::class;}
+        if ($name=='could_stand' ) {$l='متي استطاع الوقوف';$option=Year::class;}
+        if ($name=='could_walk' ) {$l='متي استطاع المشي';$option=Year::class;}
+        if ($name=='when_try_speak' ) {$l='متي بدأ محاولة النطق';$option=WhenSpeak::class;}
+        if ($name=='when_speak' ) {$l='متي استطاع التحدث';$option=WhenSpeak::class;}
+        if ($name=='when_open_door' ) {$l='متي استطاع فتح الابواب';$option=YearAndNot::class;}
+        if ($name=='when_set_export' ) {$l='متي ضبط عمليات الاخراج';$option=YearAndNot::class;}
+        if ($name=='when_wear_shoes' ) {$l='متي استطاع ان يلبس الحذاء';$option=YearAndNot::class;}
+        if ($name=='when_use_spoon' ) {$l='متي استطاع استخدام الملعقة او الكوب';$option=YearAndNot::class;}
+        if ($name=='is_child_food_good' ) {$l='هل كانت تغذية الطفل جيدة';$option=Food::class;}
+        if ($name=='sleep_habit' ) {$l='ما عاداته فالنوم';$option=Sleap::class;}
+
+
+        if ($label) $l=$label;
+        if (!$option) $option=YesNo::class;
 
         return  Radio::make($name)
             ->options($option)
@@ -87,7 +122,7 @@ trait PublicTrait {
             ->live()
             ->default(1)
             ->inlineLabel(false)
-            ->label($label);
+            ->label($l);
     }
     protected static function getColumn($name): TextColumn
     {
@@ -154,6 +189,7 @@ trait PublicTrait {
         if ($name=='person_relationship') {$l='علاقته بالطفل';$option=Person_relationship::class;}
         if ($name=='family_salary') {$l='الدخل الشهري';$option=\App\Enums\Salary::class;}
         if ($name=='family_sources') {$l='مصادر دخل الأسرة';$option=\App\Enums\Sources::class;}
+        if ($name=='is_play_with_other') {$l='هل يلعب';$option=\App\Enums\Play::class;}
         if ($label) $l=$label;
         return Select::make($name)
             ->options($option)

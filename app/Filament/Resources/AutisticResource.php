@@ -18,6 +18,7 @@ use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Forms;
 use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
@@ -254,10 +255,155 @@ class AutisticResource extends Resource
                              ]),
                         self::getRadio('boy_response'),
 
-                     ])->columns(4)
+                     ])
+                     ->columns(4)
                 ]),
               Grid::make()
-              ->relationship('Growth')
+                ->relationship('Growth')
+                ->schema([
+                    Section::make('بيانات عن تاريخ النمو')
+                    ->schema([
+                        self::getInput('mother_old','عمر الأم عند ولادة الطفل')
+                         ->numeric()
+                         ->minValue(16)
+                         ->maxValue(55),
+                        self::getInput('pregnancy_duration','مدة الحمل')
+                         ->numeric()
+                         ->minValue(5)
+                         ->maxValue(12),
+                        self::getRadio('is_pregnancy_planned','هل كان الحمل مخططا له'),
+                        self::getRadio('mother_p_d_health'),
+                        self::getInput('p_d_why_not_health','لماذا كانت غير جيدة')->nullable(),
+                        self::getRadio('is_p_d_followed','هل تم الحمل بنتابعة طبية'),
+                        self::getRadio('is_p_d_good_food','هل غذاء الام اثناء الحمل جيد'),
+                        self::getRadio('is_child_wanted','هل كان الطفل مرغوب فيه'),
+                        self::getRadio('is_p_d_disease','هل تعرضت الام لأي أمراض أو حوادث'),
+                        self::getInput('p_d_diseases',' ماهي الامراض او الحوادث'),
+                        self::getRadio('is_pregnancy_normal'),
+                        self::getRadio('where_pregnancy_done'),
+                        self::getRadio('pregnancy_time'),
+                        self::getRadio('child_weight'),
+                        self::getRadio('is_child_followed','هل احتاج الطفل بعد ولادته غلي رعاية خاصة'),
+                        self::getinput('why_child_followed','لماذا احتاج لرعاية'),
+                        Section::make()
+                            ->schema([
+                                TableRepeater::make('BoyDisease')
+                                    ->columnSpanFull()
+                                    ->label('قائمة بأبرز الأمراض التي أصيب بها الطفل')
+                                    ->relationship()
+                                    ->headers([
+                                        Header::make('المرض')
+                                            ->width('30%'),
+                                        Header::make('عمر الطفل عند الولادة')
+                                            ->width('10%'),
+                                        Header::make('مدة المرض')
+                                            ->width('10%'),
+                                        Header::make('شدته')
+                                            ->width('10%'),
+                                        Header::make('العلاج')
+                                            ->width('20%'),
+
+                                    ])
+                                    ->live()
+                                    ->defaultItems(0)
+                                    ->addActionLabel('إضافة مرض')
+                                    ->schema([
+                                        self::getInput('name',' '),
+                                        self::getInput('age',' '),
+                                        self::getInput('period',' '),
+                                        self::getInput('intensity',' '),
+                                        self::getInput('treatment',' '),
+                                    ])
+                                    ->addable(function ($state){
+                                        $flag=true;
+                                        foreach ($state as $item) {
+                                            if (!$item['name'] || !$item['age']  || !$item['period']
+                                                || !$item['intensity'] || !$item['treatment']) {$flag=false; break;}
+                                        }
+                                        return $flag;
+                                    }),
+
+                            ]),
+
+                        self::getRadio('is_breastfeeding_natural'),
+                        self::getRadio('breastfeeding_period'),
+                        self::getInput('difficulties_during_weaning','هل حدثت صعوبات اثناء الفطام')->nullable(),
+                        self::getRadio('when_can_set'),
+                        self::getRadio('teeth_appear'),
+                        self::getRadio('could_crawl'),
+                        self::getRadio('could_stand'),
+                        self::getRadio('could_walk'),
+                        self::getRadio('when_try_speak'),
+                        self::getRadio('when_speak'),
+                        self::getRadio('when_open_door'),
+                        self::getRadio('when_set_export'),
+                        self::getRadio('when_wear_shoes'),
+                        self::getRadio('when_use_spoon'),
+                        self::getRadio('is_child_food_good'),
+                        self::getRadio('sleep_habit'),
+                        self::getRadio('is_disturbing_nightmares','هل يتعرض لكوابيس مزعجة'),
+                        self::getRadio('safety_of_senses','هل الحواس سليمة'),
+                        self::getinput('who_senses','ماهي الحواس المصابة'),
+                        self::getRadio('mental_health','هل الوظائف العقلية سليمة'),
+                        self::getInput('who_mental','ماهي الوظائف المصابة'),
+                        self::getInput('injuries_disabilities','هل توجد إصابات أو عاهات جسيمة'),
+                        Section::make()
+                            ->schema([
+                                TableRepeater::make('GrowDifficult')
+                                    ->columnSpanFull()
+                                    ->label('صعوبات النمو التي تعرض لها الطفل')
+                                    ->relationship()
+                                    ->headers([
+                                        Header::make('الصعوبة')
+                                            ->width('30%'),
+                                        Header::make('العمر')
+                                            ->width('10%'),
+                                        Header::make('الاجراءات التي اتخذت')
+                                            ->width('60%'),
+
+                                    ])
+                                    ->live()
+                                    ->defaultItems(0)
+                                    ->addActionLabel('إضافة صعوبة')
+                                    ->schema([
+                                        self::getInput('name',' '),
+                                        self::getInput('age',' '),
+                                        self::getInput('procedure',' '),
+
+                                    ])
+                                    ->addable(function ($state){
+                                        $flag=true;
+                                        foreach ($state as $item) {
+                                            if (!$item['name'] || !$item['age']  || !$item['procedure']) {$flag=false; break;}
+                                        }
+                                        return $flag;
+                                    }),
+
+                            ]),
+                        self::getRadio('is_take_medicine','هل يتناول الطفل دواء'),
+                        FileUpload::make('prescription_image')
+                            ->directory('prescription-images')
+                            ->label('صورة وصفة الدواء'),
+                        self::getRadio('is_child_play_toy','هل يمارس الطفل اللعب بالالعاب'),
+                        self::getInput('why_not_play_toy','لماذا'),
+                        self::getSelectEnum('is_play_with_other')->multiple(),
+                        self::getRadio('slookea_1','هل طفلك يستمتع بان يتأرجح ويتمايل'),
+                        self::getRadio('slookea_2','هل طفلك مهتم بالأخرين'),
+                        self::getRadio('slookea_3','هل طفلك يتسلق الاشياء مثل السلالم وما شابه'),
+                        self::getRadio('slookea_4','هل طفلك يمارس العاب الطفال مثل لعبة الاستغماية (التخفي)'),
+                        self::getRadio('slookea_5','هل يمارس طفلك (اللعب التخيلي) مثلاً انه يقوم بعمل الشاي باستخدام اكواب وأدوات من اللعب او غيرها '),
+                        self::getRadio('slookea_6','هل يستخدم طفلك اصبعه ليشير الي أشياء يريد أن يسألك عنها'),
+                        self::getRadio('slookea_7','هل يستخدم طفلك اصبعه ليشير الي أشياء هو مهتم بها'),
+                        self::getRadio('slookea_8','هل يحضر لك طفلك اشياء لكي يريها لك'),
+
+                        self::getRadio('slookea_9','هل يقوم الطفل بالدوران حول نفسه'),
+                        self::getRadio('slookea_10','هل يسير علي أطراف الاصابع'),
+
+                        self::getInput('slookea_other','مظاهر سلوكية اخري'),
+
+
+                    ]),
+                ]),
             ]);
     }
 
