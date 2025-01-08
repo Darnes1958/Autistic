@@ -52,12 +52,15 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
+use Filament\Notifications\Notification;
+use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\Summarizers\Summarizer;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\HtmlString;
 use Symfony\Component\Console\Input\Input;
 
 trait PublicTrait {
@@ -95,20 +98,7 @@ trait PublicTrait {
         if ($name=='is_pregnancy_normal' ) {$l='هل كانت الولادة طبيعية';$option=PregnancyNormal::class;}
         if ($name=='where_pregnancy_done' ) {$l='اين تمت عملية الولادة';$option=WherePregnancy::class;}
         if ($name=='pregnancy_time' ) {$l='ما الوقت الذي استغرقته عملية الولادة';$option=PregnancyTime::class;}
-        if ($name=='child_weight' ) {$l='وزن الطفل اثناء الولادة';$option=ChildWeight::class;}
         if ($name=='is_breastfeeding_natural' ) {$l='هل كانت الرضاعة طبيعية';$option=BreastfeedingNatural::class;}
-        if ($name=='breastfeeding_period' ) {$l='مدة الرضاعة';$option=Year::class;}
-        if ($name=='when_can_set' ) {$l='متي استطاع الجلوس';$option=Year::class;}
-        if ($name=='teeth_appear' ) {$l='متي بدأت الاسنان بالظهور';$option=Year::class;}
-        if ($name=='could_crawl' ) {$l='متي استطاع الحبو (الزحف';$option=Year::class;}
-        if ($name=='could_stand' ) {$l='متي استطاع الوقوف';$option=Year::class;}
-        if ($name=='could_walk' ) {$l='متي استطاع المشي';$option=Year::class;}
-        if ($name=='when_try_speak' ) {$l='متي بدأ محاولة النطق';$option=WhenSpeak::class;}
-        if ($name=='when_speak' ) {$l='متي استطاع التحدث';$option=WhenSpeak::class;}
-        if ($name=='when_open_door' ) {$l='متي استطاع فتح الابواب';$option=YearAndNot::class;}
-        if ($name=='when_set_export' ) {$l='متي ضبط عمليات الاخراج';$option=YearAndNot::class;}
-        if ($name=='when_wear_shoes' ) {$l='متي استطاع ان يلبس الحذاء';$option=YearAndNot::class;}
-        if ($name=='when_use_spoon' ) {$l='متي استطاع استخدام الملعقة او الكوب';$option=YearAndNot::class;}
         if ($name=='is_child_food_good' ) {$l='هل كانت تغذية الطفل جيدة';$option=Food::class;}
         if ($name=='sleep_habit' ) {$l='ما عاداته فالنوم';$option=Sleap::class;}
 
@@ -184,12 +174,27 @@ trait PublicTrait {
     }
     protected static function getSelectEnum($name,$label=null): Select
     {
+
         if ( $name=='brother_academic')  {$label='المستوي الدراسي';$option=Academic::class;}
         if ($name=='sym_year') {$l=' تمت رؤية الأعراض في العام ';$option=Sym_year::class;}
         if ($name=='person_relationship') {$l='علاقته بالطفل';$option=Person_relationship::class;}
         if ($name=='family_salary') {$l='الدخل الشهري';$option=\App\Enums\Salary::class;}
         if ($name=='family_sources') {$l='مصادر دخل الأسرة';$option=\App\Enums\Sources::class;}
         if ($name=='is_play_with_other') {$l='هل يلعب';$option=\App\Enums\Play::class;}
+        if ($name=='child_weight' ) {$l='وزن الطفل اثناء الولادة';$option=ChildWeight::class;}
+        if ($name=='breastfeeding_period' ) {$l='مدة الرضاعة';$option=Year::class;}
+        if ($name=='when_can_set' ) {$l='متي استطاع الجلوس';$option=Year::class;}
+        if ($name=='teeth_appear' ) {$l='متي بدأت الاسنان بالظهور';$option=Year::class;}
+        if ($name=='could_crawl' ) {$l='متي استطاع الحبو (الزحف';$option=Year::class;}
+        if ($name=='could_stand' ) {$l='متي استطاع الوقوف';$option=Year::class;}
+        if ($name=='could_walk' ) {$l='متي استطاع المشي';$option=Year::class;}
+        if ($name=='when_try_speak' ) {$l='متي بدأ محاولة النطق';$option=WhenSpeak::class;}
+        if ($name=='when_speak' ) {$l='متي استطاع التحدث';$option=WhenSpeak::class;}
+        if ($name=='when_open_door' ) {$l='متي استطاع فتح الابواب';$option=YearAndNot::class;}
+        if ($name=='when_set_export' ) {$l='متي ضبط عمليات الاخراج';$option=YearAndNot::class;}
+        if ($name=='when_wear_shoes' ) {$l='متي استطاع ان يلبس الحذاء';$option=YearAndNot::class;}
+        if ($name=='when_use_spoon' ) {$l='متي استطاع استخدام الملعقة او الكوب';$option=YearAndNot::class;}
+
         if ($label) $l=$label;
         return Select::make($name)
             ->options($option)
@@ -262,5 +267,15 @@ trait PublicTrait {
             ->required();
     }
 
+public static function noti_danger($label)
+{
+    return                                 Notification::make()
+        ->title(new HtmlString('<span class="my-yellow">'.$label.'</span>'))
+        ->danger()
+        ->icon('heroicon-o-exclamation-triangle')
+        ->iconColor('danger')
+        ->iconSize(IconSize::Large)
+        ->send();
 
+}
 }

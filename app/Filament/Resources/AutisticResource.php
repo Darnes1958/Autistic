@@ -26,15 +26,22 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Filament\Livewire\Notifications;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconSize;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 
 class AutisticResource extends Resource
 {
@@ -63,7 +70,7 @@ class AutisticResource extends Resource
                          Fieldset::make('العنوان الحالي')
                              ->schema([
                                  self::getSelect('city_id','المدينة')
-                                     ->afterStateUpdated(function (Forms\Set $set){
+                                     ->afterStateUpdated(function (Set $set){
                                          $set('street_id',null);
                                      }),
                                  self::getSelect('street_id','الحي')
@@ -115,7 +122,9 @@ class AutisticResource extends Resource
                              ->label('الاعراض')->multiple()->columnSpan(2),
                          self::getSelectEnum('sym_year'),
 
-                     ])->columns(4)
+                     ])
+                     ->collapsible()
+                     ->columns(4)
                  ]),
               Grid::make()
                  ->relationship('Family')
@@ -154,83 +163,83 @@ class AutisticResource extends Resource
                                      self::getInput('number_of_pregnancies')->numeric()->minValue(1)->default(1),
                                      self::getInput('number_of_miscarriages')->numeric()->default(0),
                                  ])->columns(4),
+                             Fieldset::make('هل تعرض أحد الوالدين لامراض مزمنة او اصابات اخري')
+                                 ->schema([
+                                     self::getInput('father_chronic_diseases','الاب')->required(false),
+                                     self::getInput('mother_chronic_diseases','الأم')->required(false),
+                                 ])->columns(2),
+                             self::getRadio('is_parent_relationship'),
+                             self::getInput('father_blood_type','فصيلة دم الأب'),
+                             self::getInput('mother_blood_type','فصيلة دم الأم'),
+                             self::getRadio('parent_relationship_nature')->columnSpanFull(),
+                             Section::make()
+                                 ->schema([
+                                     TableRepeater::make('Brother')
+                                         ->columnSpanFull()
+                                         ->label('بيانات الاخوة')
+                                         ->relationship()
+                                         ->headers([
+                                             Header::make('الاسم')
+                                                 ->width('30%'),
+                                             Header::make('ت.الولادة')
+                                                 ->width('10%'),
+                                             Header::make('الجنس')
+                                                 ->width('10%'),
+                                             Header::make('الحالة الصحية')
+                                                 ->width('10%'),
+                                             Header::make('السبب تدهور الصحة')
+                                                 ->width('10%'),
+                                             Header::make('المستوي التعليمي')
+                                                 ->width('10%'),
+                                             Header::make('المهنة')
+                                                 ->width('10%'),
+                                             Header::make('اتجاه وعلاقته بالطفل')
+                                                 ->width('10%'),
+                                         ])
+                                         ->live()
+                                         ->defaultItems(0)
+                                         ->addActionLabel('إضافة أخ / أخت')
+                                         ->schema([
+                                             self::getInput('name',' '),
+                                             self::getDate('brother_date',' '),
+                                             self::getRadio('brother_sex',' '),
+                                             self::getRadio('brother_health',' '),
+                                             self::getInput('brother_health_reason',' ')->required(false),
+                                             self::getSelectEnum('brother_academic',' '),
+                                             self::getInput('brother_job',' ')->required(false),
+                                             self::getInput('brother_relation',' ')->required(false),
+                                         ])
+                                         ->addable(function ($state){
+                                             $flag=true;
+                                             foreach ($state as $item) {
+                                                 if (!$item['name'] || !$item['brother_date'] ) {$flag=false; break;}
+                                             }
+                                             return $flag;
+                                         }),
 
-                         ])->columns(4),
-                       Fieldset::make('هل تعرض أحد الوالدين لامراض مزمنة او اصابات اخري')
-                        ->schema([
-                            self::getInput('father_chronic_diseases','الاب')->required(false),
-                            self::getInput('mother_chronic_diseases','الأم')->required(false),
-                        ])->columns(2),
-                     self::getRadio('is_parent_relationship'),
-                     self::getInput('father_blood_type','فصيلة دم الأب'),
-                     self::getInput('mother_blood_type','فصيلة دم الأم'),
-                     self::getRadio('parent_relationship_nature')->columnSpanFull(),
-                     Section::make()
-                      ->schema([
-                          TableRepeater::make('Brother')
-                              ->columnSpanFull()
-                              ->label('بيانات الاخوة')
-                              ->relationship()
-                              ->headers([
-                                  Header::make('الاسم')
-                                      ->width('30%'),
-                                  Header::make('ت.الولادة')
-                                      ->width('10%'),
-                                  Header::make('الجنس')
-                                      ->width('10%'),
-                                  Header::make('الحالة الصحية')
-                                      ->width('10%'),
-                                  Header::make('السبب تدهور الصحة')
-                                      ->width('10%'),
-                                  Header::make('المستوي التعليمي')
-                                      ->width('10%'),
-                                  Header::make('المهنة')
-                                      ->width('10%'),
-                                  Header::make('اتجاه وعلاقته بالطفل')
-                                      ->width('10%'),
-                              ])
-                              ->live()
-                              ->defaultItems(0)
-                              ->addActionLabel('إضافة أخ / أخت')
-                              ->schema([
-                                  self::getInput('name',' '),
-                                  self::getDate('brother_date',' '),
-                                  self::getRadio('brother_sex',' '),
-                                  self::getRadio('brother_health',' '),
-                                  self::getInput('brother_health_reason',' ')->required(false),
-                                  self::getSelectEnum('brother_academic',' '),
-                                  self::getInput('brother_job',' ')->required(false),
-                                  self::getInput('brother_relation',' ')->required(false),
-                              ])
-                              ->addable(function ($state){
-                                  $flag=true;
-                                  foreach ($state as $item) {
-                                      if (!$item['name'] || !$item['brother_date'] ) {$flag=false; break;}
-                                  }
-                                  return $flag;
-                              }),
+                                 ]),
 
-                      ]),
-
-                    self::getDiseaseSelect(),
-                    self::getSelectEnum('family_salary'),
-                    self::getSelectEnum('family_sources'),
-                    self::getRadio('house_type'),
-                    self::getRadio('house_narrow'),
-                    self::getRadio('house_health'),
-                    self::getRadio('house_old'),
-                    self::getRadio('house_own'),
-                    self::getRadio('is_house_good'),
-                    self::getInput('house_rooms','عدد الحجرات')->numeric()->minValue(1),
-                    self::getRadio('is_room_single'),
-                    Forms\Components\Textarea::make('other_family_notes')
-                     ->label('معلومات أخري')->columnSpanFull(),
-                    ])
-                 ->columns(4),
+                             self::getDiseaseSelect(),
+                             self::getSelectEnum('family_salary'),
+                             self::getSelectEnum('family_sources'),
+                             self::getRadio('house_type'),
+                             self::getRadio('house_narrow'),
+                             self::getRadio('house_health'),
+                             self::getRadio('house_old'),
+                             self::getRadio('house_own'),
+                             self::getRadio('is_house_good'),
+                             self::getInput('house_rooms','عدد الحجرات')->numeric()->minValue(1),
+                             self::getRadio('is_room_single'),
+                             Forms\Components\Textarea::make('other_family_notes')
+                                 ->label('معلومات أخري')->columnSpanFull(),
+                         ])
+                         ->collapsible()
+                         ->columns(4),
+                         ]),
               Grid::make()
                 ->relationship('Boy')
                 ->schema([
-                    Section::make('بيانات عن تاريخ النمو')
+                    Section::make('بيانات عن الطفل وتوقعات الأسرة ')
                      ->schema([
                          self::getInput('as_father_say','كما ورد علي لسان الأب'),
                          self::getInput('as_mother_say','كما ورد علي لسان الأم'),
@@ -257,6 +266,7 @@ class AutisticResource extends Resource
 
                      ])
                      ->columns(4)
+                     ->collapsible()
                 ]),
               Grid::make()
                 ->relationship('Growth')
@@ -265,26 +275,47 @@ class AutisticResource extends Resource
                     ->schema([
                         self::getInput('mother_old','عمر الأم عند ولادة الطفل')
                          ->numeric()
+                         ->live(onBlur: true)
+                         ->afterStateUpdated(function (Set $set, $state){
+                             if ($state>55 || $state<16) {
+                                 $set('mother_old', null);
+                                 self::noti_danger('يجب أن يكون عمر الام عند الولادة من 16 الي 55');
+                             }
+                         })
                          ->minValue(16)
                          ->maxValue(55),
                         self::getInput('pregnancy_duration','مدة الحمل')
                          ->numeric()
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (Set $set, $state){
+                                if ($state<5 || $state>12) {
+                                    $set('pregnancy_duration', null);
+                                    self::noti_danger('يجب أن تكون مدة الحمل من 5 الي 12');
+                                }
+                            })
                          ->minValue(5)
                          ->maxValue(12),
                         self::getRadio('is_pregnancy_planned','هل كان الحمل مخططا له'),
-                        self::getRadio('mother_p_d_health'),
-                        self::getInput('p_d_why_not_health','لماذا كانت غير جيدة')->nullable(),
-                        self::getRadio('is_p_d_followed','هل تم الحمل بنتابعة طبية'),
+                        self::getRadio('mother_p_d_health')->live(),
+                        self::getInput('p_d_why_not_health','لماذا كانت غير جيدة')
+                            ->visible(fn(Get $get): bool =>$get('mother_p_d_health')==0)->nullable(),
+                        self::getRadio('is_p_d_followed','هل تم الحمل بمتابعة طبية'),
                         self::getRadio('is_p_d_good_food','هل غذاء الام اثناء الحمل جيد'),
                         self::getRadio('is_child_wanted','هل كان الطفل مرغوب فيه'),
-                        self::getRadio('is_p_d_disease','هل تعرضت الام لأي أمراض أو حوادث'),
-                        self::getInput('p_d_diseases',' ماهي الامراض او الحوادث'),
-                        self::getRadio('is_pregnancy_normal'),
-                        self::getRadio('where_pregnancy_done'),
-                        self::getRadio('pregnancy_time'),
-                        self::getRadio('child_weight'),
-                        self::getRadio('is_child_followed','هل احتاج الطفل بعد ولادته غلي رعاية خاصة'),
-                        self::getinput('why_child_followed','لماذا احتاج لرعاية'),
+                        self::getRadio('is_p_d_disease','هل تعرضت الام لأي أمراض أو حوادث')->default(0)->live(),
+                        self::getInput('p_d_disease',' ماهي الامراض او الحوادث')
+                            ->nullable()->visible(fn(Get $get): bool =>$get('is_p_d_disease')==1)->nullable(),
+                        Grid::make()
+                         ->schema([
+                             self::getRadio('is_pregnancy_normal'),
+                             self::getRadio('where_pregnancy_done'),
+                             self::getRadio('pregnancy_time'),
+                             self::getSelectEnum('child_weight'),
+                             self::getRadio('is_child_followed','هل احتاج الطفل بعد ولادته إلي رعاية خاصة')->live(),
+                             self::getinput('why_child_followed','لماذا احتاج لرعاية')
+                                 ->visible(fn(Get $get):bool =>$get('is_child_followed'))->nullable(),
+                         ])
+                         ->columns(3),
                         Section::make()
                             ->schema([
                                 TableRepeater::make('BoyDisease')
@@ -294,7 +325,7 @@ class AutisticResource extends Resource
                                     ->headers([
                                         Header::make('المرض')
                                             ->width('30%'),
-                                        Header::make('عمر الطفل عند الولادة')
+                                        Header::make('عمر الطفل عند الإصابة')
                                             ->width('10%'),
                                         Header::make('مدة المرض')
                                             ->width('10%'),
@@ -324,28 +355,29 @@ class AutisticResource extends Resource
                                     }),
 
                             ]),
-
                         self::getRadio('is_breastfeeding_natural'),
-                        self::getRadio('breastfeeding_period'),
+                        self::getSelectEnum('breastfeeding_period'),
                         self::getInput('difficulties_during_weaning','هل حدثت صعوبات اثناء الفطام')->nullable(),
-                        self::getRadio('when_can_set'),
-                        self::getRadio('teeth_appear'),
-                        self::getRadio('could_crawl'),
-                        self::getRadio('could_stand'),
-                        self::getRadio('could_walk'),
-                        self::getRadio('when_try_speak'),
-                        self::getRadio('when_speak'),
-                        self::getRadio('when_open_door'),
-                        self::getRadio('when_set_export'),
-                        self::getRadio('when_wear_shoes'),
-                        self::getRadio('when_use_spoon'),
+                        self::getSelectEnum('when_can_set'),
+                        self::getSelectEnum('teeth_appear'),
+                        self::getSelectEnum('could_crawl'),
+                        self::getSelectEnum('could_stand'),
+                        self::getSelectEnum('could_walk'),
+                        self::getSelectEnum('when_try_speak'),
+                        self::getSelectEnum('when_speak'),
+                        self::getSelectEnum('when_open_door'),
+                        self::getSelectEnum('when_set_export'),
+                        self::getSelectEnum('when_wear_shoes'),
+                        self::getSelectEnum('when_use_spoon'),
                         self::getRadio('is_child_food_good'),
                         self::getRadio('sleep_habit'),
                         self::getRadio('is_disturbing_nightmares','هل يتعرض لكوابيس مزعجة'),
                         self::getRadio('safety_of_senses','هل الحواس سليمة'),
-                        self::getinput('who_senses','ماهي الحواس المصابة'),
+                        self::getinput('who_senses','ماهي الحواس المصابة')
+                            ->visible(fn(Get $get):bool => !$get('safety_of_senses'))->nullable(),
                         self::getRadio('mental_health','هل الوظائف العقلية سليمة'),
-                        self::getInput('who_mental','ماهي الوظائف المصابة'),
+                        self::getInput('who_mental','ماهي الوظائف المصابة')
+                            ->visible(fn(Get $get):bool => !$get('mental_health'))->nullable(),
                         self::getInput('injuries_disabilities','هل توجد إصابات أو عاهات جسيمة'),
                         Section::make()
                             ->schema([
@@ -368,13 +400,13 @@ class AutisticResource extends Resource
                                     ->schema([
                                         self::getInput('name',' '),
                                         self::getInput('age',' '),
-                                        self::getInput('procedure',' '),
+                                        self::getInput('procedures',' '),
 
                                     ])
                                     ->addable(function ($state){
                                         $flag=true;
                                         foreach ($state as $item) {
-                                            if (!$item['name'] || !$item['age']  || !$item['procedure']) {$flag=false; break;}
+                                            if (!$item['name'] || !$item['age']  || !$item['procedures']) {$flag=false; break;}
                                         }
                                         return $flag;
                                     }),
@@ -402,7 +434,9 @@ class AutisticResource extends Resource
                         self::getInput('slookea_other','مظاهر سلوكية اخري'),
 
 
-                    ]),
+                    ])
+                    ->collapsible()
+                    ->columns(4),
                 ]),
             ]);
     }
