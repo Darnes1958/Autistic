@@ -24,11 +24,11 @@ class Family extends Model
     public function Brother(){
         return $this->hasOne(Brother::class);
     }
-    public function Father_city()
+    public function FatherCity()
     {
         return $this->belongsTo(City::class, 'father_city');
     }
-    public function Mother_city()
+    public function MotherCity()
     {
         return $this->belongsTo(City::class, 'mother_city');
     }

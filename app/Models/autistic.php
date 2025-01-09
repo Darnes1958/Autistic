@@ -45,11 +45,11 @@ class autistic extends Model
     {
         return $this->belongsTo(Near::class);
     }
-    public function Birth_city()
+    public function BirthCity()
     {
         return $this->belongsTo(City::class, 'birth_city');
     }
-    public function Person_city()
+    public function PersonCity()
     {
         return $this->belongsTo(City::class, 'person_city');
     }

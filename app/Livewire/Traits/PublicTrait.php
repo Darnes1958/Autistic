@@ -232,15 +232,15 @@ trait PublicTrait {
     }
     protected static function getSelect($name,$label=null): Select
     {
-        if ($name=='birth_city') {$l='محل الميلاد'; $option='Birth_city';$att='name';}
+        if ($name=='birth_city') {$l='محل الميلاد'; $option='BirthCity';$att='name';}
         if ($name=='city_id') {$l='المدينه'; $option='City';$att='name';}
         if ($name=='street_id') {$l='الحي'; $option='Street';$att='name';}
         if ($name=='near_id') {$l='نقطة دالة'; $option='Near';$att='name';}
         if ($name=='center_id') {$l='مركز توحد'; $option='Center';$att='name';}
-        if ($name=='person_city') {$l='عنوانه'; $option='Person_city';$att='name';}
+        if ($name=='person_city') {$l='عنوانه'; $option='PersonCity';$att='name';}
         if ($name=='symptom_id') {$l='الاعراض والصعوبات'; $option='Symptom';$att='name';}
-        if ($name=='father_city') {$l='محل الميلاد'; $option='Father_city';$att='name';}
-        if ($name=='mother_city') {$l='محل الميلاد'; $option='Mother_city';$att='name';}
+        if ($name=='father_city') {$l='محل الميلاد'; $option='FatherCity';$att='name';}
+        if ($name=='mother_city') {$l='محل الميلاد'; $option='MotherCity';$att='name';}
         if ($name=='ambitious_id') {$l='ما هو طموح الأسرة بالنسبة للطفل'; $option='Ambitious';$att='name';}
 
         if ($label) $l=$label;
