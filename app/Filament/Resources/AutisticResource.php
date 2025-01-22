@@ -521,8 +521,6 @@ class AutisticResource extends Resource
                     ->color('danger')
                     ->requiresConfirmation()
                     ->action(function ($record){
-                        Brother::where('autistic_id',$record->id)->delete();
-                        Family::where('autistic_id',$record->id)->delete();
                         $record->delete();
                     }),
             ])
