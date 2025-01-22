@@ -43,6 +43,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Filament\Support\Exceptions\Halt;
 
 class AutisticResource extends Resource
 {
@@ -65,29 +67,33 @@ class AutisticResource extends Resource
                        self::getInput('nat_id','الرقم الوطني')
                            ->live(onBlur: true)
                            ->numeric()
-                           ->minLength(12)
+                            ->rules(['digits:12'])
+                           ->startsWith([1,2])
                            ->afterStateUpdated(function ($state,Set $set) {
-                               if ($state && Autistic::where('nat_id', $state)->first()) {
-                                   Notification::make()
-                                       ->title('هذا الرقم مخزون مسبقا')
-                                       ->body('يرجي التاكد من الرقم .. أو ان بيانات هذا الطفل سبق وان تم ادخالها')
-                                       ->danger()
-                                       ->send();
-                               } else {if ($state){
-                                   if (strlen($state) != 12   || $state[0]>2 || $state[0]<1 ){
-                                       Notification::make()
-                                           ->title('هذا الرقم غير صحيح')
-                                           ->body('يرجي التاكد من الرقم .. ')
-                                           ->danger()
-                                           ->send();
-                                       $set('show_all',false);
-                                   } else
-                                   $set('show_all',true);
-                               } else {$set('show_all',false);}}
+                               if ($state){
+                                   $set('sex',$state[0]);
 
+
+                               }
                            })
-                           ->unique(ignoreRecord: true),
-                   ])->columns(4),
+
+                           ->unique(ignoreRecord: true)
+                           ->validationMessages([
+                               'unique' => 'هذا الرقم مخزون مسبقا',
+                               'digits'=>'يجب ان يتكون الرقم من 12 خانة',
+                               'starts_with'=>'يجب ان يبدأ بالرقم 1 او 2'
+                           ]),
+                   ])->afterValidation(function (Get $get) {
+                          if (intval(substr($get('nat_id'),1,4))<1990){
+                              Notification::make()
+                                  ->title('رقم خطأ')
+                                  ->send();
+                              throw new Halt();
+                          }
+
+
+                      })
+                      ->columns(4),
                   Wizard\Step::make('other_data')
                    ->label('البيانات')
                    ->schema([
@@ -95,20 +101,11 @@ class AutisticResource extends Resource
                            ->schema([
                                Section::make('بيانات أولية')
                                    ->schema([
-
-                                       Hidden::make('show_all')
-                                           ->default(false)
-                                           ->dehydrated(false),
-
                                        Section::make()
-                                           ->visible(function (Get $get){
-                                               return $get('show_all');
-                                           })
-
                                            ->schema([
                                                self::getInput('name','الاسم الاول'),
                                                self::getInput('surname'),
-                                               self::getRadio('sex','الجنس'),
+                                               self::getRadio('sex','الجنس')->disabled(),
                                                self::getDate('birthday'),
                                                self::getSelect('birth_city'),
 
@@ -175,9 +172,7 @@ class AutisticResource extends Resource
                            ]),
                        Grid::make()
                            ->relationship('Family')
-                           ->visible(function (Get $get){
-                               return $get('show_all');
-                           })
+
                            ->schema([
                                Section::make('بيانات عن الاسرة')
                                    ->schema([
@@ -288,9 +283,7 @@ class AutisticResource extends Resource
                            ]),
                        Grid::make()
                            ->relationship('Boy')
-                           ->visible(function (Get $get){
-                               return $get('show_all');
-                           })
+
                            ->schema([
                                Section::make('بيانات عن الطفل وتوقعات الأسرة ')
                                    ->schema([
@@ -323,9 +316,6 @@ class AutisticResource extends Resource
                            ]),
                        Grid::make()
                            ->relationship('Growth')
-                           ->visible(function (Get $get){
-                               return $get('show_all');
-                           })
                            ->schema([
                                Section::make('بيانات عن تاريخ النمو')
                                    ->schema([
@@ -556,4 +546,5 @@ class AutisticResource extends Resource
             'edit' => Pages\EditAutistic::route('/{record}/edit'),
         ];
     }
+
 }

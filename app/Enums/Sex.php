@@ -8,7 +8,7 @@ use Filament\Support\Contracts\HasColor;
 enum Sex: int implements HasLabel,HasColor
 {
   case ذكر = 1;
-  case انثي = 0;
+  case انثي = 2;
 
 
   public function getLabel(): ?string
