@@ -105,7 +105,7 @@ class AutisticResource extends Resource
                                            ->schema([
                                                self::getInput('name','الاسم الاول'),
                                                self::getInput('surname'),
-                                               self::getRadio('sex','الجنس')->disabled(),
+                                               self::getRadio('sex','الجنس'),
                                                self::getDate('birthday'),
                                                self::getSelect('birth_city'),
 
