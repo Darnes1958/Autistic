@@ -12,6 +12,8 @@ enum Academic: int implements HasLabel,HasColor
     case اعدادي = 2;
     case ثانوي = 3;
     case جامعي = 4;
+    case ماجستير = 5;
+    case دكتوراة = 6;
 
 
   public function getLabel(): ?string
@@ -23,9 +25,11 @@ enum Academic: int implements HasLabel,HasColor
     return match ($this) {
       self::لم_يدرس => 'gray',
       self::ابتدائي => 'Fuchsia',
-        self::اعددادي => 'blue',
+        self::اعدادي => 'blue',
         self::ثانوي => 'success',
         self::جامعي => 'yellow',
+        self::ماجستير => 'info',
+        self::دكتوراة => 'danger',
     };
   }
 

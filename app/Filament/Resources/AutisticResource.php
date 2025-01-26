@@ -100,9 +100,7 @@ class AutisticResource extends Resource
                        Grid::make()
                            ->schema([
                                Section::make('بيانات أولية')
-                                   ->schema([
-                                       Section::make()
-                                           ->schema([
+                                  ->schema([
                                                self::getInput('name','الاسم الاول'),
                                                self::getInput('surname'),
                                                self::getRadio('sex','الجنس'),
@@ -148,14 +146,16 @@ class AutisticResource extends Resource
                                                        return Center::create($data)->getKey();
                                                    }),
                                                self::getRadio('academic')->columnSpan(3),
-                                               Fieldset::make('الشخص الذي قام بالتعبئة')
+                                               Fieldset::make('الشخص الذي قام بتعبئة البيانات')
                                                    ->schema([
                                                        self::getInput('person_name')->columnSpan(2),
                                                        self::getSelectEnum('person_relationship'),
                                                        self::getInput('person_phone'),
                                                        self::getSelect('person_city'),
                                                        self::getDate('person_date'),
-                                                   ])->columns(6),
+                                                   ])
+                                                   ->columns(6)
+                                                   ->columnSpanFull(),
                                                Select::make('symptom_id')
                                                    ->options(Symptom::all()->pluck('name', 'id'))
                                                    ->preload()
@@ -164,15 +164,12 @@ class AutisticResource extends Resource
                                                    ->label('الاعراض')->multiple()->columnSpan(2),
                                                self::getSelectEnum('sym_year'),
 
-                                           ]),
-
-                                   ])
+                                           ])
                                    ->collapsible()
                                    ->columns(4)
                            ]),
                        Grid::make()
                            ->relationship('Family')
-
                            ->schema([
                                Section::make('بيانات عن الاسرة')
                                    ->schema([
@@ -283,7 +280,6 @@ class AutisticResource extends Resource
                            ]),
                        Grid::make()
                            ->relationship('Boy')
-
                            ->schema([
                                Section::make('بيانات عن الطفل وتوقعات الأسرة ')
                                    ->schema([

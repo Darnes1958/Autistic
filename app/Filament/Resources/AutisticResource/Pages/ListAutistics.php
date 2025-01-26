@@ -14,7 +14,9 @@ class ListAutistics extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label('إضافة حالة جديدة'),
+            Actions\CreateAction::make()
+                ->label('إضافة حالة جديدة')
+                ,
         ];
     }
 }
