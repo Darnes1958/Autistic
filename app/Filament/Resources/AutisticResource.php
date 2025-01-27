@@ -223,21 +223,21 @@ class AutisticResource extends Resource
                                                    ->relationship()
                                                    ->headers([
                                                        Header::make('الاسم')
-                                                           ->width('30%'),
+                                                           ->width('12%'),
                                                        Header::make('ت.الولادة')
-                                                           ->width('10%'),
+                                                           ->width('14%'),
                                                        Header::make('الجنس')
-                                                           ->width('10%'),
+                                                           ->width('12%'),
                                                        Header::make('الحالة الصحية')
-                                                           ->width('10%'),
+                                                           ->width('12%'),
                                                        Header::make('السبب تدهور الصحة')
-                                                           ->width('10%'),
+                                                           ->width('12%'),
                                                        Header::make('المستوي التعليمي')
-                                                           ->width('10%'),
+                                                           ->width('12%'),
                                                        Header::make('المهنة')
-                                                           ->width('10%'),
+                                                           ->width('12%'),
                                                        Header::make('اتجاه وعلاقته بالطفل')
-                                                           ->width('10%'),
+                                                           ->width('12%'),
                                                    ])
                                                    ->streamlined()
                                                    ->live()

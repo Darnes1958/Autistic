@@ -21,6 +21,7 @@ use App\Enums\PregnancyNormal;
 use App\Enums\PregnancyTime;
 use App\Enums\procedures;
 use App\Enums\Relationship_nature;
+use App\Enums\RelationsTypes;
 use App\Enums\Sex;
 use App\Enums\Sleap;
 use App\Enums\Sym_year;
@@ -177,7 +178,7 @@ trait PublicTrait {
         if ($name=='academic' || $name=='father_academic' || $name=='mother_academic' || $name=='brother_academic')
         {$l='المستوي الدراسي';$option=Academic::class;}
 
-        if ($name=='brother_relation') {$l='اتجاه وعلاقته بالطفل ';$option=ReLationsTypes::class;}
+        if ($name=='brother_relation') {$l='اتجاه وعلاقته بالطفل ';$option=RelationsTypes::class;}
         if ($name=='sym_year') {$l=' تمت رؤية الأعراض في العام ';$option=Sym_year::class;}
         if ($name=='person_relationship') {$l='علاقته بالطفل';$option=Person_relationship::class;}
         if ($name=='family_salary') {$l='الدخل الشهري';$option=\App\Enums\Salary::class;}
