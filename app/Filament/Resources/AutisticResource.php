@@ -136,6 +136,7 @@ class AutisticResource extends Resource
                                                    ->columns(3),
                                                self::getSelect('center_id')
                                                    ->label('مركز التوحد (اذا كان الطفل ملتحقا بمركز)')
+
                                                    ->required(false)
                                                    ->options(fn (Forms\Get $get): Collection => Center::query()
                                                        ->where('city_id', $get('city_id'))
@@ -145,14 +146,14 @@ class AutisticResource extends Resource
                                                        $data['city_id']=$get('city_id');
                                                        return Center::create($data)->getKey();
                                                    }),
-                                               self::getRadio('academic')->columnSpan(3),
+                                               self::getSelectEnum('academic'),
                                                Fieldset::make('الشخص الذي قام بتعبئة البيانات')
                                                    ->schema([
-                                                       self::getInput('person_name')->columnSpan(2),
-                                                       self::getSelectEnum('person_relationship'),
-                                                       self::getInput('person_phone'),
-                                                       self::getSelect('person_city'),
-                                                       self::getDate('person_date'),
+                                                            self::getInput('person_name')->columnSpan(3),
+                                                            self::getSelectEnum('person_relationship')->columnSpan(2),
+                                                       self::getInput('person_phone')->columnSpan(2),
+                                                       self::getSelect('person_city')->columnSpan(2),
+                                                       self::getDate('person_date')->columnSpan(2),
                                                    ])
                                                    ->columns(6)
                                                    ->columnSpanFull(),
@@ -178,7 +179,7 @@ class AutisticResource extends Resource
                                                self::getInput('father_name'),
                                                self::getSelect('father_city'),
                                                self::getDate('father_date'),
-                                               self::getRadio('father_academic')
+                                               self::getSelectEnum('father_academic')
                                                    ->columnSpan(2),
                                                self::getInput('father_job'),
                                                self::getRadio('is_father_life'),
@@ -192,7 +193,7 @@ class AutisticResource extends Resource
                                                self::getInput('mother_name'),
                                                self::getSelect('mother_city'),
                                                self::getDate('mother_date'),
-                                               self::getRadio('mother_academic')
+                                               self::getSelectEnum('mother_academic')
                                                    ->columnSpan(2),
                                                self::getInput('mother_job'),
                                                self::getRadio('is_mother_life'),
@@ -207,8 +208,8 @@ class AutisticResource extends Resource
                                            ])->columns(4),
                                        Fieldset::make('هل تعرض أحد الوالدين لامراض مزمنة او اصابات اخري')
                                            ->schema([
-                                               self::getInput('father_chronic_diseases','الاب')->required(false),
-                                               self::getInput('mother_chronic_diseases','الأم')->required(false),
+                                               self::getRadio('father_chronic_diseases','الأب'),
+                                               self::getRadio('mother_chronic_diseases','الام'),
                                            ])->columns(2),
                                        self::getRadio('is_parent_relationship'),
                                        self::getInput('father_blood_type','فصيلة دم الأب'),
@@ -238,6 +239,7 @@ class AutisticResource extends Resource
                                                        Header::make('اتجاه وعلاقته بالطفل')
                                                            ->width('10%'),
                                                    ])
+                                                   ->streamlined()
                                                    ->live()
                                                    ->defaultItems(0)
                                                    ->addActionLabel('إضافة أخ / أخت')
@@ -249,7 +251,7 @@ class AutisticResource extends Resource
                                                        self::getInput('brother_health_reason',' ')->required(false),
                                                        self::getSelectEnum('brother_academic',' '),
                                                        self::getInput('brother_job',' ')->required(false),
-                                                       self::getInput('brother_relation',' ')->required(false),
+                                                       self::getSelectEnum('brother_relation',' ')->required(false),
                                                    ])
                                                    ->addable(function ($state){
                                                        $flag=true;

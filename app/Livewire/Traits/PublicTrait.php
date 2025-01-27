@@ -70,11 +70,10 @@ trait PublicTrait {
         $option=null;
         if ($name=='sex' ||  $name=='brother_sex') {$l='الجنس';$option=Sex::class;}
 
-        if ($name=='academic' || $name=='father_academic' || $name=='mother_academic' || $name=='brother_academic')
-           {$l='المستوي الدراسي';$option=Academic::class;}
         if ($name=='is_father_life' || $name=='is_mother_life') {$l='علي قيد الحياة';$option=YesNo::class;}
 
         if ($name=='is_parent_relationship') {$l='هل هناك صلة قرابة بين الاب والام ';$option=YesNo::class;}
+
         if ($name=='parent_relationship_nature') {$l='ما هي طبيعة العلاقة بين الأب والأم ';$option=Relationship_nature::class;}
         if ($name=='brother_health' ) {$l='الحالة الصحية';$option=Health::class;}
         if ($name=='house_type' ) {$l='نوع السكن';$option=HouseType::class;}
@@ -175,7 +174,10 @@ trait PublicTrait {
     protected static function getSelectEnum($name,$label=null): Select
     {
 
-        if ( $name=='brother_academic')  {$label='المستوي الدراسي';$option=Academic::class;}
+        if ($name=='academic' || $name=='father_academic' || $name=='mother_academic' || $name=='brother_academic')
+        {$l='المستوي الدراسي';$option=Academic::class;}
+
+        if ($name=='brother_relation') {$l='اتجاه وعلاقته بالطفل ';$option=ReLationsTypes::class;}
         if ($name=='sym_year') {$l=' تمت رؤية الأعراض في العام ';$option=Sym_year::class;}
         if ($name=='person_relationship') {$l='علاقته بالطفل';$option=Person_relationship::class;}
         if ($name=='family_salary') {$l='الدخل الشهري';$option=\App\Enums\Salary::class;}
