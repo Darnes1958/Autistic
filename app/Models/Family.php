@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Faker\Core\Blood;
 use Illuminate\Database\Eloquent\Model;
 
 class Family extends Model
@@ -32,5 +33,12 @@ class Family extends Model
     {
         return $this->belongsTo(City::class, 'mother_city');
     }
-
+    public function MotherBlood()
+    {
+        return $this->belongsTo(BloodType::class, 'mother_blood_type');
+    }
+    public function FatherBlood()
+    {
+        return $this->belongsTo(BloodType::class, 'father_blood_type');
+    }
 }

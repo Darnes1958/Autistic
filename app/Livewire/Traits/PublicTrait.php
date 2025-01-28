@@ -257,6 +257,9 @@ trait PublicTrait {
         if ($name=='disease_menu_id') {$l='المرض'; $option='DiseaseMenu';$att='name';}
         if ($name=='grow_difficult_menu_id') {$l='الصعوبة'; $option='GrowDifficultMenu';$att='name';}
         if ($name=='medicine_id') {$l='اسم الدواء'; $option='Medicine';$att='name';}
+        if ($name=='father_blood_type') {$l='فصيلة دم الاب'; $option='FatherBlood';$att='name';}
+        if ($name=='mother_blood_type') {$l='فصيلة دم الام'; $option='MotherBlood';$att='name';}
+
 
         if ($label) $l=$label;
 

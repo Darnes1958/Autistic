@@ -208,8 +208,8 @@ class AutisticResource extends Resource
                                                self::getRadio('mother_chronic_diseases','الام'),
                                            ])->columns(2),
                                        self::getRadio('is_parent_relationship'),
-                                       self::getInput('father_blood_type','فصيلة دم الأب'),
-                                       self::getInput('mother_blood_type','فصيلة دم الأم'),
+                                       self::getSelect('father_blood_type','فصيلة دم الأب'),
+                                       self::getSelect('mother_blood_type','فصيلة دم الأم'),
                                        self::getSelectEnum('parent_relationship_nature'),
                                        Section::make()
                                            ->schema([
