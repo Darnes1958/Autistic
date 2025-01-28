@@ -4,9 +4,10 @@ namespace App\Livewire\Traits;
 
 
 use App\Enums\Academic;
-use App\Enums\AccLevel;
+
 use App\Enums\Boy_response;
 use App\Enums\BreastfeedingNatural;
+use App\Enums\BreastPeriod;
 use App\Enums\ChildWeight;
 use App\Enums\Food;
 use App\Enums\Health;
@@ -25,7 +26,7 @@ use App\Enums\RelationsTypes;
 use App\Enums\Sex;
 use App\Enums\Sleap;
 use App\Enums\Sym_year;
-use App\Enums\Symyear;
+
 use App\Enums\WhenSpeak;
 use App\Enums\WherePregnancy;
 use App\Enums\With_language;
@@ -38,10 +39,6 @@ use App\Enums\YearAndNot;
 use App\Enums\YesNo;
 use App\Models\City;
 use App\Models\Disease;
-use App\Models\Rent;
-use App\Models\Renttran;
-use App\Models\Salary;
-use App\Models\Salarytran;
 
 use App\Models\Street;
 use Carbon\Carbon;
@@ -75,7 +72,7 @@ trait PublicTrait {
 
         if ($name=='is_parent_relationship') {$l='هل هناك صلة قرابة بين الاب والام ';$option=YesNo::class;}
 
-        if ($name=='parent_relationship_nature') {$l='ما هي طبيعة العلاقة بين الأب والأم ';$option=Relationship_nature::class;}
+
         if ($name=='brother_health' ) {$l='الحالة الصحية';$option=Health::class;}
         if ($name=='house_type' ) {$l='نوع السكن';$option=HouseType::class;}
         if ($name=='house_narrow' ) {$l='مساحة السكن';$option=HouseNarrow::class;}
@@ -85,19 +82,10 @@ trait PublicTrait {
         if ($name=='is_house_good' ) {$l='هل تتوفر داخل السكن متطلبات الحياة الأساسية';$option=YesNo::class;}
         if ($name=='is_room_single' ) {$l='هل حجرة الطقل فردية';$option=YesNo::class;}
         if ($name=='how_past' ) {$l='كيف كان وضع الطفل في بداية ظهور الاعراض';$option=How_past::class;}
-        if ($name=='with_people' ) {$l='في الجانب الاجتماعي';$option=With_people::class;}
-        if ($name=='with_motion' ) {$l='في الجانب الحركي';$option=With_motion::class;}
-        if ($name=='with_language' ) {$l='في الجانب اللغوي';$option=With_language::class;}
-        if ($name=='with_personal' ) {$l='في جانب العناية الشخصية';$option=With_personal::class;}
-        if ($name=='with_mind' ) {$l='في الجانب المعرفي العقلي';$option=With_mind::class;}
-        if ($name=='father_procedure' ) {$l='الاب';$option=procedures::class;}
-        if ($name=='mother_procedure' ) {$l='الام';$option=procedures::class;}
-        if ($name=='brother_procedure' ) {$l='الاخوة';$option=procedures::class;}
-        if ($name=='boy_response' ) {$l='مدي استجابة الطفل لأسلوب التعامل';$option=Boy_response::class;}
+
+
         if ($name=='mother_p_d_health' ) {$l='حالة الام الصحية اثناء الحمل';$option=Health::class;}
-        if ($name=='is_pregnancy_normal' ) {$l='هل كانت الولادة طبيعية';$option=PregnancyNormal::class;}
-        if ($name=='where_pregnancy_done' ) {$l='اين تمت عملية الولادة';$option=WherePregnancy::class;}
-        if ($name=='pregnancy_time' ) {$l='ما الوقت الذي استغرقته عملية الولادة';$option=PregnancyTime::class;}
+
         if ($name=='is_breastfeeding_natural' ) {$l='هل كانت الرضاعة طبيعية';$option=BreastfeedingNatural::class;}
         if ($name=='is_child_food_good' ) {$l='هل كانت تغذية الطفل جيدة';$option=Food::class;}
         if ($name=='sleep_habit' ) {$l='ما عاداته فالنوم';$option=Sleap::class;}
@@ -174,9 +162,29 @@ trait PublicTrait {
     }
     protected static function getSelectEnum($name,$label=null): Select
     {
+        $option=null;
 
         if ($name=='academic' || $name=='father_academic' || $name=='mother_academic' || $name=='brother_academic')
         {$l='المستوي الدراسي';$option=Academic::class;}
+
+        if ($name=='parent_relationship_nature') {$l='ما هي طبيعة العلاقة بين الأب والأم ';$option=Relationship_nature::class;}
+
+        if ($name=='with_people' ) {$l='في الجانب الاجتماعي';$option=With_people::class;}
+        if ($name=='with_motion' ) {$l='في الجانب الحركي';$option=With_motion::class;}
+        if ($name=='with_language' ) {$l='في الجانب اللغوي';$option=With_language::class;}
+        if ($name=='with_personal' ) {$l='في جانب العناية الشخصية';$option=With_personal::class;}
+        if ($name=='with_mind' ) {$l='في الجانب المعرفي العقلي';$option=With_mind::class;}
+
+        if ($name=='father_procedure' ) {$l='الاب';$option=procedures::class;}
+        if ($name=='mother_procedure' ) {$l='الام';$option=procedures::class;}
+        if ($name=='brother_procedure' ) {$l='الاخوة';$option=procedures::class;}
+
+        if ($name=='boy_response' ) {$l='مدي استجابة الطفل لأسلوب التعامل';$option=Boy_response::class;}
+
+        if ($name=='is_pregnancy_normal' ) {$l='هل كانت الولادة طبيعية';$option=PregnancyNormal::class;}
+        if ($name=='where_pregnancy_done' ) {$l='اين تمت عملية الولادة';$option=WherePregnancy::class;}
+        if ($name=='pregnancy_time' ) {$l='ما الوقت الذي استغرقته عملية الولادة';$option=PregnancyTime::class;}
+
 
         if ($name=='brother_relation') {$l='اتجاه وعلاقته بالطفل ';$option=RelationsTypes::class;}
         if ($name=='sym_year') {$l=' تمت رؤية الأعراض في العام ';$option=Sym_year::class;}
@@ -185,7 +193,7 @@ trait PublicTrait {
         if ($name=='family_sources') {$l='مصادر دخل الأسرة';$option=\App\Enums\Sources::class;}
         if ($name=='is_play_with_other') {$l='هل يلعب';$option=\App\Enums\Play::class;}
         if ($name=='child_weight' ) {$l='وزن الطفل اثناء الولادة';$option=ChildWeight::class;}
-        if ($name=='breastfeeding_period' ) {$l='مدة الرضاعة';$option=Year::class;}
+        if ($name=='breastfeeding_period' ) {$l='مدة الرضاعة';$option=BreastPeriod::class;}
         if ($name=='when_can_set' ) {$l='متي استطاع الجلوس';$option=Year::class;}
         if ($name=='teeth_appear' ) {$l='متي بدأت الاسنان بالظهور';$option=Year::class;}
         if ($name=='could_crawl' ) {$l='متي استطاع الحبو (الزحف';$option=Year::class;}
@@ -199,6 +207,7 @@ trait PublicTrait {
         if ($name=='when_use_spoon' ) {$l='متي استطاع استخدام الملعقة او الكوب';$option=YearAndNot::class;}
 
         if ($label) $l=$label;
+        if (!$option) $option=YesNo::class;
         return Select::make($name)
             ->options($option)
             ->default(1)
@@ -245,6 +254,9 @@ trait PublicTrait {
         if ($name=='father_city') {$l='محل الميلاد'; $option='FatherCity';$att='name';}
         if ($name=='mother_city') {$l='محل الميلاد'; $option='MotherCity';$att='name';}
         if ($name=='ambitious_id') {$l='ما هو طموح الأسرة بالنسبة للطفل'; $option='Ambitious';$att='name';}
+        if ($name=='disease_menu_id') {$l='المرض'; $option='DiseaseMenu';$att='name';}
+        if ($name=='grow_difficult_menu_id') {$l='الصعوبة'; $option='GrowDifficultMenu';$att='name';}
+        if ($name=='medicine_id') {$l='اسم الدواء'; $option='Medicine';$att='name';}
 
         if ($label) $l=$label;
 

@@ -72,8 +72,6 @@ class AutisticResource extends Resource
                            ->afterStateUpdated(function ($state,Set $set) {
                                if ($state){
                                    $set('sex',$state[0]);
-
-
                                }
                            })
 
@@ -84,14 +82,12 @@ class AutisticResource extends Resource
                                'starts_with'=>'يجب ان يبدأ بالرقم 1 او 2'
                            ]),
                    ])->afterValidation(function (Get $get) {
-                          if (intval(substr($get('nat_id'),1,4))<1990){
+                          if (intval(substr($get('nat_id'),1,4))<1980){
                               Notification::make()
                                   ->title('رقم خطأ')
                                   ->send();
                               throw new Halt();
                           }
-
-
                       })
                       ->columns(4),
                   Wizard\Step::make('other_data')
@@ -214,7 +210,7 @@ class AutisticResource extends Resource
                                        self::getRadio('is_parent_relationship'),
                                        self::getInput('father_blood_type','فصيلة دم الأب'),
                                        self::getInput('mother_blood_type','فصيلة دم الأم'),
-                                       self::getRadio('parent_relationship_nature')->columnSpanFull(),
+                                       self::getSelectEnum('parent_relationship_nature'),
                                        Section::make()
                                            ->schema([
                                                TableRepeater::make('Brother')
@@ -292,21 +288,23 @@ class AutisticResource extends Resource
                                            ->visible(function (Get $get){return $get('how_past')==0;}),
                                        Fieldset::make('مدي تأثير الإضطرابات علي الطفل')
                                            ->schema([
-                                               self::getRadio('with_people'),
-                                               self::getRadio('with_motion'),
-                                               self::getRadio('with_language'),
-                                               self::getRadio('with_personal'),
-                                               self::getRadio('with_mind'),
-                                           ]),
-                                       self::getInput('other_boy_info','معلومات اخري عن الطفل')->required(false)->columnSpanFull(),
+                                               self::getSelectEnum('with_people'),
+                                               self::getSelectEnum('with_motion'),
+                                               self::getSelectEnum('with_language'),
+                                               self::getSelectEnum('with_personal'),
+                                               self::getSelectEnum('with_mind'),
+                                           ])->columns(3),
                                        self::getSelect('ambitious_id'),
+                                       self::getInput('other_boy_info','معلومات اخري عن الطفل')->required(false)->columnSpan(3),
+
                                        Fieldset::make('ما أساليب التعامل مع الطفل')
                                            ->schema([
-                                               self::getRadio('father_procedure'),
-                                               self::getRadio('mother_procedure'),
-                                               self::getRadio('brother_procedure'),
-                                           ]),
-                                       self::getRadio('boy_response'),
+                                               self::getSelectEnum('father_procedure'),
+                                               self::getSelectEnum('mother_procedure'),
+                                               self::getSelectEnum('brother_procedure'),
+                                               self::getSelectEnum('boy_response'),
+                                           ])->columns(4)->columnSpan(4),
+
 
                                    ])
                                    ->columns(4)
@@ -351,9 +349,9 @@ class AutisticResource extends Resource
                                            ->nullable()->visible(fn(Get $get): bool =>$get('is_p_d_disease')==1)->nullable(),
                                        Grid::make()
                                            ->schema([
-                                               self::getRadio('is_pregnancy_normal'),
-                                               self::getRadio('where_pregnancy_done'),
-                                               self::getRadio('pregnancy_time'),
+                                               self::getSelectEnum('is_pregnancy_normal'),
+                                               self::getSelectEnum('where_pregnancy_done'),
+                                               self::getSelectEnum('pregnancy_time'),
                                                self::getSelectEnum('child_weight'),
                                                self::getRadio('is_child_followed','هل احتاج الطفل بعد ولادته إلي رعاية خاصة')->live(),
                                                self::getinput('why_child_followed','لماذا احتاج لرعاية')
@@ -383,7 +381,7 @@ class AutisticResource extends Resource
                                                    ->defaultItems(0)
                                                    ->addActionLabel('إضافة مرض')
                                                    ->schema([
-                                                       self::getInput('name',' '),
+                                                       self::getSelect('disease_menu_id',' '),
                                                        self::getInput('age',' '),
                                                        self::getInput('period',' '),
                                                        self::getInput('intensity',' '),
@@ -392,7 +390,7 @@ class AutisticResource extends Resource
                                                    ->addable(function ($state){
                                                        $flag=true;
                                                        foreach ($state as $item) {
-                                                           if (!$item['name'] || !$item['age']  || !$item['period']
+                                                           if (!$item['disease_menu_id'] || !$item['age']  || !$item['period']
                                                                || !$item['intensity'] || !$item['treatment']) {$flag=false; break;}
                                                        }
                                                        return $flag;
@@ -401,7 +399,7 @@ class AutisticResource extends Resource
                                            ]),
                                        self::getRadio('is_breastfeeding_natural'),
                                        self::getSelectEnum('breastfeeding_period'),
-                                       self::getInput('difficulties_during_weaning','هل حدثت صعوبات اثناء الفطام')->nullable(),
+                                       self::getRadio('difficulties_during_weaning','هل حدثت صعوبات اثناء الفطام'),
                                        self::getSelectEnum('when_can_set'),
                                        self::getSelectEnum('teeth_appear'),
                                        self::getSelectEnum('could_crawl'),
@@ -422,7 +420,7 @@ class AutisticResource extends Resource
                                        self::getRadio('mental_health','هل الوظائف العقلية سليمة'),
                                        self::getInput('who_mental','ماهي الوظائف المصابة')
                                            ->visible(fn(Get $get):bool => !$get('mental_health'))->nullable(),
-                                       self::getInput('injuries_disabilities','هل توجد إصابات أو عاهات جسيمة'),
+                                       self::getRadio('injuries_disabilities','هل توجد إصابات أو عاهات جسيمة'),
                                        Section::make()
                                            ->schema([
                                                TableRepeater::make('GrowDifficult')
@@ -442,7 +440,7 @@ class AutisticResource extends Resource
                                                    ->defaultItems(0)
                                                    ->addActionLabel('إضافة صعوبة')
                                                    ->schema([
-                                                       self::getInput('name',' '),
+                                                       self::getSelect('grow_difficult_menu_id',' '),
                                                        self::getInput('age',' '),
                                                        self::getInput('procedures',' '),
 
@@ -450,18 +448,39 @@ class AutisticResource extends Resource
                                                    ->addable(function ($state){
                                                        $flag=true;
                                                        foreach ($state as $item) {
-                                                           if (!$item['name'] || !$item['age']  || !$item['procedures']) {$flag=false; break;}
+                                                           if (!$item['grow_difficult_menu_id'] || !$item['age']  || !$item['procedures']) {$flag=false; break;}
                                                        }
                                                        return $flag;
                                                    }),
 
                                            ]),
                                        self::getRadio('is_take_medicine','هل يتناول الطفل دواء'),
+                                       TableRepeater::make('GrowMedicine')
+                                           ->label('قائمة بالادوية التي يتناولها ')
+                                           ->relationship()
+                                           ->headers([
+                                               Header::make('اسم الدواء')
+                                                   ->width('100%'),
+                                           ])
+                                           ->live()
+                                           ->defaultItems(0)
+                                           ->addActionLabel('إضافة دواء')
+                                           ->schema([
+                                               self::getSelect('medicine_id',' '),
+                                           ])
+                                           ->addable(function ($state){
+                                               $flag=true;
+                                               foreach ($state as $item) {
+                                                   if (!$item['medicine_id'] ) {$flag=false; break;}
+                                               }
+                                               return $flag;
+                                           }),
                                        FileUpload::make('prescription_image')
                                            ->directory('prescription-images')
                                            ->label('صورة وصفة الدواء'),
                                        self::getRadio('is_child_play_toy','هل يمارس الطفل اللعب بالالعاب'),
-                                       self::getInput('why_not_play_toy','لماذا'),
+                                       self::getInput('why_not_play_toy','لماذا لا يمارس اللعب بالالعاب ؟')
+                                           ->visible(fn(Get $get):bool => !$get('is_child_play_toy'))->nullable(),
                                        self::getSelectEnum('is_play_with_other')->multiple(),
                                        self::getRadio('slookea_1','هل طفلك يستمتع بان يتأرجح ويتمايل'),
                                        self::getRadio('slookea_2','هل طفلك مهتم بالأخرين'),

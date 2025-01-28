@@ -10,4 +10,8 @@ class BoyDisease extends Model
    {
        return $this->belongsTo(Growth::class);
    }
+   public function DiseaseMenu()
+   {
+       return $this->belongsTo(DiseaseMenu::class);
+   }
 }
