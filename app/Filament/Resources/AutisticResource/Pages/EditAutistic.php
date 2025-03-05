@@ -10,6 +10,7 @@ use Filament\Resources\Pages\EditRecord;
 class EditAutistic extends EditRecord
 {
     protected static string $resource = AutisticResource::class;
+    protected ?string $heading='شاشة تعديل حالة توحد';
 
     protected function getHeaderActions(): array
     {

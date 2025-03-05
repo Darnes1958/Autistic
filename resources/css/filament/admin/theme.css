@@ -18,3 +18,12 @@
 .my-yellow {
     @apply text-yellow-600
 }
+
+.fi-form {
+    background-color: #B9C8BC;
+}
+.fi-fo-wizard {
+    background-color: #B9C8BC  ;}
+.fi-section {
+    background-color: #B9C8BC  ;
+}

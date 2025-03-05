@@ -18,7 +18,16 @@ enum Academic: int implements HasLabel,HasColor
 
   public function getLabel(): ?string
   {
-    return $this->name;
+
+      return match ($this) {
+          self::لم_يدرس => 'لم يدرس',
+          self::ابتدائي => 'ابتدائي',
+          self::اعدادي => 'اعدادي',
+          self::ثانوي => 'ثانوي',
+          self::جامعي => 'جامعي',
+          self::ماجستير => 'ماجستير',
+          self::دكتوراة => 'دكتوراه',
+      };
   }
   public function getColor(): string | array | null
   {
