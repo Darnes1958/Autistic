@@ -10,4 +10,9 @@ class GrowDifficult extends Model
     {
         return $this->belongsTo(Growth::class);
     }
+    public function GrowDifficultMenu()
+    {
+        return $this->belongsTo(GrowDifficultMenu::class);
+    }
+
 }

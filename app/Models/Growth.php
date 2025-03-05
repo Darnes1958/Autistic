@@ -26,6 +26,10 @@ class Growth extends Model
     {
         return $this->hasMany(GrowDifficult::class);
     }
+    public function GrowMedicine()
+    {
+        return $this->hasMany(GrowMedicine::class);
+    }
     public function Autistic()
     {
         return $this->belongsTo(Autistic::class);
