@@ -27,3 +27,6 @@
 .fi-section {
     background-color: #B9C8BC  ;
 }
+.fi-fo-field-wrp-label {
+    @apply gap-x-1 !important;
+}

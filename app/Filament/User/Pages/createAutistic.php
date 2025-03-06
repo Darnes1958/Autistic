@@ -1,0 +1,131 @@
+<?php
+
+namespace App\Filament\User\Pages;
+
+use App\Livewire\Traits\PublicTrait;
+use App\Models\autistic;
+use App\Models\Center;
+use App\Models\Near;
+use App\Models\Street;
+use App\Models\Symptom;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
+use Filament\Pages\Page;
+use Illuminate\Support\Collection;
+
+class createAutistic extends Page implements HasForms
+{
+    use InteractsWithForms,PublicTrait;
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
+    protected static string $view = 'filament.user.pages.create-autistic';
+    protected static ?string $navigationLabel='بيانات أولية';
+    protected ?string $heading='بيانات أولية';
+
+public $city_id;
+public $street_id;
+    public function mount(): void
+    {
+
+        $this->form->fill();
+    }
+    public function form(Form $form): Form
+    {
+        return $form
+            ->model(Autistic::class)
+
+            ->schema([
+               Grid::make()
+                   ->schema([
+                       Fieldset::make('الإسم')
+                           ->schema([
+                               self::getInput('name',' ')
+                                   ->inlineLabel(false)
+                                   ->placeholder('الاسم الأول'),
+                               self::getInput('surname',' ')
+                                   ->inlineLabel(false)
+                                   ->placeholder('اسم الأب ثلاثي')->columnSpan(2),
+                           ])
+                           ->columns(3),
+
+                       self::getRadio('sex','النوع'),
+
+                       self::getDate('birthday'),
+                       self::getSelect('birth_city')
+                           ,
+
+                       Fieldset::make('العنوان الحالي')
+                           ->schema([
+                               self::getSelect('city_id','المدينة')
+                                   ->live()
+                                   ->afterStateUpdated(function (Set $set,$state){
+                                       $set('street_id',null);
+
+                                   }),
+                               self::getSelect('street_id','الحي')
+                                   ->live()
+                                   ->options(fn (Get $get): Collection => Street::query()
+                                       ->where('city_id', $get('city_id'))
+                                       ->pluck('name', 'id'))
+                                   ->disabled(function (Get $get){return $get('city_id')==null; })
+                                   ->createOptionUsing(function (array $data,Get $get) : int {
+                                       $data['city_id']=$get('city_id');
+                                       return Street::create($data)->getKey();
+                                   })
+                               ,
+                               self::getSelect('near_id','اقرب نقطة دالة')
+                                   ->options(fn (Get $get): Collection => Near::query()
+                                       ->where('street_id', $get('street_id'))
+                                       ->pluck('name', 'id'))
+                                   ->disabled(function (Get $get){return !$get('street_id'); })
+                                   ->createOptionUsing(function (array $data,Get $get) : int {
+                                       $data['street_id']=$get('street_id');
+                                       return Near::create($data)->getKey();
+                                   }),
+                           ])
+                           ->columns(1)
+                           ,
+                       self::getSelect('center_id')
+                           ->label('مركز التوحد (اذا كان  ملتحقا بمركز)')
+                           ->required(false)
+                           ->options(fn (Get $get): Collection => Center::query()
+                               ->where('city_id', $get('city_id'))
+                               ->pluck('name', 'id'))
+                           ->disabled(function (Get $get){return !$get('city_id'); })
+                           ->createOptionUsing(function (array $data,Get $get) : int {
+                               $data['city_id']=$get('city_id');
+                               return Center::create($data)->getKey();
+                           }),
+                       self::getSelectEnum('academic')->columnSpanFull(),
+                       Fieldset::make('الشخص الذي قام بتعبئة البيانات')
+                           ->schema([
+                               self::getInput('person_name'),
+                               self::getSelectEnum('person_relationship'),
+                               self::getInput('person_phone'),
+                               self::getSelect('person_city'),
+                               self::getDate('person_date'),
+                           ])
+                           ->columns(1)
+                           ,
+                       Select::make('symptom_id')
+                           ->options(Symptom::all()->pluck('name', 'id'))
+                           ->preload()
+                           ->required()
+                           ->searchable()
+                           ->label('الاعراض')->multiple()
+                           ,
+                       self::getSelectEnum('sym_year'),
+
+                   ])
+                   ->columns(1)
+                   ->columnSpan(1)
+            ])->columns(3) ;
+
+    }
+}

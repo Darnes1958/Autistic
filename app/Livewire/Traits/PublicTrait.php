@@ -66,7 +66,7 @@ trait PublicTrait {
     protected static function getRadio($name,$label=null): Radio
     {
         $option=null;
-        if ($name=='sex' ||  $name=='brother_sex') {$l='الجنس';$option=Sex::class;}
+        if ($name=='sex' ||  $name=='brother_sex') {$l='النوع';$option=Sex::class;}
 
         if ($name=='is_father_life' || $name=='is_mother_life') {$l='علي قيد الحياة';$option=YesNo::class;}
 
@@ -98,8 +98,7 @@ trait PublicTrait {
             ->options($option)
             ->inline()
             ->live()
-            ->default(1)
-            ->inlineLabel(false)
+            ->required()
             ->label($l);
     }
     protected static function getColumn($name): TextColumn
@@ -139,6 +138,7 @@ trait PublicTrait {
 
         return TextInput::make($name)
             ->label($l)
+            ->inlineLabel()
             ->required();
 
     }
@@ -157,6 +157,7 @@ trait PublicTrait {
 
         return DatePicker::make($name)
             ->label($l)
+            ->inlineLabel()
             ->required();
 
     }
@@ -179,20 +180,20 @@ trait PublicTrait {
         if ($name=='mother_procedure' ) {$l='الام';$option=procedures::class;}
         if ($name=='brother_procedure' ) {$l='الاخوة';$option=procedures::class;}
 
-        if ($name=='boy_response' ) {$l='مدي استجابة الطفل لأسلوب التعامل';$option=Boy_response::class;}
+        if ($name=='boy_response' ) {$l='مدي استجابة الحالة لأسلوب التعامل';$option=Boy_response::class;}
 
         if ($name=='is_pregnancy_normal' ) {$l='هل كانت الولادة طبيعية';$option=PregnancyNormal::class;}
         if ($name=='where_pregnancy_done' ) {$l='اين تمت عملية الولادة';$option=WherePregnancy::class;}
         if ($name=='pregnancy_time' ) {$l='ما الوقت الذي استغرقته عملية الولادة';$option=PregnancyTime::class;}
 
 
-        if ($name=='brother_relation') {$l='اتجاه وعلاقته بالطفل ';$option=RelationsTypes::class;}
+        if ($name=='brother_relation') {$l='اتجاه وعلاقته بالحالة ';$option=RelationsTypes::class;}
         if ($name=='sym_year') {$l=' تمت رؤية الأعراض في العام ';$option=Sym_year::class;}
-        if ($name=='person_relationship') {$l='علاقته بالطفل';$option=Person_relationship::class;}
+        if ($name=='person_relationship') {$l='علاقته بالحالة';$option=Person_relationship::class;}
         if ($name=='family_salary') {$l='الدخل الشهري';$option=\App\Enums\Salary::class;}
         if ($name=='family_sources') {$l='مصادر دخل الأسرة';$option=\App\Enums\Sources::class;}
         if ($name=='is_play_with_other') {$l='هل يلعب';$option=\App\Enums\Play::class;}
-        if ($name=='child_weight' ) {$l='وزن الطفل اثناء الولادة';$option=ChildWeight::class;}
+        if ($name=='child_weight' ) {$l='وزن الحالة اثناء الولادة';$option=ChildWeight::class;}
         if ($name=='breastfeeding_period' ) {$l='مدة الرضاعة';$option=BreastPeriod::class;}
         if ($name=='when_can_set' ) {$l='متي استطاع الجلوس';$option=Year::class;}
         if ($name=='teeth_appear' ) {$l='متي بدأت الاسنان بالظهور';$option=Year::class;}
@@ -214,6 +215,7 @@ trait PublicTrait {
             ->preload()
             ->searchable()
             ->label($l)
+            ->inlineLabel()
             ->required();
     }
 
@@ -221,7 +223,9 @@ trait PublicTrait {
     {
         return  Select::make('family_disease')
             ->options(Disease::all()->pluck('name', 'id'))
+
             ->preload()
+            ->inlineLabel()
             ->searchable()
             ->createOptionForm([
                 TextInput::make('name')
@@ -265,9 +269,11 @@ trait PublicTrait {
 
         return Select::make($name)
             ->relationship($option,$att)
+
             ->preload()
             ->searchable()
             ->label($l)
+            ->inlineLabel()
             ->createOptionForm([
                         TextInput::make($att)
                             ->required()
