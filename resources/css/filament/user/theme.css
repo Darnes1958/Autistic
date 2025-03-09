@@ -1,0 +1,36 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+.fi-ta-ctn .py-4 {
+    padding-top: .3rem !important;
+    padding-bottom: .3rem !important;
+}
+.fi-sidebar-nav-groups  {
+
+    @apply gap-y-2;
+}
+
+
+
+.my-blue {
+    @apply text-blue-600
+}
+
+.my-yellow {
+    @apply text-yellow-600
+}
+
+.fi-form {
+    background-color: #B9C8BC;
+    @apply text-2xl !important;
+
+}
+.fi-fo-wizard {
+    background-color: #B9C8BC  ;}
+.fi-section {
+    background-color: #B9C8BC  ;
+    @apply text-2xl !important;
+
+}
+

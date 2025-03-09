@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\Login;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -23,7 +24,12 @@ class UserPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->darkMode(false)
+            ->font('Amiri')
+
+            ->viteTheme('resources/css/filament/user/theme.css')
             ->sidebarFullyCollapsibleOnDesktop()
+            ->login(Login::class)
             ->breadcrumbs(false)
             ->maxContentWidth('Full')
             ->id('user')

@@ -9,7 +9,9 @@ use App\Models\Near;
 use App\Models\Street;
 use App\Models\Symptom;
 use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -43,85 +45,88 @@ public $street_id;
             ->schema([
                Grid::make()
                    ->schema([
-                       Fieldset::make('الإسم')
-                           ->schema([
-                               self::getInput('name',' ')
-                                   ->inlineLabel(false)
-                                   ->placeholder('الاسم الأول'),
-                               self::getInput('surname',' ')
-                                   ->inlineLabel(false)
-                                   ->placeholder('اسم الأب ثلاثي')->columnSpan(2),
-                           ])
-                           ->columns(3),
+                       Section::make()
+                       ->schema([
+                           Fieldset::make('الإسم')
+                               ->schema([
+                                   self::getInput('name',' ')
+                                       ->inlineLabel(false)
+                                       ->placeholder('الاسم الأول'),
+                                   self::getInput('surname',' ')
+                                       ->inlineLabel(false)
+                                       ->placeholder('اسم الأب ثلاثي')->columnSpan(2),
+                               ])
+                               ->columns(3),
 
-                       self::getRadio('sex','النوع'),
+                           self::getRadio('sex','النوع'),
 
-                       self::getDate('birthday'),
-                       self::getSelect('birth_city')
+                           self::getDate('birthday'),
+                           self::getSelect('birth_city')
                            ,
 
-                       Fieldset::make('العنوان الحالي')
-                           ->schema([
-                               self::getSelect('city_id','المدينة')
-                                   ->live()
-                                   ->afterStateUpdated(function (Set $set,$state){
-                                       $set('street_id',null);
+                           Fieldset::make('العنوان الحالي')
+                               ->schema([
+                                   self::getSelect('city_id','المدينة')
+                                       ->live()
+                                       ->afterStateUpdated(function (Set $set,$state){
+                                           $set('street_id',null);
 
-                                   }),
-                               self::getSelect('street_id','الحي')
-                                   ->live()
-                                   ->options(fn (Get $get): Collection => Street::query()
-                                       ->where('city_id', $get('city_id'))
-                                       ->pluck('name', 'id'))
-                                   ->disabled(function (Get $get){return $get('city_id')==null; })
-                                   ->createOptionUsing(function (array $data,Get $get) : int {
-                                       $data['city_id']=$get('city_id');
-                                       return Street::create($data)->getKey();
-                                   })
-                               ,
-                               self::getSelect('near_id','اقرب نقطة دالة')
-                                   ->options(fn (Get $get): Collection => Near::query()
-                                       ->where('street_id', $get('street_id'))
-                                       ->pluck('name', 'id'))
-                                   ->disabled(function (Get $get){return !$get('street_id'); })
-                                   ->createOptionUsing(function (array $data,Get $get) : int {
-                                       $data['street_id']=$get('street_id');
-                                       return Near::create($data)->getKey();
-                                   }),
-                           ])
-                           ->columns(1)
+                                       }),
+                                   self::getSelect('street_id','الحي')
+                                       ->live()
+                                       ->options(fn (Get $get): Collection => Street::query()
+                                           ->where('city_id', $get('city_id'))
+                                           ->pluck('name', 'id'))
+                                       ->disabled(function (Get $get){return $get('city_id')==null; })
+                                       ->createOptionUsing(function (array $data,Get $get) : int {
+                                           $data['city_id']=$get('city_id');
+                                           return Street::create($data)->getKey();
+                                       })
+                                   ,
+                                   self::getSelect('near_id','اقرب نقطة دالة')
+                                       ->options(fn (Get $get): Collection => Near::query()
+                                           ->where('street_id', $get('street_id'))
+                                           ->pluck('name', 'id'))
+                                       ->disabled(function (Get $get){return !$get('street_id'); })
+                                       ->createOptionUsing(function (array $data,Get $get) : int {
+                                           $data['street_id']=$get('street_id');
+                                           return Near::create($data)->getKey();
+                                       }),
+                               ])
+                               ->columns(1)
                            ,
-                       self::getSelect('center_id')
-                           ->label('مركز التوحد (اذا كان  ملتحقا بمركز)')
-                           ->required(false)
-                           ->options(fn (Get $get): Collection => Center::query()
-                               ->where('city_id', $get('city_id'))
-                               ->pluck('name', 'id'))
-                           ->disabled(function (Get $get){return !$get('city_id'); })
-                           ->createOptionUsing(function (array $data,Get $get) : int {
-                               $data['city_id']=$get('city_id');
-                               return Center::create($data)->getKey();
-                           }),
-                       self::getSelectEnum('academic')->columnSpanFull(),
-                       Fieldset::make('الشخص الذي قام بتعبئة البيانات')
-                           ->schema([
-                               self::getInput('person_name'),
-                               self::getSelectEnum('person_relationship'),
-                               self::getInput('person_phone'),
-                               self::getSelect('person_city'),
-                               self::getDate('person_date'),
-                           ])
-                           ->columns(1)
+                           self::getSelect('center_id')
+                               ->label('مركز التوحد (اذا كان  ملتحقا بمركز)')
+                               ->required(false)
+                               ->options(fn (Get $get): Collection => Center::query()
+                                   ->where('city_id', $get('city_id'))
+                                   ->pluck('name', 'id'))
+                               ->disabled(function (Get $get){return !$get('city_id'); })
+                               ->createOptionUsing(function (array $data,Get $get) : int {
+                                   $data['city_id']=$get('city_id');
+                                   return Center::create($data)->getKey();
+                               }),
+                           self::getSelectEnum('academic')->columnSpanFull(),
+                           Fieldset::make('الشخص الذي قام بتعبئة البيانات')
+                               ->schema([
+                                   self::getInput('person_name'),
+                                   self::getSelectEnum('person_relationship'),
+                                   self::getInput('person_phone'),
+                                   self::getSelect('person_city'),
+                                   self::getDate('person_date'),
+                               ])
+                               ->columns(1)
                            ,
-                       Select::make('symptom_id')
-                           ->options(Symptom::all()->pluck('name', 'id'))
-                           ->preload()
-                           ->required()
-                           ->searchable()
-                           ->label('الاعراض')->multiple()
+                           self::getInput('symptoms','الاعراض التي تمت ملاحظتها')
                            ,
-                       self::getSelectEnum('sym_year'),
+                           self::getSelectEnum('sym_year'),
+                           FileUpload::make('image')
+                               ->required()
+                               ->label('صورة شخصية للحالة')
+                               ->multiple()
+                               ->directory('autistic-images'),
 
+                       ])
                    ])
                    ->columns(1)
                    ->columnSpan(1)

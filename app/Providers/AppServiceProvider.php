@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+
 use Filament\Http\Responses\Auth\Contracts\LoginResponse;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;

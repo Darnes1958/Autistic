@@ -11,12 +11,18 @@ class LoginResponse extends \Filament\Http\Responses\Auth\LoginResponse
   {
     // You can use the Filament facade to get the current panel and check the ID
 
-  if (Auth::user()->is_admin)
-      return redirect(Filament::getPanel('admin')->getPath());
-  else
-      return redirect(Filament::getPanel('user')->getPath());
 
 
-   
+    if (Auth::user()->is_admin)
+        return redirect(Filament::getPanel('admin')->getPath());
+    if (!Auth::user()->is_admin)
+        return redirect(Filament::getPanel('user')->getPath());
+
+
+
+            return parent::toResponse($request);
+
+
+
   }
 }
