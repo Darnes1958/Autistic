@@ -11,7 +11,7 @@ class autistic extends Model
         return $this->name.' '.$this->surname;
     }
     protected $casts = [
-        'symptom_id' => 'array',
+        'image' => 'array',
     ];
     public function Family(){
         return $this->hasOne(Family::class);

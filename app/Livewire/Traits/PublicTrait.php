@@ -63,15 +63,17 @@ use Symfony\Component\Console\Input\Input;
 
 trait PublicTrait {
 
+    protected static function  ret_html($text,$c='text-black')
+    {
+        return  new HtmlString('<span class=" text-lg '.$c.'">'.$text.'</span>');
+
+    }
     protected static function getRadio($name,$label=null): Radio
     {
         $option=null;
         if ($name=='sex' ||  $name=='brother_sex') {$l='النوع';$option=Sex::class;}
-
         if ($name=='is_father_life' || $name=='is_mother_life') {$l='علي قيد الحياة';$option=YesNo::class;}
-
         if ($name=='is_parent_relationship') {$l='هل هناك صلة قرابة بين الاب والام ';$option=YesNo::class;}
-
 
         if ($name=='brother_health' ) {$l='الحالة الصحية';$option=Health::class;}
         if ($name=='house_type' ) {$l='نوع السكن';$option=HouseType::class;}
@@ -83,13 +85,11 @@ trait PublicTrait {
         if ($name=='is_room_single' ) {$l='هل حجرة الطقل فردية';$option=YesNo::class;}
         if ($name=='how_past' ) {$l='كيف كان وضع الطفل في بداية ظهور الاعراض';$option=How_past::class;}
 
-
         if ($name=='mother_p_d_health' ) {$l='حالة الام الصحية اثناء الحمل';$option=Health::class;}
 
         if ($name=='is_breastfeeding_natural' ) {$l='هل كانت الرضاعة طبيعية';$option=BreastfeedingNatural::class;}
         if ($name=='is_child_food_good' ) {$l='هل كانت تغذية الطفل جيدة';$option=Food::class;}
         if ($name=='sleep_habit' ) {$l='ما عاداته فالنوم';$option=Sleap::class;}
-
 
         if ($label) $l=$label;
         if (!$option) $option=YesNo::class;
@@ -99,7 +99,7 @@ trait PublicTrait {
             ->inline()
             ->live()
             ->required()
-            ->label($l);
+            ->label(fn()=>self::ret_html($l));
     }
     protected static function getColumn($name): TextColumn
     {
@@ -137,7 +137,7 @@ trait PublicTrait {
         if ($label) $l=$label;
 
         return TextInput::make($name)
-            ->label($l)
+            ->label(fn()=>self::ret_html($l))
             ->inlineLabel()
             ->required();
 
@@ -156,7 +156,7 @@ trait PublicTrait {
         if ($label) $l=$label;
 
         return DatePicker::make($name)
-            ->label($l)
+            ->label(fn()=>self::ret_html($l))
             ->inlineLabel()
             ->required();
 
@@ -214,7 +214,7 @@ trait PublicTrait {
             ->default(1)
             ->preload()
             ->searchable()
-            ->label($l)
+            ->label(fn()=>self::ret_html($l))
             ->inlineLabel()
             ->required();
     }
@@ -244,7 +244,8 @@ trait PublicTrait {
                     ->unique(ignoreRecord: true)
                     ->label('المرض'),
             ])
-            ->label('هل أصيب أحد أفراد الأسرة بمرض أو حادث معين')->multiple()->columnSpan(2);
+            ->label(fn()=>self::ret_html('هل أصيب أحد أفراد الأسرة بمرض أو حادث معين'))
+            ->multiple()->columnSpan(2);
     }
     protected static function getSelect($name,$label=null): Select
     {
@@ -269,10 +270,10 @@ trait PublicTrait {
 
         return Select::make($name)
             ->relationship($option,$att)
-
             ->preload()
             ->searchable()
-            ->label($l)
+            ->label(fn()=>self::ret_html($l))
+
             ->inlineLabel()
             ->createOptionForm([
                         TextInput::make($att)

@@ -8,9 +8,13 @@ use App\Models\Center;
 use App\Models\Near;
 use App\Models\Street;
 use App\Models\Symptom;
+
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
@@ -20,6 +24,8 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Pages\Page;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\HtmlString;
 
 class createAutistic extends Page implements HasForms
 {
@@ -30,8 +36,7 @@ class createAutistic extends Page implements HasForms
     protected static ?string $navigationLabel='بيانات أولية';
     protected ?string $heading='بيانات أولية';
 
-public $city_id;
-public $street_id;
+    public ?array $data = [];
     public function mount(): void
     {
 
@@ -41,7 +46,7 @@ public $street_id;
     {
         return $form
             ->model(Autistic::class)
-
+            ->statePath('data')
             ->schema([
                Grid::make()
                    ->schema([
@@ -50,6 +55,7 @@ public $street_id;
                            Fieldset::make('الإسم')
                                ->schema([
                                    self::getInput('name',' ')
+
                                        ->inlineLabel(false)
                                        ->placeholder('الاسم الأول'),
                                    self::getInput('surname',' ')
@@ -60,11 +66,13 @@ public $street_id;
 
                            self::getRadio('sex','النوع'),
 
-                           self::getDate('birthday'),
+                           self::getDate('birthday')
+
+                               ,
                            self::getSelect('birth_city')
                            ,
 
-                           Fieldset::make('العنوان الحالي')
+                           Fieldset::make(fn()=>self::ret_html('العنوان الحالي','my-blue'))
                                ->schema([
                                    self::getSelect('city_id','المدينة')
                                        ->live()
@@ -95,8 +103,8 @@ public $street_id;
                                ])
                                ->columns(1)
                            ,
-                           self::getSelect('center_id')
-                               ->label('مركز التوحد (اذا كان  ملتحقا بمركز)')
+                           self::getSelect('center_id','مركز التوحد (اذا كان  ملتحقا بمركز)')
+
                                ->required(false)
                                ->options(fn (Get $get): Collection => Center::query()
                                    ->where('city_id', $get('city_id'))
@@ -107,7 +115,7 @@ public $street_id;
                                    return Center::create($data)->getKey();
                                }),
                            self::getSelectEnum('academic')->columnSpanFull(),
-                           Fieldset::make('الشخص الذي قام بتعبئة البيانات')
+                           Fieldset::make(fn()=>self::ret_html('الشخص الذي قام بتعبئة البيانات','my-blue'))
                                ->schema([
                                    self::getInput('person_name'),
                                    self::getSelectEnum('person_relationship'),
@@ -115,16 +123,27 @@ public $street_id;
                                    self::getSelect('person_city'),
                                    self::getDate('person_date'),
                                ])
-                               ->columns(1)
-                           ,
-                           self::getInput('symptoms','الاعراض التي تمت ملاحظتها')
-                           ,
+                               ->columns(1),
+                           self::getInput('symptoms','الاعراض التي تمت ملاحظتها'),
                            self::getSelectEnum('sym_year'),
                            FileUpload::make('image')
                                ->required()
                                ->label('صورة شخصية للحالة')
                                ->multiple()
                                ->directory('autistic-images'),
+                            Hidden::make('nat_id')
+                              ->default(Auth::user()->nat),
+                            Actions::make([
+                                Action::make('store')
+                                    ->requiresConfirmation()
+                                    ->action(function (){
+                                        autistic::create($this->form->getState());
+                                    })
+                                    ->label('تخزين'),
+                                Action::make('cancel')
+                                    ->label('خروج بدون تخزين')
+                            ])->alignCenter(),
+
 
                        ])
                    ])
