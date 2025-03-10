@@ -37,9 +37,13 @@ class createAutistic extends Page implements HasForms
     protected ?string $heading='بيانات أولية';
 
     public ?array $data = [];
+    public $aut;
     public function mount(): void
     {
-
+        $this->aut=autistic::where('nat_id',Auth::user()->nat)->first();
+        if ($this->aut)
+           $this->form->fill($this->aut->toArray());
+        else
         $this->form->fill();
     }
     public function form(Form $form): Form
@@ -137,7 +141,11 @@ class createAutistic extends Page implements HasForms
                                 Action::make('store')
                                     ->requiresConfirmation()
                                     ->action(function (){
-                                        autistic::create($this->form->getState());
+                                        if ($this->aut)
+                                          $this->aut->update($this->form->getState());
+
+                                        else
+                                            autistic::create($this->form->getState());
                                     })
                                     ->label('تخزين'),
                                 Action::make('cancel')
