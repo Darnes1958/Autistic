@@ -20,7 +20,7 @@ enum WhenSpeak: int implements HasLabel
 
     public function getLabel(): ?string
     {
-        return $this->name;
+        return str_replace('_', ' ',  $this->name);
     }
 
 

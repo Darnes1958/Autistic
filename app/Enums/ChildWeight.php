@@ -19,7 +19,17 @@ enum ChildWeight: int implements HasLabel
 
     public function getLabel(): ?string
     {
-        return $this->name;
+        return match ($this) {
+       self::اقل_من_كيلو => 'اقل من كيلو',
+            self::كيلو => 'كيلو',
+            self::اثنين_كيلو => 'اثنين كيل',
+            self::ثلاثة_كيلو => 'ثلاثة كيلو',
+            self::اربعة_كيلو => 'اربعة كيلو',
+            self::خمسة_كيلو => 'خمسة كيلو',
+            self::ستة_كيلو  => 'سته كيلو',
+            self::سبعة_كيلو  => 'سبعة كيلو',
+        };
+
     }
 
 

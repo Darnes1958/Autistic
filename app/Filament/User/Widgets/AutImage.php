@@ -11,6 +11,7 @@ class AutImage extends Widget
     public $image;
     protected static string $view = 'filament.user.widgets.aut-image';
     public function mount(): void{
-        $this->image=autistic::where('nat_id',Auth::user()->nat)->first()->image;
+        $aut=autistic::where('user_id',Auth::id())->first();
+      if ($aut)  $this->image=$aut->image; else $this->image=null;
     }
 }

@@ -72,8 +72,8 @@ trait PublicTrait {
     {
         $option=null;
         if ($name=='sex' ||  $name=='brother_sex') {$l='النوع';$option=Sex::class;}
-        if ($name=='is_father_life' || $name=='is_mother_life') {$l='علي قيد الحياة';$option=YesNo::class;}
-        if ($name=='is_parent_relationship') {$l='هل هناك صلة قرابة بين الاب والام ';$option=YesNo::class;}
+
+        if ($name=='is_parent_relationship') {$l='هل هناك صلة قرابة بين الاب والام ? ';$option=YesNo::class;}
 
         if ($name=='brother_health' ) {$l='الحالة الصحية';$option=Health::class;}
         if ($name=='house_type' ) {$l='نوع السكن';$option=HouseType::class;}
@@ -81,14 +81,14 @@ trait PublicTrait {
         if ($name=='house_health' ) {$l='الحالة الصحية للسكن';$option=HouseHealth::class;}
         if ($name=='house_old' ) {$l='حالة السكن';$option=HouseOld::class;}
         if ($name=='house_own' ) {$l='ملكية السكن';$option=HouseOwn::class;}
-        if ($name=='is_house_good' ) {$l='هل تتوفر داخل السكن متطلبات الحياة الأساسية';$option=YesNo::class;}
-        if ($name=='is_room_single' ) {$l='هل حجرة الطقل فردية';$option=YesNo::class;}
-        if ($name=='how_past' ) {$l='كيف كان وضع الطفل في بداية ظهور الاعراض';$option=How_past::class;}
+        if ($name=='is_house_good' ) {$l='هل تتوفر داخل السكن متطلبات الحياة الأساسية ?';$option=YesNo::class;}
+        if ($name=='is_room_single' ) {$l='هل حجرة الحالة فردية ?';$option=YesNo::class;}
+        if ($name=='how_past' ) {$l='كيف كان وضع الطفل في بداية ظهور الاعراض ?';$option=How_past::class;}
 
         if ($name=='mother_p_d_health' ) {$l='حالة الام الصحية اثناء الحمل';$option=Health::class;}
 
-        if ($name=='is_breastfeeding_natural' ) {$l='هل كانت الرضاعة طبيعية';$option=BreastfeedingNatural::class;}
-        if ($name=='is_child_food_good' ) {$l='هل كانت تغذية الطفل جيدة';$option=Food::class;}
+        if ($name=='is_breastfeeding_natural' ) {$l='هل كانت الرضاعة طبيعية ?';$option=BreastfeedingNatural::class;}
+        if ($name=='is_child_food_good' ) {$l='هل كانت تغذية الطفل جيدة ?';$option=Food::class;}
         if ($name=='sleep_habit' ) {$l='ما عاداته فالنوم';$option=Sleap::class;}
 
         if ($label) $l=$label;
@@ -211,7 +211,7 @@ trait PublicTrait {
         if (!$option) $option=YesNo::class;
         return Select::make($name)
             ->options($option)
-            ->default(1)
+
             ->preload()
             ->searchable()
             ->label(fn()=>self::ret_html($l))
@@ -245,7 +245,7 @@ trait PublicTrait {
                     ->label('المرض'),
             ])
             ->label(fn()=>self::ret_html('هل أصيب أحد أفراد الأسرة بمرض أو حادث معين'))
-            ->multiple()->columnSpan(2);
+            ->multiple();
     }
     protected static function getSelect($name,$label=null): Select
     {

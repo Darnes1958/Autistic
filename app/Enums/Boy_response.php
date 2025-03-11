@@ -14,7 +14,13 @@ enum Boy_response: int implements HasLabel,HasColor
 
   public function getLabel(): ?string
   {
-    return $this->name;
+      return match ($this) {
+          self::مطيع=>'مطيع',
+          self::عنيد=>'عنيد',
+          self::غير_مطيع=>'غير مطيع',
+
+      };
+
   }
   public function getColor(): string | array | null
   {

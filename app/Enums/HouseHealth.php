@@ -16,7 +16,10 @@ enum HouseHealth: int implements HasLabel,HasColor
 
   public function getLabel(): ?string
   {
-    return $this->name;
+    return match ($this) {
+      self::صحي  =>'صحي',
+        self::غير_صحي=>'غير صحي',
+    };
   }
   public function getColor(): string | array | null
   {

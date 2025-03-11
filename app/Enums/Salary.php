@@ -18,7 +18,7 @@ enum Salary: int implements HasLabel,HasColor
 
   public function getLabel(): ?string
   {
-    return $this->name;
+      return str_replace('_', ' ',  $this->name);
   }
   public function getColor(): string | array | null
   {

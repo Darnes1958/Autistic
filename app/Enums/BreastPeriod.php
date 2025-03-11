@@ -14,7 +14,11 @@ enum BreastPeriod: int implements HasLabel
 
     public function getLabel(): ?string
     {
-        return $this->name;
+        return match ($this) {
+          self::اقل_من_سنه  =>'اقل من سنه',
+        self::بعد_سنه  =>'بعد سنه',
+        self::بعد_سنتين  =>'بعد سنتين',
+        };
     }
 
 

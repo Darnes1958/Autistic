@@ -16,7 +16,11 @@ enum BreastfeedingNatural: int implements HasLabel,HasColor
 
   public function getLabel(): ?string
   {
-    return $this->name;
+    return match ($this) {
+      self::طبيعية =>'طبيعية',
+        self::اصطناعية=>'اصطناعية',
+        self::الاثنان_معاً=>'الإثنان معاً',
+    };
   }
   public function getColor(): string | array | null
   {

@@ -13,6 +13,20 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
     use HasRoles;
 
+    protected $appends = ['has_aut','has_fam','has_grow','has_boy'];
+    public function getHasAutAttribute(){
+        return autistic::where('user_id',$this->id)->first();
+    }
+    public function getHasFamAttribute(){
+        return Family::where('user_id',$this->id)->first();
+    }
+    public function getHasGrowAttribute(){
+        return Growth::where('user_id',$this->id)->first();
+    }
+    public function getHasBoyAttribute(){
+        return Boy::where('user_id',$this->id)->first();
+    }
+
     /**
      * The attributes that are mass assignable.
      *

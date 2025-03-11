@@ -16,12 +16,12 @@ enum With_people: int implements HasLabel,HasColor
 
   public function getLabel(): ?string
   {
-    return $this->name;
+      return str_replace('_', ' ',  $this->name);
   }
   public function getColor(): string | array | null
   {
     return match ($this) {
-      self::متصل_بفاغلية => 'success',
+      self::متصل_بفاعلية => 'success',
       self::متصل_في_بعض_الأحيان => 'info',
         self::غير_متصل => 'gray',
     };
