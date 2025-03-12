@@ -63,7 +63,7 @@ class createAutistic extends Page implements HasForms
         if ($this->aut)
            $this->form->fill($this->aut->toArray());
         else
-        $this->form->fill();
+        $this->form->fill(['user_id'=>Auth::id()]);
     }
     public function form(Form $form): Form
     {
@@ -154,8 +154,8 @@ class createAutistic extends Page implements HasForms
                                ->label('صورة شخصية للحالة')
                                ->multiple()
                                ->directory('autistic-images'),
-                            Hidden::make('user_id')
-                              ->default(Auth::id()),
+                            Hidden::make('user_id'),
+
                             Actions::make([
                                 Action::make('store')
                                     ->requiresConfirmation()

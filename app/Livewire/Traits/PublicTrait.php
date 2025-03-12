@@ -124,7 +124,7 @@ trait PublicTrait {
         if ($name=='person_name') $l='الاسم بالكامل';
         if ($name=='person_phone') $l='هاتف';
         if ($name=='father_name') $l='اسم الأب';
-        if ($name=='father_job') $l='مهنة الوالد';
+        if ($name=='father_job') $l='مهنة الاب';
         if ($name=='father_dead_reason') $l='سبب الوفاة';
         if ($name=='mother_name') $l='اسم الام';
         if ($name=='mother_job') $l='مهنة الام';
@@ -244,7 +244,7 @@ trait PublicTrait {
                     ->unique(ignoreRecord: true)
                     ->label('المرض'),
             ])
-            ->label(fn()=>self::ret_html('هل أصيب أحد أفراد الأسرة بمرض أو حادث معين'))
+            ->label(fn()=>self::ret_html('أمراض من القائمة'))
             ->multiple();
     }
     protected static function getSelect($name,$label=null): Select

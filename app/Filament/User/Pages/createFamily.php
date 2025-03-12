@@ -67,8 +67,8 @@ class createFamily extends Page implements HasForms
         {
 
             if (Auth::user()->has_aut)
-            $this->form->fill(['father_name'=>Auth::user()->has_aut->surname]);
-            else $this->form->fill();
+            $this->form->fill(['father_name'=>Auth::user()->has_aut->surname,'user_id'=>Auth::id()]);
+            else $this->form->fill(['user_id'=>Auth::id()]);
         }
 
     }
@@ -90,7 +90,13 @@ class createFamily extends Page implements HasForms
                                         self::getSelectEnum('father_academic'),
                                         self::getInput('father_job'),
                                         self::getRadio('is_father_life','هل الأب علي قيد الحياة ؟')
-                                        ->default(null),
+                                            ->afterStateUpdated(function ($state,Set $set){
+
+                                                if ($state) {
+                                                    $set('father_dead_reason',null);
+                                                    $set('father_dead_date',null);
+                                                }
+                                            }),
                                         self::getInput('father_dead_reason')
                                             ->visible(function (Get $get){return $get('is_father_life')==0 && $get('is_father_life')!=null;}),
                                         self::getDate('father_dead_date')
@@ -101,10 +107,15 @@ class createFamily extends Page implements HasForms
                                         self::getInput('mother_name'),
                                         self::getSelect('mother_city'),
                                         self::getDate('mother_date'),
-                                        self::getSelectEnum('mother_academic')
-                                           ,
+                                        self::getSelectEnum('mother_academic'),
                                         self::getInput('mother_job'),
-                                        self::getRadio('is_mother_life','هل الأم علي قيد الحياة ؟'),
+                                        self::getRadio('is_mother_life','هل الأم علي قيد الحياة ؟')
+                                            ->afterStateUpdated(function ($state,Set $set){
+                                                if ($state) {
+                                                    $set('mother_dead_reason',null);
+                                                    $set('mother_dead_date',null);
+                                                }
+                                            }),
                                         self::getInput('mother_dead_reason')
                                             ->visible(function (Get $get){return $get('is_mother_life')!=null && $get('is_mother_life')==0;}),
                                         self::getDate('mother_dead_date')
@@ -116,16 +127,37 @@ class createFamily extends Page implements HasForms
                                     ])->columns(1),
                                 Fieldset::make('هل تعرض أحد الوالدين لامراض مزمنة او اصابات اخري ?')
                                     ->schema([
-                                        self::getRadio('father_chronic_diseases','الأب'),
-                                        self::getRadio('mother_chronic_diseases','الام'),
+                                        self::getRadio('is_father_chronic_diseases','الأب')
+                                         ->afterStateUpdated(function ($state,Set $set){
+                                             if (!$state) $set('father_chronic_diseases',null);
+                                         }),
+                                        self::getInput('father_chronic_diseases','أمراض الأب المزمنة')
+                                            ->visible(function (Get $get){return $get('is_father_chronic_diseases') ;}),
+
+                                        self::getRadio('is_mother_chronic_diseases','الأم')
+                                            ->afterStateUpdated(function ($state,Set $set){
+                                                if (!$state) $set('mother_chronic_diseases',null);
+                                            }),
+                                        self::getInput('mother_chronic_diseases','أمراض الأم المزمنة')
+                                            ->visible(function (Get $get){return $get('is_mother_chronic_diseases') ;}),
+
                                     ])->columns(1),
                                 self::getRadio('is_parent_relationship'),
                                 self::getSelect('father_blood_type','فصيلة دم الأب'),
                                 self::getSelect('mother_blood_type','فصيلة دم الأم'),
                                 self::getSelectEnum('parent_relationship_nature'),
 
+                                self::getInput('brothers_count','عدد الإخوة والأخوات')->numeric()->minValue(0),
+                                self::getInput('male_count','عدد الذكور')->numeric()->minValue(0),
+                                self::getInput('female_count','عدد الإناث')->numeric()->minValue(0),
+                                self::getInput('ser_in_brothers','تسلل الحالة في الأسرة')->numeric()->minValue(1),
+                                Fieldset::make('هل أصيب أحد أفراد الأسرة بمرض أو حادث معين ؟')
+                                    ->schema([
+                                        self::getDiseaseSelect(),
+                                        self::getInput('other_diseases','أمراض أخري')->required(false)
+                                    ])
+                                    ->columns(1),
 
-                                self::getDiseaseSelect(),
                                 self::getSelectEnum('family_salary'),
                                 self::getSelectEnum('family_sources'),
                                 self::getRadio('house_type'),
@@ -136,15 +168,35 @@ class createFamily extends Page implements HasForms
                                 self::getRadio('is_house_good'),
                                 self::getInput('house_rooms','عدد الحجرات')->numeric()->minValue(1),
                                 self::getRadio('is_room_single'),
+                                self::getRadio('has_salary','هل يتقاضي الحالة معاش اساسي ؟')
+                                    ->afterStateUpdated(function ($state,Set $set){
+                                        if ($state==1) $set('why_not_has_salary',null);
+                                    }),
+                                self::getInput('why_not_has_salary','ما هي الأسباب ؟')
+                                    ->visible(function (Get $get){return $get('has_salary')!=1 &&  $get('has_salary')!=null;}),
                                 Textarea::make('other_family_notes')
                                     ->label('معلومات أخري'),
-                                Hidden::make('user_id')
-                                    ->default(Auth::id()),
+                                Hidden::make('user_id'),
+
+                                Actions::make([
+                                    Action::make('store')
+                                        ->requiresConfirmation()
+                                        ->action(function (){
+                                            if ($this->fam)
+                                                $this->fam->update($this->form->getState());
+
+                                            else
+                                                Family::create($this->form->getState());
+                                        })
+                                        ->label('تخزين'),
+                                    Action::make('cancel')
+                                        ->label('خروج بدون تخزين')
+                                ])->alignCenter(),
                             ])->columns(1)
                     ])
                     ->columns(1)
-                    ->columnSpan(1)
-            ])->columns(3) ;
+                    ->columnSpan(2)
+            ])->columns(5) ;
 
     }
 }
