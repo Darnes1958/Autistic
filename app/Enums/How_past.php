@@ -5,31 +5,33 @@ use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasColor;
 
-enum How_past: int implements HasLabel,HasColor,HasIcon
+enum How_past: int implements HasLabel
 {
-  case ظهرت_بعض_الصعوبات = 0;
-  case مثل_بقية_الاطفال_الاخرين = 1;
+  case كان_نموه_طبيعيا_ثم_بدأ_فالتراجع = 0;
+  case كان_لديه_تأخر_ملحوظ_منذ_الولادة_في_التطور_الحركي_أو_اللغوي = 1;
+  case واجه_صعوبة_في_التواصل_البصري_والتفاعل_مع_الآخرين_منذ_الصغر = 2;
+  case كان_لديه_حساسية_شديدة_للأصوات_أو_اللمس_أو_الروائح_منذ_الصغر  = 3;
+  case كان_يلعب_بطريقة_غير_نمطية_مثل_ترتيب_الأشياء_بدلا_من_اللعب_بها  = 4;
+  case كان_مرتبطا_بروتين_محدد_ويغضب_عند_تغييره  = 5;
+  case واجه_صعوبة_في_فهم_التعليمات_أو_التعبير_عن_احتياجاته  =6;
+  case كان_يفضل_العزلة_ولا_يتفاعل_مع_الأطفال_الآخرين  =7;
+case كان_لديه_نشاط_مفرط_أو_خمول_غير_طبيعي_مقارنة_بأقرانه  =8;
+case لم_يُلاحظ_أي_اختلاف_واضح_حتى_تم_التشخيص =9;
+
+    case أخري =10;
+
+
+
+
+
+
 
 
   public function getLabel(): ?string
   {
-      return str_replace('_', ' ',  $this->name);
+      if ($this->name=='كان_نموه_طبيعيا_ثم_بدأ_فالتراجع') return 'كان نموه طبيعيا ثم بدأ في التراجع (مثلاً: كان يتحدث كلمات قليلة ثم توقف عن الكلام)';
+      else return str_replace('_', ' ',  $this->name);
   }
-  public function getColor(): string | array | null
-  {
-    return match ($this) {
-      self::ظهرت_بعض_الصعوبات => 'info',
-      self::مثل_بقية_الاطفال_الاخرين => 'success',
-    };
-  }
-
-    public function getIcon(): ?string
-    {
-        return match ($this) {
-            self::ظهرت_بعض_الصعوبات => 'heroicon-m-no-symbol',
-            self::مثل_بقية_الاطفال_الاخرين => 'heroicon-m-check',
-        };
-    }
 
 
 }

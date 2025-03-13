@@ -165,6 +165,8 @@ class createAutistic extends Page implements HasForms
 
                                         else
                                             autistic::create($this->form->getState());
+
+                                        $this->redirect(Dashboard::getUrl());
                                     })
                                     ->label('تخزين'),
                                 Action::make('cancel')
@@ -173,6 +175,7 @@ class createAutistic extends Page implements HasForms
 
 
                        ])
+                       ->extraAttributes(['class' => 'greanbackground'])
                    ])
                    ->columns(1)
                    ->columnSpan(1)

@@ -187,12 +187,17 @@ class createFamily extends Page implements HasForms
 
                                             else
                                                 Family::create($this->form->getState());
+
+                                            $this->redirect(Dashboard::getUrl());
+
                                         })
                                         ->label('تخزين'),
                                     Action::make('cancel')
                                         ->label('خروج بدون تخزين')
                                 ])->alignCenter(),
-                            ])->columns(1)
+                            ])
+                            ->columns(1)
+                            ->extraAttributes(['class' => 'greanbackground'])
                     ])
                     ->columns(1)
                     ->columnSpan(2)

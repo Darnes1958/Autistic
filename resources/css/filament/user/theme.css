@@ -24,9 +24,10 @@
 
 .fi-fo-wizard {
     background-color: #B9C8BC  ;}
-.fi-section {
+
+.greanbackground
+{
     background-color: #B9C8BC  ;
     @apply text-2xl !important;
-
 }
 

@@ -43,6 +43,7 @@ use App\Models\Disease;
 use App\Models\Street;
 use Carbon\Carbon;
 use DateTime;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Radio;
@@ -67,6 +68,20 @@ trait PublicTrait {
     {
         return  new HtmlString('<span class=" text-lg '.$c.'">'.$text.'</span>');
 
+
+    }
+    protected static function getCheck($name,$label=null): CheckboxList
+    {
+        $option=null;
+        if ($name=='how_past' ) {$l='كيف كان وضع الطفل في بداية ظهور الاعراض ?';$option=How_past::class;}
+
+        if ($label) $l=$label;
+
+        return  CheckboxList::make($name)
+            ->options($option)
+            ->required()
+            ->label(fn()=>self::ret_html($l));
+
     }
     protected static function getRadio($name,$label=null): Radio
     {
@@ -83,7 +98,7 @@ trait PublicTrait {
         if ($name=='house_own' ) {$l='ملكية السكن';$option=HouseOwn::class;}
         if ($name=='is_house_good' ) {$l='هل تتوفر داخل السكن متطلبات الحياة الأساسية ?';$option=YesNo::class;}
         if ($name=='is_room_single' ) {$l='هل حجرة الحالة فردية ?';$option=YesNo::class;}
-        if ($name=='how_past' ) {$l='كيف كان وضع الطفل في بداية ظهور الاعراض ?';$option=How_past::class;}
+
 
         if ($name=='mother_p_d_health' ) {$l='حالة الام الصحية اثناء الحمل';$option=Health::class;}
 
