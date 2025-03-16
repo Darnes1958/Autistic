@@ -8,18 +8,18 @@ use Filament\Support\Contracts\HasColor;
 enum Health: int implements HasLabel,HasColor
 {
   case جيدة = 1;
-  case سيئة = 0;
+  case غير_جيدة = 0;
 
 
   public function getLabel(): ?string
   {
-    return $this->name;
+    return str_replace('_',' ',$this->name) ;
   }
   public function getColor(): string | array | null
   {
     return match ($this) {
       self::جيدة => 'success',
-      self::سيئة => 'danger',
+      self::غير_جيدة => 'danger',
     };
   }
 

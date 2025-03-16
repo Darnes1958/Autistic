@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Boy extends Model
 {
+    public function User()
+    {
+        return $this->belongsTo(User::class);
+    }
     protected $casts=[
         'how_past'=>'array'
     ];

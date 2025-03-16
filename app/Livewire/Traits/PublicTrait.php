@@ -27,8 +27,15 @@ use App\Enums\Sex;
 use App\Enums\Sleap;
 use App\Enums\Sym_year;
 
+use App\Enums\Symptoms\BehavioralAndEmotional;
+use App\Enums\Symptoms\Behaviors;
+use App\Enums\Symptoms\Sensory;
+use App\Enums\Symptoms\SocialCommunication;
+use App\Enums\TherapeuticDetails;
+use App\Enums\Weekly;
 use App\Enums\WhenSpeak;
 use App\Enums\WherePregnancy;
+use App\Enums\WhyMedicine;
 use App\Enums\With_language;
 use App\Enums\With_mind;
 use App\Enums\With_motion;
@@ -36,6 +43,7 @@ use App\Enums\With_people;
 use App\Enums\With_personal;
 use App\Enums\Year;
 use App\Enums\YearAndNot;
+use App\Enums\Years\CrawlYear;
 use App\Enums\YesNo;
 use App\Models\City;
 use App\Models\Disease;
@@ -64,16 +72,24 @@ use Symfony\Component\Console\Input\Input;
 
 trait PublicTrait {
 
-    protected static function  ret_html($text,$c='text-black')
+    protected static function  ret_html($text,$c='text-lg text-black')
     {
-        return  new HtmlString('<span class=" text-lg '.$c.'">'.$text.'</span>');
-
-
+        return  new HtmlString('<span class="   '.$c.'">'.$text.'</span>');
     }
     protected static function getCheck($name,$label=null): CheckboxList
     {
         $option=null;
-        if ($name=='how_past' ) {$l='كيف كان وضع الطفل في بداية ظهور الاعراض ?';$option=How_past::class;}
+
+        if ($name=='how_past' ) {$l='كيف كان وضع الحالة في بداية ظهور الاعراض ?';$option=How_past::class;}
+        if ($name=='social_communication' ) {$option=SocialCommunication::class;}
+        if ($name=='behaviors' ) {$option=Behaviors::class;}
+        if ($name=='sensory' ) {$option=Sensory::class;}
+        if ($name=='behavioral_and_emotional' ) {$option=BehavioralAndEmotional::class;}
+        if ($name=='is_play_with_other') {$l='هل يلعب';$option=\App\Enums\Play::class;}
+
+        if ($name=='why_take_medicine' ) {$option=WhyMedicine::class;}
+        if ($name=='therapeutic_details' ) {$option=TherapeuticDetails::class;}
+
 
         if ($label) $l=$label;
 
@@ -98,13 +114,11 @@ trait PublicTrait {
         if ($name=='house_own' ) {$l='ملكية السكن';$option=HouseOwn::class;}
         if ($name=='is_house_good' ) {$l='هل تتوفر داخل السكن متطلبات الحياة الأساسية ?';$option=YesNo::class;}
         if ($name=='is_room_single' ) {$l='هل حجرة الحالة فردية ?';$option=YesNo::class;}
-
-
         if ($name=='mother_p_d_health' ) {$l='حالة الام الصحية اثناء الحمل';$option=Health::class;}
-
         if ($name=='is_breastfeeding_natural' ) {$l='هل كانت الرضاعة طبيعية ?';$option=BreastfeedingNatural::class;}
-        if ($name=='is_child_food_good' ) {$l='هل كانت تغذية الطفل جيدة ?';$option=Food::class;}
-        if ($name=='sleep_habit' ) {$l='ما عاداته فالنوم';$option=Sleap::class;}
+        if ($name=='is_child_food_good' ) {$l='كيف كانت تغذية الحالة ?';$option=Food::class;}
+        if ($name=='sleep_habit' ) {$l='ما عادات الحالة في النوم ؟';$option=Sleap::class;}
+        if ($name=='weekly_therapeutic' ) {$option=Weekly::class;}
 
         if ($label) $l=$label;
         if (!$option) $option=YesNo::class;
@@ -207,20 +221,20 @@ trait PublicTrait {
         if ($name=='person_relationship') {$l='علاقته بالحالة';$option=Person_relationship::class;}
         if ($name=='family_salary') {$l='الدخل الشهري';$option=\App\Enums\Salary::class;}
         if ($name=='family_sources') {$l='مصادر دخل الأسرة';$option=\App\Enums\Sources::class;}
-        if ($name=='is_play_with_other') {$l='هل يلعب';$option=\App\Enums\Play::class;}
+
         if ($name=='child_weight' ) {$l='وزن الحالة اثناء الولادة';$option=ChildWeight::class;}
         if ($name=='breastfeeding_period' ) {$l='مدة الرضاعة';$option=BreastPeriod::class;}
-        if ($name=='when_can_set' ) {$l='متي استطاع الجلوس';$option=Year::class;}
-        if ($name=='teeth_appear' ) {$l='متي بدأت الاسنان بالظهور';$option=Year::class;}
-        if ($name=='could_crawl' ) {$l='متي استطاع الحبو (الزحف';$option=Year::class;}
-        if ($name=='could_stand' ) {$l='متي استطاع الوقوف';$option=Year::class;}
-        if ($name=='could_walk' ) {$l='متي استطاع المشي';$option=Year::class;}
-        if ($name=='when_try_speak' ) {$l='متي بدأ محاولة النطق';$option=WhenSpeak::class;}
-        if ($name=='when_speak' ) {$l='متي استطاع التحدث';$option=WhenSpeak::class;}
-        if ($name=='when_open_door' ) {$l='متي استطاع فتح الابواب';$option=YearAndNot::class;}
-        if ($name=='when_set_export' ) {$l='متي ضبط عمليات الاخراج';$option=YearAndNot::class;}
-        if ($name=='when_wear_shoes' ) {$l='متي استطاع ان يلبس الحذاء';$option=YearAndNot::class;}
-        if ($name=='when_use_spoon' ) {$l='متي استطاع استخدام الملعقة او الكوب';$option=YearAndNot::class;}
+        if ($name=='when_can_set' ) {$l='متى استطاع الجلوس';$option=Year::class;}
+        if ($name=='teeth_appear' ) {$l='متى بدأت الاسنان بالظهور';$option=Year::class;}
+        if ($name=='could_crawl' ) {$l='متى استطاع الحبو (الزحف)';$option=CrawlYear::class;}
+        if ($name=='could_stand' ) {$l='متى استطاع الوقوف';$option=Year::class;}
+        if ($name=='could_walk' ) {$l='متى استطاع المشي';$option=Year::class;}
+        if ($name=='when_try_speak' ) {$l='متى بدأت محاولة النطق';$option=WhenSpeak::class;}
+        if ($name=='when_speak' ) {$l='متى استطاع التحدث';$option=WhenSpeak::class;}
+        if ($name=='when_open_door' ) {$l='متى استطاع فتح الابواب';$option=YearAndNot::class;}
+        if ($name=='when_set_export' ) {$l='متى ضبط عمليات الاخراج';$option=YearAndNot::class;}
+        if ($name=='when_wear_shoes' ) {$l='متى استطاع ان يلبس الحذاء';$option=YearAndNot::class;}
+        if ($name=='when_use_spoon' ) {$l='متى استطاع استخدام الملعقة و الكوب';$option=YearAndNot::class;}
 
         if ($label) $l=$label;
         if (!$option) $option=YesNo::class;

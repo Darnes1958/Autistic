@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Responses;
+use App\Filament\User\Pages\Dashboard;
 use Filament\Facades\Filament;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -13,11 +14,9 @@ class LoginResponse extends \Filament\Http\Responses\Auth\LoginResponse
 
 
 
-    if (Auth::user()->is_admin)
-        return redirect(Filament::getPanel('admin')->getPath());
-    if (!Auth::user()->is_admin)
-        return redirect(Filament::getPanel('user')->getPath());
-
+      if (auth()->user()->is_admin) {
+          return redirect()->to(Dashboard::getUrl(panel: 'admin'));
+      }
 
 
             return parent::toResponse($request);

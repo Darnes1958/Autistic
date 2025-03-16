@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Enums;
+namespace App\Enums\Years;
 
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 
-enum Year: int implements HasLabel
+enum SetYear: int implements HasLabel
 {
     case ما_قبل_سنه = 1;
     case بعد_سنه = 2;

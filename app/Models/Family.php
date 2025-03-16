@@ -7,13 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Family extends Model
 {
+
+    public function User()
+    {
+        return $this->belongsTo(User::class);
+    }
     protected $casts = [
+
         'family_disease' => 'array',
     ];
-    public function Autistic()
-    {
-        return $this->belongsTo(Autistic::class);
-    }
+
     public function City()
     {
         return $this->belongsTo(City::class);

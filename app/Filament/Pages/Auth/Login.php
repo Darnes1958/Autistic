@@ -17,6 +17,8 @@ use Illuminate\Validation\ValidationException;
 
 class Login extends \Filament\Pages\Auth\Login
 {
+
+
     protected function getForms(): array
     {
         return [

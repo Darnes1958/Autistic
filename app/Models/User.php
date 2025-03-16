@@ -6,14 +6,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable;
     use HasRoles;
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'admin') {
+            return Auth::user()->is_employee;
+        }
 
-    protected $appends = ['has_aut','has_fam','has_grow','has_boy'];
+
+        return true;
+    }
+
+    protected $appends = ['has_aut','has_fam','has_grow','has_boy','has_med'];
     public function getHasAutAttribute(){
         return autistic::where('user_id',$this->id)->first();
     }
@@ -25,6 +37,9 @@ class User extends Authenticatable
     }
     public function getHasBoyAttribute(){
         return Boy::where('user_id',$this->id)->first();
+    }
+    public function getHasMedAttribute(){
+        return Medicine::where('user_id',$this->id)->first();
     }
 
     /**
@@ -58,6 +73,27 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_employee' => 'boolean',
+            'is_admin' => 'boolean',
         ];
     }
+
+    public function Autistic(){
+        return $this->hasOne(autistic::class);
+    }
+
+    public function Family(){
+        return $this->hasOne(Family::class);
+    }
+
+    public function Boy(){
+        return $this->hasOne(Boy::class);
+    }
+    public function Growth(){
+        return $this->hasOne(Growth::class);
+    }
+    public function Medicine(){
+        return $this->hasOne(Medicine::class);
+    }
+
 }

@@ -8,7 +8,7 @@ use Filament\Support\Contracts\HasLabel;
 enum YearAndNot: int implements HasLabel
 {
 
-    case فالعام_الأول = 1;
+    case العام_الأول = 1;
     case العام_الثاني = 2;
     case العام_الثالث = 3;
     case العام_الرابع = 4;

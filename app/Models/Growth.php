@@ -8,8 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Growth extends Model
 {
+    public function User()
+    {
+        return $this->belongsTo(User::class);
+    }
     protected $casts = [
         'is_play_with_other' => 'array',
+        'social_communication' => 'array',
+        'behaviors' => 'array',
+        'sensory' => 'array',
+        'behavioral_and_emotional' => 'array',
+
         'mother_p_d_health' => Health::class,
         'is_pregnancy_planned' => YesNo::class,
         'is_p_d_followed' => YesNo::class,
@@ -26,12 +35,6 @@ class Growth extends Model
     {
         return $this->hasMany(GrowDifficult::class);
     }
-    public function GrowMedicine()
-    {
-        return $this->hasMany(GrowMedicine::class);
-    }
-    public function Autistic()
-    {
-        return $this->belongsTo(Autistic::class);
-    }
+
+
 }

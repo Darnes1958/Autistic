@@ -3,7 +3,8 @@
 namespace App\Providers;
 
 
-use Filament\Http\Responses\Auth\Contracts\LoginResponse;
+
+
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,11 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
+    public $singletons = [
+        \Filament\Http\Responses\Auth\Contracts\LoginResponse::class => \App\Http\Responses\LoginResponse::class,
+        \Filament\Http\Responses\Auth\Contracts\LogoutResponse::class => \App\Http\Responses\LogoutResponse::class,
+    ];
+
     public function register(): void
     {
         $this->app->singleton(

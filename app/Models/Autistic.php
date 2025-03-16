@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class autistic extends Model
+class Autistic extends Model
 {
     protected $appends = ['full_name'];
     public function getFullNameAttribute(){
@@ -13,17 +13,11 @@ class autistic extends Model
     protected $casts = [
         'image' => 'array',
     ];
-    public function Family(){
-        return $this->hasOne(Family::class);
-    }
 
-    public function Boy(){
-    return $this->hasOne(Boy::class);
-    }
-    public function Growth(){
-        return $this->hasOne(Growth::class);
-    }
-
+public function User()
+{
+    return $this->belongsTo(User::class);
+}
     public function City()
    {
        return $this->belongsTo(City::class);

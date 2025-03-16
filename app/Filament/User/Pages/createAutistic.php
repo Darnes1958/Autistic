@@ -59,7 +59,7 @@ class createAutistic extends Page implements HasForms
     public $aut;
     public function mount(): void
     {
-        $this->aut=autistic::where('user_id',Auth::id())->first();
+        $this->aut=Autistic::where('user_id',Auth::id())->first();
         if ($this->aut)
            $this->form->fill($this->aut->toArray());
         else
@@ -164,7 +164,7 @@ class createAutistic extends Page implements HasForms
                                           $this->aut->update($this->form->getState());
 
                                         else
-                                            autistic::create($this->form->getState());
+                                            Autistic::create($this->form->getState());
 
                                         $this->redirect(Dashboard::getUrl());
                                     })
