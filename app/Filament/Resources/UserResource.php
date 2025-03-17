@@ -30,6 +30,10 @@ class UserResource extends Resource
     protected static ?string $navigationLabel='ادخال وتعديل وعرض الحالات';
 
 
+ public static function canAccess(): bool
+ {
+     return auth()->user()->is_admin;
+ }
 
     public static function form(Form $form): Form
     {
