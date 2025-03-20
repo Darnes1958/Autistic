@@ -78,7 +78,6 @@ class createAutistic extends Page implements HasForms
                            Fieldset::make('الإسم')
                                ->schema([
                                    self::getInput('name',' ')
-
                                        ->inlineLabel(false)
                                        ->placeholder('الاسم الأول'),
                                    self::getInput('surname',' ')
@@ -88,7 +87,6 @@ class createAutistic extends Page implements HasForms
                                ->columns(3),
 
                            self::getRadio('sex','النوع'),
-
                            self::getDate('birthday')
 
                                ,

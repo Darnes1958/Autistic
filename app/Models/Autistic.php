@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Sex;
 use Illuminate\Database\Eloquent\Model;
 
 class Autistic extends Model
@@ -12,6 +13,7 @@ class Autistic extends Model
     }
     protected $casts = [
         'image' => 'array',
+        'sex' => Sex::class,
     ];
 
 public function User()

@@ -27,19 +27,19 @@ class User extends Authenticatable implements FilamentUser
 
     protected $appends = ['has_aut','has_fam','has_grow','has_boy','has_med'];
     public function getHasAutAttribute(){
-        return autistic::where('user_id',$this->id)->first();
+        return autistic::where('user_id',$this->id)->exists();
     }
     public function getHasFamAttribute(){
-        return Family::where('user_id',$this->id)->first();
+        return Family::where('user_id',$this->id)->exists();
     }
     public function getHasGrowAttribute(){
-        return Growth::where('user_id',$this->id)->first();
+        return Growth::where('user_id',$this->id)->exists();
     }
     public function getHasBoyAttribute(){
-        return Boy::where('user_id',$this->id)->first();
+        return Boy::where('user_id',$this->id)->exists();
     }
     public function getHasMedAttribute(){
-        return Medicine::where('user_id',$this->id)->first();
+        return Medicine::where('user_id',$this->id)->exists();
     }
 
     /**
@@ -75,6 +75,11 @@ class User extends Authenticatable implements FilamentUser
             'password' => 'hashed',
             'is_employee' => 'boolean',
             'is_admin' => 'boolean',
+            'has_aut' => 'boolean',
+            'has_fam' => 'boolean',
+            'has_boy' => 'boolean',
+            'has_grow' => 'boolean',
+            'has_med' => 'boolean',
         ];
     }
 

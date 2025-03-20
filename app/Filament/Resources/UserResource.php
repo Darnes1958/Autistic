@@ -5,10 +5,15 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 
+use App\Models\Autistic;
 use App\Models\User;
 use Filament\Actions\CreateAction;
+use Filament\Actions\StaticAction;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -66,8 +71,67 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('nat')->label('الرقم الوطني'),
                 TextColumn::make('name')->label('الاسم'),
-                TextColumn::make('created_at'),
-                TextColumn::make('updated_at'),
+                Tables\Columns\IconColumn::make('has_aut')
+                    ->boolean()
+                    ->action(
+                        Tables\Actions\Action::make('aut_info')
+                            ->label('البيانات الأولية')
+                            ->modalSubmitAction(false)
+                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+
+                            ->infolist([
+                            Section::make()
+                             ->schema([
+                               TextEntry::make('Autistic.name')
+
+                                   ->label('الإسم'),
+                               TextEntry::make('Autistic.surname')
+                                   ->label('إسم الأب'),
+                               TextEntry::make('Autistic.sex')
+                                   ->label('النوع'),
+                               TextEntry::make('Autistic.birthday')
+                                   ->label('تاريخ الميلاد'),
+                               TextEntry::make('Autistic.BirthCity.name')
+                                   ->label('مكان الميلاد'),
+                                 Fieldset::make('العنوان')
+                                    ->schema([
+                                        TextEntry::make('Autistic.City.name')
+                                            ->label('المدينه'),
+                                        TextEntry::make('Autistic.Street.name')
+                                            ->label('الشارع'),
+                                        TextEntry::make('Autistic.Near.name')
+                                            ->label('اقرب نقطة دالة')
+
+                                    ])->columns(3),
+                                 TextEntry::make('Autistic.Center.name')
+                                     ->label('مركز التوحد'),
+                                 Fieldset::make('الشخص الذي قام بتعبئة البيانات')
+                                     ->schema([
+                                         TextEntry::make('Autistic.person_name')->label('الاسم'),
+                                         TextEntry::make('Autistic.person_relationship')->label('علاقته بالحالة'),
+                                         TextEntry::make('Autistic.person_phone')->label('هاتف'),
+                                         TextEntry::make('Autistic.PersonCity.name')->label('العنوان'),
+                                         TextEntry::make('Autistic.person_date')->label('تاريخ التعبئة'),
+                                     ])
+                                     ->columns(5),
+
+                             ])
+                            ->columns(5),
+                        ])
+                    )
+                    ->label('بيانات أولية'),
+                Tables\Columns\IconColumn::make('has_fam')
+                    ->boolean()
+                    ->label('بيانات عن الأسرة'),
+                Tables\Columns\IconColumn::make('has_boy')
+                    ->boolean()
+                    ->label('بيانات عن الحالة'),
+                Tables\Columns\IconColumn::make('has_grow')
+                    ->boolean()
+                    ->label('تاريخ النمو'),
+                Tables\Columns\IconColumn::make('has_med')
+                    ->boolean()
+                    ->label('التدخلات العلاجية'),
 
             ])
             ->filters([
