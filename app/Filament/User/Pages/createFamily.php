@@ -67,7 +67,7 @@ class createFamily extends Page implements HasForms
         {
 
             if (Auth::user()->has_aut)
-            $this->form->fill(['father_name'=>Auth::user()->has_aut->surname,'user_id'=>Auth::id()]);
+            $this->form->fill(['father_name'=>Auth::user()->Autistic->surname,'user_id'=>Auth::id()]);
             else $this->form->fill(['user_id'=>Auth::id()]);
         }
 

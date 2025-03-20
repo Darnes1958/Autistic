@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\Person_relationship;
 use App\Enums\Sex;
+use App\Enums\Sym_year;
 use Illuminate\Database\Eloquent\Model;
 
 class Autistic extends Model
@@ -14,6 +16,8 @@ class Autistic extends Model
     protected $casts = [
         'image' => 'array',
         'sex' => Sex::class,
+        'sym_year' =>Sym_year::class,
+        'person_relationship' => Person_relationship::class,
     ];
 
 public function User()

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\Academic;
+use App\Enums\YesNo;
 use Faker\Core\Blood;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +17,10 @@ class Family extends Model
     protected $casts = [
 
         'family_disease' => 'array',
+        'father_academic'=> Academic::class,
+        'mother_academic'=> Academic::class,
+        'is_father_life'=> YesNo::class,
+        'is_mother_life'=> YesNo::class,
     ];
 
     public function City()

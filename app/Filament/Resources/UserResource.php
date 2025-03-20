@@ -68,6 +68,9 @@ class UserResource extends Resource
                         ;
 
             })
+            ->recordUrl(
+                false
+            )
             ->columns([
                 TextColumn::make('nat')->label('الرقم الوطني'),
                 TextColumn::make('name')->label('الاسم'),
@@ -75,6 +78,7 @@ class UserResource extends Resource
                     ->boolean()
                     ->action(
                         Tables\Actions\Action::make('aut_info')
+                            ->visible(function ($record){return $record->has_aut;})
                             ->label('البيانات الأولية')
                             ->modalSubmitAction(false)
                             ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
@@ -103,8 +107,7 @@ class UserResource extends Resource
                                             ->label('اقرب نقطة دالة')
 
                                     ])->columns(3),
-                                 TextEntry::make('Autistic.Center.name')
-                                     ->label('مركز التوحد'),
+
                                  Fieldset::make('الشخص الذي قام بتعبئة البيانات')
                                      ->schema([
                                          TextEntry::make('Autistic.person_name')->label('الاسم'),
@@ -114,6 +117,12 @@ class UserResource extends Resource
                                          TextEntry::make('Autistic.person_date')->label('تاريخ التعبئة'),
                                      ])
                                      ->columns(5),
+                                 TextEntry::make('Autistic.Center.name')
+                                     ->label('مركز التوحد'),
+                                 TextEntry::make('Autistic.symptoms')
+                                     ->label('الأعراض التي تمت ملاحظاتها'),
+                                 TextEntry::make('Autistic.sym_year')
+                                     ->label('تمت رؤية الأعراض في العام'),
 
                              ])
                             ->columns(5),
@@ -122,6 +131,66 @@ class UserResource extends Resource
                     ->label('بيانات أولية'),
                 Tables\Columns\IconColumn::make('has_fam')
                     ->boolean()
+                    ->action(
+                        Tables\Actions\Action::make('fam_info')
+                            ->visible(function ($record){return $record->has_fam;})
+                            ->label('بيانات عن الأسرة')
+                            ->modalSubmitAction(false)
+                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+
+                            ->infolist([
+                                Section::make()
+                                    ->schema([
+                                        Fieldset::make('الأب')
+                                          ->schema([
+                                              TextEntry::make('Family.father_name')
+                                                  ->label('الإسم'),
+                                              TextEntry::make('Family.FatherCity.name')
+                                                  ->label('محل الملاد'),
+                                              TextEntry::make('Family.father_date')
+                                                  ->label('تاريخ الميلاد'),
+                                              TextEntry::make('Family.father_academic')
+                                                  ->label('المستوي الدراسي'),
+                                              TextEntry::make('Family.father_job')
+                                                  ->label('المهنة'),
+                                              TextEntry::make('Family.is_father_life')
+                                                  ->label('هل الأب علي قيد الحياة ؟'),
+                                              TextEntry::make('Family.father_dead_reason')
+                                                  ->visible(function ($record){return $record->Family->is_father_life->value==0;})
+                                                  ->label('سبب وفاة الأب'),
+                                              TextEntry::make('Family.father_dead_date')
+                                                  ->visible(fn($record) :bool => $record->Family->is_father_life->value==0)
+                                                  ->label('تاريخ وفاة الأب'),
+
+                                          ])->columns(3),
+                                        Fieldset::make('الأم')
+                                            ->schema([
+                                                TextEntry::make('Family.mother_name')
+                                                    ->label('الإسم'),
+                                                TextEntry::make('Family.MotherCity.name')
+                                                    ->label('محل الملاد'),
+                                                TextEntry::make('Family.mother_date')
+                                                    ->label('تاريخ الميلاد'),
+                                                TextEntry::make('Family.mother_academic')
+                                                    ->label('المستوي الدراسي'),
+                                                TextEntry::make('Family.mother_job')
+                                                    ->label('المهنة'),
+                                                TextEntry::make('Family.is_mother_life')
+                                                    ->label('هل الأب علي قيد الحياة ؟'),
+                                                TextEntry::make('Family.mother_dead_reason')
+                                                    ->visible(function ($record){return $record->Family->is_mother_life->value==0;})
+                                                    ->label('سبب وفاة الأم'),
+                                                TextEntry::make('Family.mother_dead_date')
+                                                    ->visible(fn($record) :bool => $record->Family->is_mother_life->value==0)
+                                                    ->label('تاريخ وفاة الأم'),
+
+                                            ])->columns(3),
+
+
+                                    ])
+                                    ->columns(5),
+                            ])
+                    )
                     ->label('بيانات عن الأسرة'),
                 Tables\Columns\IconColumn::make('has_boy')
                     ->boolean()
