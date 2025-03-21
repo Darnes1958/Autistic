@@ -37,6 +37,7 @@ class createFamily extends Page implements HasForms
 
     protected static ?string $navigationLabel='بيانات عن الأسرة';
     protected ?string $heading='بيانات عن الأسرة';
+    protected static ?int $navigationSort=2;
     public static function getNavigationIcon(): string|Htmlable|null
     {
         if (Auth::user()->has_fam)
@@ -121,9 +122,9 @@ class createFamily extends Page implements HasForms
                                         self::getDate('mother_dead_date')
                                             ->visible(function (Get $get){return $get('is_mother_life')!=null && $get('is_mother_life')==0;}),
                                         self::getInput('number_of_marriages')->numeric()->minValue(1),
-                                        self::getInput('number_of_separation')->numeric(),
+                                        self::getInput('number_of_separation')->numeric()->minValue(0),
                                         self::getInput('number_of_pregnancies')->numeric()->minValue(1),
-                                        self::getInput('number_of_miscarriages')->numeric(),
+                                        self::getInput('number_of_miscarriages')->numeric()->minValue(0),
                                     ])->columns(1),
                                 Fieldset::make('هل تعرض أحد الوالدين لامراض مزمنة او اصابات اخري ?')
                                     ->schema([

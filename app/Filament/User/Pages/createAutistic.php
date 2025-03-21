@@ -36,6 +36,7 @@ class createAutistic extends Page implements HasForms
     protected static string $view = 'filament.user.pages.create-autistic';
     protected static ?string $navigationLabel='بيانات أولية';
     protected ?string $heading='بيانات أولية';
+    protected static ?int $navigationSort=1;
 
     public static function getNavigationIcon(): string|Htmlable|null
     {

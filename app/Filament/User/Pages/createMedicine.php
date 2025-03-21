@@ -33,6 +33,7 @@ class createMedicine extends Page implements HasForms
 
     protected static ?string $navigationLabel='التدخلات العلاجية والأدوية';
     protected ?string $heading='التدخلات العلاجية والأدوية';
+    protected static ?int $navigationSort=5;
     public static function getNavigationIcon(): string|Htmlable|null
     {
         if (Auth::user()->has_med)

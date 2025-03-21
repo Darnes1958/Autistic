@@ -137,7 +137,6 @@ class UserResource extends Resource
                             ->label('بيانات عن الأسرة')
                             ->modalSubmitAction(false)
                             ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
-
                             ->infolist([
                                 Section::make()
                                     ->schema([
@@ -176,15 +175,16 @@ class UserResource extends Resource
                                                 TextEntry::make('Family.mother_job')
                                                     ->label('المهنة'),
                                                 TextEntry::make('Family.is_mother_life')
-                                                    ->label('هل الأب علي قيد الحياة ؟'),
+                                                    ->label('هل الأم علي قيد الحياة ؟'),
                                                 TextEntry::make('Family.mother_dead_reason')
+                                                    ->columnStart(2)
                                                     ->visible(function ($record){return $record->Family->is_mother_life->value==0;})
                                                     ->label('سبب وفاة الأم'),
                                                 TextEntry::make('Family.mother_dead_date')
                                                     ->visible(fn($record) :bool => $record->Family->is_mother_life->value==0)
                                                     ->label('تاريخ وفاة الأم'),
-
                                             ])->columns(3),
+
 
 
                                     ])

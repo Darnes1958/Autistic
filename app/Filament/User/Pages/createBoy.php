@@ -30,6 +30,7 @@ class createBoy extends Page implements HasForms
     protected static string $view = 'filament.user.pages.create-boy';
     protected static ?string $navigationLabel='بيانات عن الحالة';
     protected ?string $heading='بيانات عن الحالة';
+    protected static ?int $navigationSort=3;
     public static function getNavigationIcon(): string|Htmlable|null
     {
         if (Auth::user()->has_boy)

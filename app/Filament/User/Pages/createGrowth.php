@@ -32,6 +32,7 @@ class createGrowth extends Page implements HasForms
 
     protected static ?string $navigationLabel='تاريخ النمو';
     protected ?string $heading='تاريخ النمو';
+    protected static ?int $navigationSort=4;
     public static function getNavigationIcon(): string|Htmlable|null
     {
         if (Auth::user()->has_grow)
@@ -194,6 +195,38 @@ class createGrowth extends Page implements HasForms
                                     ->nullable(),
 
 
+                                self::getRadio('is_child_play_toy','هل يمارس الحالة اللعب بالالعاب')
+                                    ->live()
+                                    ->afterStateUpdated(function (Set $set, $state){
+                                        if ($state==1) $set('why_not_play_toy',null);
+                                    }),
+                                self::getInput('why_not_play_toy','لماذا لا يمارس اللعب بالالعاب ؟')
+                                    ->visible(fn(Get $get):bool => $get('is_child_play_toy')!=null
+                                        && $get('is_child_play_toy')==0)
+                                    ->nullable(),
+                                self::getCheck('is_play_with_other',),
+
+                                self::getRadio('slookea_1','هل الحالة يستمتع بان يتأرجح ويتمايل'),
+                                self::getRadio('slookea_2','هل الحالة مهتم بالأخرين'),
+                                self::getRadio('slookea_3','هل الحالة يتسلق الاشياء مثل السلالم وما شابه'),
+                                self::getRadio('slookea_4','هل حالةك يمارس العاب الطفال مثل لعبة الاستغماية (التخفي)'),
+                                self::getRadio('slookea_5','هل يمارس الحالة (اللعب التخيلي) مثلاً انه يقوم بعمل الشاي باستخدام اكواب وأدوات من اللعب او غيرها '),
+                                self::getRadio('slookea_6','هل يستخدم الحالة اصبعه ليشير الي أشياء يريد أن يسألك عنها'),
+                                self::getRadio('slookea_7','هل يستخدم الحالة اصبعه ليشير الي أشياء هو مهتم بها'),
+                                self::getRadio('slookea_8','هل يحضر لك الحال اشياء لكي يريها لك'),
+
+                                self::getRadio('slookea_9','هل يقوم الحالة بالدوران حول نفسه'),
+                                self::getRadio('slookea_10','هل يسير علي أطراف الاصابع'),
+
+                                self::getInput('slookea_other','مظاهر سلوكية اخري'),
+
+                                Fieldset::make(fn()=>self::ret_html(' أذكر أبرز الأعراض الظاهرة على الحالة','my-blue font-extrabold '))
+                                    ->schema([
+                                        self::getCheck('social_communication','صعوبات في التواصل الاجتماعي'),
+                                        self::getCheck('behaviors','سلوكيات نمطية ومتكررة'),
+                                        self::getCheck('sensory','مشكلات حسية'),
+                                        self::getCheck('behavioral_and_emotional','مشكلات سلوكية وعاطفية'),
+                                    ])->columns(1),
 
 
 
