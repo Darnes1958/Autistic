@@ -76,7 +76,7 @@ class createAutistic extends Page implements HasForms
                    ->schema([
                        Section::make()
                        ->schema([
-                           Fieldset::make('الإسم')
+                           Fieldset::make(fn()=>self::ret_html('الإسم','my-yellow text-lg'))
                                ->schema([
                                    self::getInput('name',' ')
                                        ->inlineLabel(false)
@@ -94,7 +94,7 @@ class createAutistic extends Page implements HasForms
                            self::getSelect('birth_city')
                            ,
 
-                           Fieldset::make(fn()=>self::ret_html('العنوان الحالي','my-blue'))
+                           Fieldset::make(fn()=>self::ret_html('العنوان الحالي','my-yellow text-lg'))
                                ->schema([
                                    self::getSelect('city_id','المدينة')
                                        ->live()
@@ -126,7 +126,7 @@ class createAutistic extends Page implements HasForms
                                ->columns(1)
                            ,
                            self::getSelect('center_id','مركز التوحد (اذا كان  ملتحقا بمركز)')
-
+                               ->label(fn()=>self::ret_html('مركز التوحد (اذا كان  ملتحقا بمركز)','text-black '))
                                ->required(false)
                                ->options(fn (Get $get): Collection => Center::query()
                                    ->where('city_id', $get('city_id'))
@@ -137,7 +137,7 @@ class createAutistic extends Page implements HasForms
                                    return Center::create($data)->getKey();
                                }),
                            self::getSelectEnum('academic')->columnSpanFull(),
-                           Fieldset::make(fn()=>self::ret_html('الشخص الذي قام بتعبئة البيانات','my-blue'))
+                           Fieldset::make(fn()=>self::ret_html('الشخص الذي قام بتعبئة البيانات','my-yellow text-lg'))
                                ->schema([
                                    self::getInput('person_name'),
                                    self::getSelectEnum('person_relationship'),
@@ -146,11 +146,13 @@ class createAutistic extends Page implements HasForms
                                    self::getDate('person_date'),
                                ])
                                ->columns(1),
-                           self::getInput('symptoms','الاعراض التي تمت ملاحظتها'),
-                           self::getSelectEnum('sym_year'),
+                           self::getInput('symptoms','الاعراض التي تمت ملاحظتها')
+                           ->label(fn()=>self::ret_html('الاعراض التي تمت ملاحظتها ','text-black ')),
+                           self::getSelectEnum('sym_year')
+                               ->label(fn()=>self::ret_html(' تمت رؤية الأعراض في العام ','text-black ')),
                            FileUpload::make('image')
                                ->required()
-                               ->label('صورة شخصية للحالة')
+                               ->label(fn()=>self::ret_html('صورة شخصية للحالة ','my-yellow text-lg'))
                                ->multiple()
                                ->maxFiles(5)
                                ->directory('autistic-images'),
@@ -178,8 +180,8 @@ class createAutistic extends Page implements HasForms
                        ->extraAttributes(['class' => 'greanbackground'])
                    ])
                    ->columns(1)
-                   ->columnSpan(2)
-            ])->columns(5) ;
+                   ->columnSpan(3)
+            ])->columns(6) ;
 
     }
 }

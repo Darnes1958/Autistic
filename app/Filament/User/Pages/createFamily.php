@@ -83,7 +83,7 @@ class createFamily extends Page implements HasForms
                     ->schema([
                         Section::make()
                             ->schema([
-                                Fieldset::make('الأب')
+                                Fieldset::make(fn()=>self::ret_html('الاب','my-yellow text-lg'))
                                     ->schema([
                                         self::getInput('father_name'),
                                         self::getSelect('father_city'),
@@ -103,7 +103,7 @@ class createFamily extends Page implements HasForms
                                         self::getDate('father_dead_date')
                                             ->visible(function (Get $get){return $get('is_father_life')==0 && $get('is_father_life')!=null;}),
                                     ])->columns(1),
-                                Fieldset::make('الأم')
+                                Fieldset::make(fn()=>self::ret_html('الأم','my-yellow text-lg'))
                                     ->schema([
                                         self::getInput('mother_name'),
                                         self::getSelect('mother_city'),
@@ -126,7 +126,7 @@ class createFamily extends Page implements HasForms
                                         self::getInput('number_of_pregnancies')->numeric()->minValue(1),
                                         self::getInput('number_of_miscarriages')->numeric()->minValue(0),
                                     ])->columns(1),
-                                Fieldset::make('هل تعرض أحد الوالدين لامراض مزمنة او اصابات اخري ?')
+                                Fieldset::make(fn()=>self::ret_html('هل تعرض أحد الوالدين لامراض مزمنة او اصابات اخري ?','my-yellow'))
                                     ->schema([
                                         self::getRadio('is_father_chronic_diseases','الأب')
                                          ->afterStateUpdated(function ($state,Set $set){
@@ -143,10 +143,10 @@ class createFamily extends Page implements HasForms
                                             ->visible(function (Get $get){return $get('is_mother_chronic_diseases') ;}),
 
                                     ])->columns(1),
-                                self::getRadio('is_parent_relationship'),
+                                self::getRadio('is_parent_relationship','هل هناك صلة قرابة بين الاب والام ? '),
                                 self::getSelect('father_blood_type','فصيلة دم الأب'),
                                 self::getSelect('mother_blood_type','فصيلة دم الأم'),
-                                self::getSelectEnum('parent_relationship_nature'),
+                                self::getSelectEnum('parent_relationship_nature','ما هي طبيعة العلاقة بين الأب والأم '),
 
                                 self::getInput('brothers_count','عدد الإخوة والأخوات')->numeric()->minValue(0),
                                 self::getInput('male_count','عدد الذكور')->numeric()->minValue(0),
@@ -201,8 +201,8 @@ class createFamily extends Page implements HasForms
                             ->extraAttributes(['class' => 'greanbackground'])
                     ])
                     ->columns(1)
-                    ->columnSpan(2)
-            ])->columns(5) ;
+                    ->columnSpan(3)
+            ])->columns(6) ;
 
     }
 }

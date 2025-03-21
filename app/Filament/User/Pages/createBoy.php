@@ -125,8 +125,8 @@ class createBoy extends Page implements HasForms
                             ->extraAttributes(['class' => 'greanbackground'])
                     ])
                     ->columns(1)
-                    ->columnSpan(2)
-            ])->columns(5) ;
+                    ->columnSpan(3)
+            ])->columns(6) ;
 
     }
 }

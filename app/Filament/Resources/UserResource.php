@@ -145,7 +145,7 @@ class UserResource extends Resource
                                               TextEntry::make('Family.father_name')
                                                   ->label('الإسم'),
                                               TextEntry::make('Family.FatherCity.name')
-                                                  ->label('محل الملاد'),
+                                                  ->label('محل الميلاد'),
                                               TextEntry::make('Family.father_date')
                                                   ->label('تاريخ الميلاد'),
                                               TextEntry::make('Family.father_academic')
@@ -167,7 +167,7 @@ class UserResource extends Resource
                                                 TextEntry::make('Family.mother_name')
                                                     ->label('الإسم'),
                                                 TextEntry::make('Family.MotherCity.name')
-                                                    ->label('محل الملاد'),
+                                                    ->label('محل الميلاد'),
                                                 TextEntry::make('Family.mother_date')
                                                     ->label('تاريخ الميلاد'),
                                                 TextEntry::make('Family.mother_academic')
@@ -183,6 +183,73 @@ class UserResource extends Resource
                                                 TextEntry::make('Family.mother_dead_date')
                                                     ->visible(fn($record) :bool => $record->Family->is_mother_life->value==0)
                                                     ->label('تاريخ وفاة الأم'),
+                                                TextEntry::make('Family.number_of_marriages')
+                                                 ->label('عدد مرات الزواج'),
+                                                TextEntry::make('Family.number_of_separation')
+                                                    ->label('عدد مرات الانفصال'),
+                                                TextEntry::make('Family.number_of_pregnancies')
+                                                    ->label('عدد مرات الحمل'),
+                                                TextEntry::make('Family.number_of_miscarriages')
+                                                    ->label('عدد مرات الاجهاض'),
+                                                TextEntry::make('Family.father_chronic_diseases')
+                                                    ->visible(fn($record) :bool => $record->Family->is_father_chronic_diseases)
+                                                    ->label('أمراض الأب المزمنة'),
+                                                TextEntry::make('Family.mother_chronic_diseases')
+                                                    ->visible(fn($record) :bool => $record->Family->is_mother_chronic_diseases)
+                                                    ->label('أمراض الأم المزمنة'),
+                                                TextEntry::make('Family.is_parent_relationship')
+                                                    ->label('هل هناك صلة قرابة بين الاب والام ? '),
+                                                TextEntry::make('Family.FatherBlood.name')
+                                                    ->label('فصيلة دم الأب'),
+                                                TextEntry::make('Family.MotherBlood.name')
+                                                    ->label('فصيلة دم الأم'),
+                                                TextEntry::make('Family.parent_relationship_nature')
+                                                    ->label('ما هي طبيعة العلاقة بين الأب والأم '),
+                                                TextEntry::make('Family.brothers_count')
+                                                    ->label('عدد الإخوة والأخوات'),
+                                                TextEntry::make('Family.male_count')
+                                                    ->label('عدد الذكور'),
+                                                TextEntry::make('Family.female_count')
+                                                    ->label('عدد الإناث'),
+                                                TextEntry::make('Family.ser_in_brothers')
+                                                    ->label('تسلل الحالة في الأسرة'),
+                                                TextEntry::make('Family.mother_chronic_diseases')
+                                                    ->visible(fn($record) :bool => $record->Family->family_disease !=null)
+                                                    ->label('أمراض أصيب بها بعض من افراد'),
+                                                TextEntry::make('Family.mother_chronic_diseases')
+                                                    ->visible(fn($record) :bool => $record->Family->other_diseases !=null)
+                                                    ->label('أمراض اخري أصيب بها بعض من افراد'),
+
+                                                TextEntry::make('Family.family_salary')
+                                                    ->label('الدخل الشهري'),
+                                                TextEntry::make('Family.family_sources')
+                                                    ->label('مصادر دخل الأسرة'),
+                                                TextEntry::make('Family.house_type')
+                                                    ->label('نوع السكن'),
+                                                TextEntry::make('Family.house_narrow')
+                                                    ->label('مساحة السكن'),
+                                                TextEntry::make('Family.house_health')
+                                                    ->label('الحالة الصحية للسكن'),
+                                                TextEntry::make('Family.house_old')
+                                                    ->label('حالة السكن'),
+                                                TextEntry::make('Family.house_own')
+                                                    ->label('ملكية السكن'),
+                                                TextEntry::make('Family.is_house_good')
+                                                    ->label('متطلبات الحياة الأساسية'),
+                                                TextEntry::make('Family.house_rooms')
+                                                    ->label('عدد الحجرات'),
+                                                TextEntry::make('Family.is_room_single')
+                                                    ->label('هل حجرة الحالة فردية'),
+                                                TextEntry::make('Family.has_salary')
+                                                    ->label('هل يتقاضي الحالة معاش اساسي'),
+                                                TextEntry::make('Family.why_not_has_salary')
+                                                    ->visible(fn($record) :bool => $record->Family->has_salary =0)
+                                                    ->label('اسباب عدم تقاضي المعاش'),
+                                                TextEntry::make('Family.other_family_notes')
+                                                    ->label('مغلومات أخري'),
+
+
+
                                             ])->columns(3),
 
 
