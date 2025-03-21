@@ -28,6 +28,7 @@ class UserPanelProvider extends PanelProvider
             ->darkMode(false)
             ->font('Amiri')
 
+
             ->viteTheme('resources/css/filament/user/theme.css')
             ->sidebarFullyCollapsibleOnDesktop()
             ->login(Login::class)

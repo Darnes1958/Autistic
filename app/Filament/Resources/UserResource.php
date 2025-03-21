@@ -201,6 +201,9 @@ class UserResource extends Resource
                 Tables\Columns\IconColumn::make('has_med')
                     ->boolean()
                     ->label('التدخلات العلاجية'),
+                Tables\Columns\ImageColumn::make('Autistic.image')
+                    ->circular()
+                 ->label(' ')
 
             ])
             ->filters([

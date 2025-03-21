@@ -2,10 +2,11 @@
     <x-filament::section>
 
 @if($image)
-            <img class="h-auto max-w-full"
-                 src="{{ asset('storage/'.$image[0]) }}" alt="description of myimage"
-
-            />
+    <figure class="max-w-lg">
+        <img class="h-auto max-w-full rounded-lg" src="{{ asset('storage/'.$image[0]) }}"
+             alt="image description">
+        <figcaption class="mt-2 text-sm text-center text-gray-500 dark:text-gray-400">{{$name}}</figcaption>
+    </figure>
 @endif
 
 

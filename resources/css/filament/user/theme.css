@@ -22,8 +22,9 @@
 }
 
 
-.fi-fo-wizard {
-    background-color: #B9C8BC  ;}
+.fi-sidebar-item-label {
+    @apply text-lg !important;
+}
 
 .greanbackground
 {

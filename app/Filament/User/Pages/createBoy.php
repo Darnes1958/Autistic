@@ -81,13 +81,13 @@ class createBoy extends Page implements HasForms
                                                 foreach ($state as $s) if ($s==10) $this->showPast=true;
                                                 if (!$this->showPast) $set('oter_past',null);
                                             }),
-                                        self::getInput('other_past','يرجي توضيح الاعراض الأخري التي ظهرت ')->required(false)
+                                        self::getArea('other_past','يرجي توضيح الاعراض الأخري التي ظهرت ')->required(false)
                                             ->visible(function (){
                                                 return $this->showPast;
                                             }),
 
                                         self::getSelect('ambitious_id'),
-                                        self::getInput('other_boy_info','معلومات اخري عن الحالة')
+                                        self::getArea('other_boy_info','معلومات اخري عن الحالة')
                                             ->required(false),
 
                                         Fieldset::make('ما أساليب التعامل مع الحالة')

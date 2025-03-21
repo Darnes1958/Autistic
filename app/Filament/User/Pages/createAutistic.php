@@ -152,6 +152,7 @@ class createAutistic extends Page implements HasForms
                                ->required()
                                ->label('صورة شخصية للحالة')
                                ->multiple()
+                               ->maxFiles(5)
                                ->directory('autistic-images'),
                             Hidden::make('user_id'),
 
@@ -177,8 +178,8 @@ class createAutistic extends Page implements HasForms
                        ->extraAttributes(['class' => 'greanbackground'])
                    ])
                    ->columns(1)
-                   ->columnSpan(1)
-            ])->columns(3) ;
+                   ->columnSpan(2)
+            ])->columns(5) ;
 
     }
 }

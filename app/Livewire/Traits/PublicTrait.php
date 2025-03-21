@@ -57,6 +57,7 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
@@ -171,6 +172,21 @@ trait PublicTrait {
             ->required();
 
     }
+    protected static function getArea($name,$label=null): Textarea
+    {
+
+
+
+
+        if ($label) $l=$label;
+
+        return Textarea::make($name)
+            ->label(fn()=>self::ret_html($l))
+
+            ->required();
+
+    }
+
     protected static function getDate($name,$label=null): DatePicker
     {
         if (!$label) $l='التاريخ';
