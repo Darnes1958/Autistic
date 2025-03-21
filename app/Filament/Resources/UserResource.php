@@ -279,7 +279,7 @@ class UserResource extends Resource
                                                 ->label('ما هو طموح الأسرة بالنسبة للطفل'),
                                             TextEntry::make('Boy.other_boy_info')
                                                 ->label('معلومات اخري عن الحالة'),
-                                            \Filament\Forms\Components\Fieldset::make('أساليب التعامل مع الحالة')
+                                            Fieldset::make('أساليب التعامل مع الحالة')
                                                 ->schema([
                                                     TextEntry::make('Boy.father_procedure')
                                                         ->label('الأب'),
