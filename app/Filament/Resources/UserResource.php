@@ -261,6 +261,39 @@ class UserResource extends Resource
                     ->label('بيانات عن الأسرة'),
                 Tables\Columns\IconColumn::make('has_boy')
                     ->boolean()
+                    ->action(
+                        Tables\Actions\Action::make('boy_info')
+                            ->visible(function ($record){return $record->has_boy;})
+                            ->label('بيانات عن الحالة')
+                            ->modalSubmitAction(false)
+                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->infolist([
+                                    Section::make()
+                                        ->schema([
+                                            TextEntry::make('Boy.how_past')
+                                                ->label('وضع الحالة في بداية ظهور الاعراض'),
+                                            TextEntry::make('Boy.other_past')
+                                                ->visible(fn($record) => $record->other_past!=null)
+                                                ->label('اعراض أحري'),
+                                            TextEntry::make('Boy.Ambitious.name')
+                                                ->label('ما هو طموح الأسرة بالنسبة للطفل'),
+                                            TextEntry::make('Boy.other_boy_info')
+                                                ->label('معلومات اخري عن الحالة'),
+                                            \Filament\Forms\Components\Fieldset::make('أساليب التعامل مع الحالة')
+                                                ->schema([
+                                                    TextEntry::make('Boy.father_procedure')
+                                                        ->label('الأب'),
+                                                    TextEntry::make('Boy.mother_procedure')
+                                                        ->label('الأم'),
+                                                    TextEntry::make('Boy.brother_procedure')
+                                                        ->label('الإخوة'),
+
+                                                ]),
+
+
+                                        ])
+                                ])
+                    )
                     ->label('بيانات عن الحالة'),
                 Tables\Columns\IconColumn::make('has_grow')
                     ->boolean()
