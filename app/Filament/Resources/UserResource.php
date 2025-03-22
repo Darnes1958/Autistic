@@ -13,6 +13,7 @@ use Filament\Actions\StaticAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Fieldset;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
@@ -139,6 +140,9 @@ class UserResource extends Resource
                             ->label('بيانات عن الأسرة')
                             ->modalSubmitAction(false)
                             ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->stickyModalHeader()
+                            ->modalAutofocus(false)
+
                             ->infolist([
                                 Section::make()
                                     ->schema([
@@ -269,6 +273,7 @@ class UserResource extends Resource
                             ->label(fn()=>self::ret_html('بيانات عن الحالة'))
                             ->modalSubmitAction(false)
                             ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->modalAutofocus(false)
                             ->infolist([
                                     Section::make()
                                         ->schema([
@@ -305,6 +310,8 @@ class UserResource extends Resource
                             ->label(fn()=>self::ret_html('تاريخ النمو'))
                             ->modalSubmitAction(false)
                             ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->stickyModalHeader()
+                            ->modalAutofocus(false)
                             ->infolist([
                                 Section::make()
                                     ->schema([
@@ -417,9 +424,114 @@ class UserResource extends Resource
                     ->label('تاريخ النمو'),
                 Tables\Columns\IconColumn::make('has_med')
                     ->boolean()
+                    ->action(
+                        Tables\Actions\Action::make('show_med')
+                            ->visible(function ($record){return $record->has_med ;})
+                            ->label(' التدخلات العلاجية والدوائية')
+                            ->modalSubmitAction(false)
+                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->stickyModalHeader()
+                            ->modalAutofocus(false)
+
+                            ->infolist([
+                            Section::make()
+
+                                ->heading(self::ret_html(' العلاج الدوائي','my-yellow') )
+                                ->schema([
+                                    self::getEntry('Medicine.is_take_medicine','هل يتناول الحالة دواء'),
+                                    Fieldset::make(' ')
+                                        ->visible(fn($record) => $record->Medicine->is_take_medicine->value==1)
+                                        ->schema([
+                                            self::getEntry('Medicine.when_take_medicine','متي بدأ تناول الدواء'),
+                                            self::getEntry('Medicine.medicine','قائمة بالادوية التي يتناولها'),
+                                            self::getEntry('Medicine.why_take_medicine','الغرض من تناول الدواء')
+                                            ->bulleted()
+                                            ->listWithLineBreaks(),
+                                            self::getEntry('Medicine.other_reason_take_medicine','الاسباب الاخري')
+                                                ->visible(fn($record):bool=>$record->Medicine->other_reason_take_medicine!=null),
+                                    self::getEntry('Medicine.is_still_take_medicine','هل مازال التدخل الدوائي مستمر ؟'),
+                                    self::getEntry('Medicine.why_he_stop_medicine','لماذا توقف العلاج')
+                                        ->visible(fn($record):bool=>$record->Medicine->is_still_take_medicine->value==0),
+                                    self::getEntry('Medicine.is_there_symptoms','هل هناك آثار جانبية ملحوظة ؟ '),
+                                    self::getEntry('Medicine.what_are_symptoms','ما هي الأثار الجانبية ?')
+                                        ->visible(fn($record):bool=>$record->Medicine->is_there_symptoms->value==1),
+                                    self::getEntry('Medicine.is_medicine_change','هل تم تغيير نوع أو جرعة الدواء مؤخراً ؟ '),
+                                    self::getEntry('Medicine.why_change','ما هي التغييرات ؟')
+                                        ->visible(fn($record):bool=>$record->Medicine->is_medicine_change->value==1),
+
+                                    ImageEntry::make('prescription_image')
+                                        ->visible(fn($record)=>$record->Medicine->prescription_image!=null)
+                                        ->label(fn()=>self::ret_html('صور وصفة الدواء','my-yellow')),
+                                    ImageEntry::make('medical_reports')
+                                        ->visible(fn($record):bool=>$record->Medicine->medical_reports!=null)
+                                        ->label(fn()=>self::ret_html('صور التقارير الطبية','my-yellow')),
+
+                                ])->columns(1),
+
+                          ]),
+
+                        Section::make()
+                            ->heading(self::ret_html(' التدخلات السلوكية والعلاجية','my-yellow') )
+                            ->schema([
+                                self::getEntry('Medicine.is_take_therapeutic','هل تلقى الحالة أي تدخلات علاجية غير دوائية ؟ '),
+                                Fieldset::make(' ')
+                                    ->visible(fn($record):bool=>$record->Medicine->is_take_therapeutic->value==1)
+                                    ->schema([
+                                        self::getEntry('Medicine.therapeutic_details','التدخلات العلاجية')
+                                        ->bulleted()
+                                        ->listWithLineBreaks(),
+                                        self::getEntry('Medicine.other_therapeutic',' التدخلات الاخري')
+                                            ->visible(fn($record):bool=>$record->Medicine->other_therapeutic!=null),
+
+                                        self::getEntry('Medicine.age_therapeutic',' كم كان عمر الحالة عند تلقي التدخلات العلاجية ؟')                                            ,
+                                        self::getEntry('Medicine.when_therapeutic','متي بدأ التدخل العلاجي ؟'),
+                                        self::getEntry('Medicine.weekly_therapeutic','عدد الجلسات أسبوعياً ؟ '),
+                                        self::getEntry('Medicine.is_stil_take_therapeutic','هل مازال التدخل العلاجي مستمر حتى الآن؟ '),
+                                        self::getEntry('Medicine.why_he_stop_therapeutic','لماذا توقف التدخل العلاجي ؟')
+                                            ->visible(fn($record):bool=>$record->Medicine->is_stil_take_therapeutic==0),
+                                        self::getEntry('Medicine.is_there_any_improve','هل هناك تحسن ملحوظ ؟ '),
+                                        self::getEntry('Medicine.what_is_improve','ما هو التحسن ?')
+                                            ->visible(fn($record):bool=>$record->Medicine->is_there_any_improve==1),
+
+
+                                        ImageEntry::make('therapeutic_reports')
+                                            ->visible(fn($record)=>$record->Medicine->therapeutic_reports!=null)
+                                            ->label(fn()=>self::ret_html('صور جلسات العلاج','my-yellow'))
+
+                                    ]),
+
+                            ]),
+
+                        Section::make()
+                            ->heading(self::ret_html('التوصيات المستقبلية','my-yellow') )
+                            ->schema([
+                                self::getEntry('Medicine.is_doctor_say','هل أوصى الطبيب أو المختص بتعديل الخطة العلاجية ؟ '),
+                                self::getEntry('Medicine.what_doctor_say','بماذا أوصي ?')
+                                    ->visible(fn($record):bool=>$record->Medicine->is_doctor_say==1),
+                                self::getEntry('Medicine.any_problems','هل هناك صعوبات في الالتزام بالعلاج سواء الدوائي أو السلوكي؟ '),
+                                self::getEntry('Medicine.what_is_problems','ماهي الصعوبات ?')
+                                    ->visible(fn($record):bool=>$record->Medicine->any_problems==1),
+
+                            ]),
+
+                        ])
+                    )
                     ->label('التدخلات العلاجية'),
                 Tables\Columns\ImageColumn::make('Autistic.image')
                     ->circular()
+                    ->action(
+                        Tables\Actions\Action::make('show_images')
+                            ->visible(function ($record){return $record->Autistic->image !=null;})
+                            ->label(' ')
+                            ->modalSubmitAction(false)
+                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->infolist([
+                                ImageEntry::make('Autistic.image')
+                                 ->label('')
+                                 ->height(500)
+                                 ->stacked()
+                            ])
+                    )
                  ->label(' ')
 
             ])
