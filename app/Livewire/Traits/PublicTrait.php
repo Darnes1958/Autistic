@@ -60,6 +60,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Get;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Support\Enums\IconSize;
 use Filament\Tables\Columns\Summarizers\Sum;
@@ -174,17 +175,20 @@ trait PublicTrait {
     }
     protected static function getArea($name,$label=null): Textarea
     {
-
-
-
-
+        $l=null;
         if ($label) $l=$label;
 
         return Textarea::make($name)
             ->label(fn()=>self::ret_html($l))
-
             ->required();
+    }
+    protected static function getEntry($name,$label=null): TextEntry
+    {
+        $l=null;
+        if ($label) $l=$label;
 
+        return TextEntry::make($name)
+            ->label(fn()=>self::ret_html($l));
     }
 
     protected static function getDate($name,$label=null): DatePicker

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 
+use App\Livewire\Traits\PublicTrait;
 use App\Models\Autistic;
 use App\Models\User;
 use Filament\Actions\CreateAction;
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
+    use PublicTrait;
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
@@ -264,22 +266,21 @@ class UserResource extends Resource
                     ->action(
                         Tables\Actions\Action::make('boy_info')
                             ->visible(function ($record){return $record->has_boy;})
-                            ->label('بيانات عن الحالة')
+                            ->label(fn()=>self::ret_html('بيانات عن الحالة'))
                             ->modalSubmitAction(false)
                             ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
                             ->infolist([
                                     Section::make()
                                         ->schema([
-                                            TextEntry::make('Boy.how_past')
-                                                ->label('وضع الحالة في بداية ظهور الاعراض'),
-                                            TextEntry::make('Boy.other_past')
-                                                ->visible(fn($record) => $record->other_past!=null)
-                                                ->label('اعراض أحري'),
-                                            TextEntry::make('Boy.Ambitious.name')
-                                                ->label('ما هو طموح الأسرة بالنسبة للطفل'),
-                                            TextEntry::make('Boy.other_boy_info')
-                                                ->label('معلومات اخري عن الحالة'),
-                                            Fieldset::make('أساليب التعامل مع الحالة')
+                                            self::getEntry('Boy.how_past','وضع الحالة في بداية ظهور الاعراض')
+                                                ->listWithLineBreaks()
+                                                ->bulleted(),
+                                             self::getEntry('Boy.other_past','اعراض أحري')
+                                                ->visible(fn($record) => $record->other_past!=null),
+                                            self::getEntry('Boy.Ambitious.name','ما هو طموح الأسرة بالنسبة للطفل'),
+                                            self::getEntry('Boy.other_boy_info','معلومات اخري عن الحالة'),
+                                            Fieldset::make('any')
+                                                ->label(fn()=>self::ret_html('أساليب التعامل مع الحالة'))
                                                 ->schema([
                                                     TextEntry::make('Boy.father_procedure')
                                                         ->label('الأب'),
