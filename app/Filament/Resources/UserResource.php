@@ -293,11 +293,127 @@ class UserResource extends Resource
 
 
                                         ])
+
                                 ])
                     )
                     ->label('بيانات عن الحالة'),
                 Tables\Columns\IconColumn::make('has_grow')
                     ->boolean()
+                    ->action(
+                        Tables\Actions\Action::make('grow_info')
+                            ->visible(function ($record){return $record->has_grow;})
+                            ->label(fn()=>self::ret_html('تاريخ النمو'))
+                            ->modalSubmitAction(false)
+                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->infolist([
+                                Section::make()
+                                    ->schema([
+                                        self::getEntry('Growth.mother_old','عمر الأم عند ولادة الحالة'),
+                                        self::getEntry('Growth.pregnancy_duration','مدة الحمل'),
+                                        self::getEntry('Growth.is_pregnancy_planned','هل كان الحمل مخططا له'),
+                                        self::getEntry('Growth.mother_p_d_health','حالة الام الصحية اثناء الحمل'),
+                                        self::getEntry('Growth.p_d_why_not_health','لماذا كانت غير جيدة')
+                                            ->visible(fn($record): bool => $record->Growth->mother_p_d_health==0),
+
+                                        self::getEntry('Growth.is_p_d_followed','هل تم الحمل بمتابعة طبية'),
+                                        self::getEntry('Growth.is_p_d_good_food','هل غذاء الام اثناء الحمل جيد'),
+                                        self::getEntry('Growth.is_child_wanted','هل كان الحالة مرغوب فيه'),
+                                        self::getEntry('Growth.is_p_d_disease','هل تعرضت الام لأي أمراض أو حوادث'),
+
+                                        self::getEntry('Growth.p_d_disease',' ماهي الامراض او الحوادث')
+                                            ->visible(fn($record): bool => $record->Growth->is_p_d_disease==1),
+
+                                        Fieldset::make(' ')
+                                            ->label(fn()=>self::ret_html('معلومات عن الحمل','my-yellow text-lg'))
+                                            ->schema([
+                                                self::getEntry('Growth.is_pregnancy_normal','هل كانت الولادة طبيعية'),
+                                                self::getEntry('Growth.where_pregnancy_done','اين تمت عملية الولادة'),
+                                                self::getEntry('Growth.pregnancy_time','ما الوقت الذي استغرقته عملية الولادة'),
+                                                self::getEntry('Growth.child_weight','وزن الحالة اثناء الولادة'),
+                                                self::getEntry('Growth.is_child_followed','هل احتاج الحالة بعد ولادته إلي رعاية خاصة'),
+
+                                                self::getEntry('Growth.why_child_followed','لماذا احتاج لرعاية')
+                                                    ->visible(fn($record):bool =>  $record->Growth->is_child_followed==1),
+
+                                            ])->columns(5),
+
+
+                                        self::getEntry('Growth.is_breastfeeding_natural','هل كانت الرضاعة طبيعية '),
+                                        self::getEntry('Growth.breastfeeding_period','مدة الرضاعة'),
+                                        self::getEntry('Growth.difficulties_during_weaning','هل حدثت صعوبات اثناء الفطام'),
+
+
+                                        self::getEntry('Growth.what_is_the_defficulties','ما هي الصعوبات ؟')
+                                            ->visible(fn($record):bool => $record->Growth->difficulties_during_weaning==1),
+
+                                        self::getEntry('Growth.when_can_set','متى استطاع الجلوس'),
+                                        self::getEntry('Growth.teeth_appear','متى بدأت الاسنان بالظهور'),
+                                        self::getEntry('Growth.could_crawl','متى استطاع الحبو (الزحف)'),
+                                        self::getEntry('Growth.could_stand','متى استطاع الوقوف'),
+                                        self::getEntry('Growth.could_walk','متى استطاع المشي'),
+                                        self::getEntry('Growth.when_try_speak','متى بدأت محاولة النطق'),
+                                        self::getEntry('Growth.when_speak','متى استطاع التحدث'),
+                                        self::getEntry('Growth.when_open_door','متى استطاع فتح الابواب'),
+                                        self::getEntry('Growth.when_set_export','متى ضبط عمليات الاخراج'),
+                                        self::getEntry('Growth.when_wear_shoes','متى استطاع ان يلبس الحذاء'),
+                                        self::getEntry('Growth.when_use_spoon','متى استطاع استخدام الملعقة و الكوب'),
+                                        self::getEntry('Growth.is_child_food_good','كيف كانت تغذية الحالة '),
+
+                                        self::getEntry('Growth.why_food_not_good','اسباب التغذية الغير جيدة')
+                                            ->visible(fn($record):bool => $record->Growth->is_child_food_good==0),
+
+                                        self::getEntry('Growth.sleep_habit','ما عادات الحالة في النوم '),
+                                        self::getEntry('Growth.is_disturbing_nightmares','هل يتعرض لكوابيس مزعجة'),
+                                        self::getEntry('Growth.safety_of_senses','هل الحواس سليمة'),
+
+                                        self::getEntry('Growth.who_senses','ماهي الحواس المصابة')
+                                            ->visible(fn($record):bool => $record->Growth->safety_of_senses==0),
+                                        self::getEntry('Growth.mental_health','هل الوظائف العقلية سليمة'),
+
+                                        self::getEntry('Growth.who_mental','ماهي الوظائف المصابة')
+                                            ->visible(fn($record):bool =>$record->Growth->mental_health==0),
+                                        self::getEntry('Growth.injuries_disabilities','هل توجد إصابات أو عاهات جسيمة'),
+                                        self::getEntry('Growth.is_child_play_toy','هل يمارس الحالة اللعب بالالعاب'),
+                                        self::getEntry('Growth.why_not_play_toy','لماذا لا يمارس اللعب بالالعاب ؟')
+                                            ->visible(fn($record):bool => $record->Growth->is_child_play_toy==0),
+                                        self::getEntry('Growth.is_play_with_other','هل يلعب'),
+                                        self::getEntry('Growth.slookea_1','هل الحالة يستمتع بان يتأرجح ويتمايل'),
+                                        self::getEntry('Growth.slookea_2','هل الحالة مهتم بالأخرين'),
+                                        self::getEntry('Growth.slookea_3','هل الحالة يتسلق الاشياء مثل السلالم وما شابه'),
+                                        self::getEntry('Growth.slookea_4','هل حالةك يمارس العاب الطفال مثل لعبة الاستغماية (التخفي)'),
+                                        self::getEntry('Growth.slookea_5','هل يمارس الحالة (اللعب التخيلي) مثلاً انه يقوم بعمل الشاي باستخدام اكواب وأدوات من اللعب او غيرها '),
+                                        self::getEntry('Growth.slookea_6','هل يستخدم الحالة اصبعه ليشير الي أشياء يريد أن يسألك عنها'),
+                                        self::getEntry('Growth.slookea_7','هل يستخدم الحالة اصبعه ليشير الي أشياء هو مهتم بها'),
+                                        self::getEntry('Growth.slookea_8','هل يحضر لك الحال اشياء لكي يريها لك'),
+
+                                        self::getEntry('Growth.slookea_9','هل يقوم الحالة بالدوران حول نفسه'),
+                                        self::getEntry('Growth.slookea_10','هل يسير علي أطراف الاصابع'),
+
+                                        self::getEntry('Growth.slookea_other','مظاهر سلوكية اخري'),
+
+                                        Fieldset::make(' ')
+                                            ->label(fn()=>self::ret_html(' أذكر أبرز الأعراض الظاهرة على الحالة','my-yellow font-extrabold '))
+                                            ->schema([
+                                                self::getEntry('Growth.social_communication','صعوبات في التواصل الاجتماعي')
+                                                    ->listWithLineBreaks()
+                                                    ->bulleted(),
+                                                self::getEntry('Growth.behaviors','سلوكيات نمطية ومتكررة')
+                                                    ->listWithLineBreaks()
+                                                    ->bulleted(),
+                                                self::getEntry('Growth.sensory','مشكلات حسية')
+                                                    ->listWithLineBreaks()
+                                                    ->bulleted(),
+                                                self::getEntry('Growth.behavioral_and_emotional','مشكلات سلوكية وعاطفية')
+                                                    ->listWithLineBreaks()
+                                                    ->bulleted(),
+                                            ])->columns(1),
+
+                                    ])
+                                    ->columns(4)
+                            ])
+                    )
+
+
                     ->label('تاريخ النمو'),
                 Tables\Columns\IconColumn::make('has_med')
                     ->boolean()
