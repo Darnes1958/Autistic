@@ -79,6 +79,7 @@ class UserResource extends Resource
                 TextColumn::make('name')->label('الاسم'),
                 Tables\Columns\IconColumn::make('has_aut')
                     ->boolean()
+                    ->tooltip('انقر هنا لعرض البيانات الاولية')
                     ->action(
                         Tables\Actions\Action::make('aut_info')
                             ->visible(function ($record){return $record->has_aut;})
@@ -134,6 +135,7 @@ class UserResource extends Resource
                     ->label('بيانات أولية'),
                 Tables\Columns\IconColumn::make('has_fam')
                     ->boolean()
+                    ->tooltip('انقر هنا لعرض بيانات الأسرة')
                     ->action(
                         Tables\Actions\Action::make('fam_info')
                             ->visible(function ($record){return $record->has_fam;})
@@ -267,6 +269,7 @@ class UserResource extends Resource
                     ->label('بيانات عن الأسرة'),
                 Tables\Columns\IconColumn::make('has_boy')
                     ->boolean()
+                    ->tooltip('انقر هنا لعرض بيانات عن الحالة')
                     ->action(
                         Tables\Actions\Action::make('boy_info')
                             ->visible(function ($record){return $record->has_boy;})
@@ -419,11 +422,11 @@ class UserResource extends Resource
                                     ->columns(4)
                             ])
                     )
-
-
+                    ->tooltip('انقر هنا لعرض تاريخ النمو')
                     ->label('تاريخ النمو'),
                 Tables\Columns\IconColumn::make('has_med')
                     ->boolean()
+                    ->tooltip('انقر هنا لعرض التدخلات العلاجية والدوائية')
                     ->action(
                         Tables\Actions\Action::make('show_med')
                             ->visible(function ($record){return $record->has_med ;})
@@ -432,10 +435,8 @@ class UserResource extends Resource
                             ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
                             ->stickyModalHeader()
                             ->modalAutofocus(false)
-
                             ->infolist([
                             Section::make()
-
                                 ->heading(self::ret_html(' العلاج الدوائي','my-yellow') )
                                 ->schema([
                                     self::getEntry('Medicine.is_take_medicine','هل يتناول الحالة دواء'),
@@ -469,7 +470,6 @@ class UserResource extends Resource
                                 ])->columns(1),
 
                           ]),
-
                         Section::make()
                             ->heading(self::ret_html(' التدخلات السلوكية والعلاجية','my-yellow') )
                             ->schema([
@@ -516,9 +516,10 @@ class UserResource extends Resource
 
                         ])
                     )
-                    ->label('التدخلات العلاجية'),
+                    ->label('التدخلات العلاجية والدوائية'),
                 Tables\Columns\ImageColumn::make('Autistic.image')
                     ->circular()
+                    ->tooltip('انقر هنا لعرض الصور بحجم أكبر')
                     ->action(
                         Tables\Actions\Action::make('show_images')
                             ->visible(function ($record){return $record->Autistic->image !=null;})
@@ -533,7 +534,6 @@ class UserResource extends Resource
                             ])
                     )
                  ->label(' ')
-
             ])
             ->filters([
                 //
