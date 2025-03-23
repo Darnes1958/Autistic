@@ -79,7 +79,9 @@ class UserResource extends Resource
                 TextColumn::make('name')->label('الاسم'),
                 Tables\Columns\IconColumn::make('has_aut')
                     ->boolean()
-                    ->tooltip('انقر هنا لعرض البيانات الاولية')
+                    ->tooltip(function ($record){
+                        if ($record->has_aut) return 'انقر هنا لعرض البيانات الاولية' ;
+                          else return null;})
                     ->action(
                         Tables\Actions\Action::make('aut_info')
                             ->visible(function ($record){return $record->has_aut;})
@@ -135,7 +137,9 @@ class UserResource extends Resource
                     ->label('بيانات أولية'),
                 Tables\Columns\IconColumn::make('has_fam')
                     ->boolean()
-                    ->tooltip('انقر هنا لعرض بيانات الأسرة')
+                    ->tooltip(function ($record){
+                        if ($record->has_fam) return 'انقر هنا لعرض بيانات الأسرة' ;
+                        else return null;})
                     ->action(
                         Tables\Actions\Action::make('fam_info')
                             ->visible(function ($record){return $record->has_fam;})
@@ -269,7 +273,9 @@ class UserResource extends Resource
                     ->label('بيانات عن الأسرة'),
                 Tables\Columns\IconColumn::make('has_boy')
                     ->boolean()
-                    ->tooltip('انقر هنا لعرض بيانات عن الحالة')
+                    ->tooltip(function ($record){
+                        if ($record->has_boy) return 'انقر هنا لعرض بيانات عن الحالة' ;
+                        else return null;})
                     ->action(
                         Tables\Actions\Action::make('boy_info')
                             ->visible(function ($record){return $record->has_boy;})
@@ -422,11 +428,16 @@ class UserResource extends Resource
                                     ->columns(4)
                             ])
                     )
-                    ->tooltip('انقر هنا لعرض تاريخ النمو')
+                    ->tooltip(function ($record){
+                        if ($record->has_grow) return 'انقر هنا لعرض تاريخ النمو' ;
+                        else return null;})
                     ->label('تاريخ النمو'),
                 Tables\Columns\IconColumn::make('has_med')
                     ->boolean()
-                    ->tooltip('انقر هنا لعرض التدخلات العلاجية والدوائية')
+
+                    ->tooltip(function ($record){
+                        if ($record->has_med) return 'انقر هنا لعرض التدخلات العلاجية والدوائية' ;
+                        else return null;})
                     ->action(
                         Tables\Actions\Action::make('show_med')
                             ->visible(function ($record){return $record->has_med ;})
@@ -519,7 +530,10 @@ class UserResource extends Resource
                     ->label('التدخلات العلاجية والدوائية'),
                 Tables\Columns\ImageColumn::make('Autistic.image')
                     ->circular()
-                    ->tooltip('انقر هنا لعرض الصور بحجم أكبر')
+
+                    ->tooltip(function ($record){
+                        if ($record->has_aut !=null) return 'انقر هنا لعرض الصور بحجم أكبر' ;
+                        else return null;})
                     ->action(
                         Tables\Actions\Action::make('show_images')
                             ->visible(function ($record){return $record->Autistic->image !=null;})
