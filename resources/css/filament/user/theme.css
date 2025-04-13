@@ -26,9 +26,22 @@
     @apply text-lg !important;
 }
 
+.fi-main {
+    background-color: #EBBC4E  ;
+
+}
+
 .greanbackground
 {
     background-color: #B9C8BC  ;
     @apply text-2xl !important;
+}
+.fi-sidebar-item-active
+{
+    @apply text-4xl text-blue-600 !important;
+}
+.fi-active
+{
+    @apply text-4xl !important;
 }
 
