@@ -32,7 +32,7 @@ class createMedicine extends Page implements HasForms
     protected static string $view = 'filament.user.pages.create-medicine';
 
     protected static ?string $navigationLabel='التدخلات العلاجية والأدوية';
-    protected ?string $heading='التدخلات العلاجية والأدوية';
+    protected ?string $heading=' ';
     protected static ?int $navigationSort=5;
     public static function getNavigationIcon(): string|Htmlable|null
     {
@@ -77,7 +77,7 @@ class createMedicine extends Page implements HasForms
                     ->schema([
                         Section::make()
 
-                          ->heading(self::ret_html(' العلاج الدوائي','my-yellow') )
+                          ->heading(self::ret_html(' العلاج الدوائي','my-yellow font-extrabold text-xl') )
                           ->schema([
                                self::getRadio('is_take_medicine','هل يتناول الحالة دواء'),
                                Fieldset::make(' ')
@@ -115,7 +115,7 @@ class createMedicine extends Page implements HasForms
                           ])
                           ->extraAttributes(['class' => 'greanbackground']),
                         Section::make()
-                            ->heading(self::ret_html(' التدخلات السلوكية والعلاجية','my-yellow') )
+                            ->heading(self::ret_html(' التدخلات السلوكية والعلاجية','my-yellow font-extrabold text-xl') )
                             ->schema([
                                 self::getRadio('is_take_therapeutic','هل تلقى الحالة أي تدخلات علاجية غير دوائية ؟ '),
                                 Fieldset::make(' ')
@@ -151,7 +151,7 @@ class createMedicine extends Page implements HasForms
                             ])
                             ->extraAttributes(['class' => 'greanbackground']),
                         Section::make()
-                            ->heading(self::ret_html('التوصيات المستقبلية','my-yellow') )
+                            ->heading(self::ret_html('التوصيات المستقبلية','my-yellow font-extrabold text-xl') )
                          ->schema([
                              self::getRadio('is_doctor_say','هل أوصى الطبيب أو المختص بتعديل الخطة العلاجية ؟ '),
                              self::getInput('what_doctor_say','بماذا أوصي ?')
@@ -179,9 +179,9 @@ class createMedicine extends Page implements HasForms
                                     $this->redirect(Dashboard::getUrl());
 
                                 })
-                                ->label('تخزين'),
+                                ->label('حفظ ومتابعة'),
                             Action::make('cancel')
-                                ->label('خروج بدون تخزين')
+                                ->label('حفظ وخروج')
                         ])
                             ->alignCenter(),
                      ])

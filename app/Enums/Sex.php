@@ -8,7 +8,7 @@ use Filament\Support\Contracts\HasColor;
 enum Sex: int implements HasLabel,HasColor
 {
   case ذكر = 1;
-  case انثي = 2;
+  case أنثى = 2;
 
 
   public function getLabel(): ?string
@@ -19,7 +19,7 @@ enum Sex: int implements HasLabel,HasColor
   {
     return match ($this) {
       self::ذكر => 'success',
-      self::انثي => 'Fuchsia',
+      self::أنثى => 'Fuchsia',
     };
   }
 

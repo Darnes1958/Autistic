@@ -26,22 +26,38 @@
     @apply text-lg !important;
 }
 
+.honeyyellow
+{
+    background-color: #EBBC4E  ;
+}
 .fi-main {
     background-color: #EBBC4E  ;
-
 }
 
+.burntorange
+{
+    background: #cc5500;
+}
+.fi-sidebar-nav
+{
+    background: #cc5500;
+}
 .greanbackground
 {
     background-color: #B9C8BC  ;
     @apply text-2xl !important;
 }
-.fi-sidebar-item-active
-{
-    @apply text-4xl text-blue-600 !important;
-}
-.fi-active
-{
-    @apply text-4xl !important;
+
+.fi-sidebar-item-active > a {
+    @apply honeyyellow;
+
+    & > svg, span {
+        @apply text-2xl !important;
+        @apply text-white ;
+    }
+
+    &:hover {
+        @apply honeyyellow;
+    }
 }
 

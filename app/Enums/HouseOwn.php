@@ -8,7 +8,7 @@ use Filament\Support\Contracts\HasColor;
 enum HouseOwn: int implements HasLabel,HasColor
 {
   case ملك = 1;
-  case ايجار = 2;
+  case إيجار = 2;
     case ملك_ورثة = 3;
 
 
@@ -23,7 +23,7 @@ enum HouseOwn: int implements HasLabel,HasColor
   {
     return match ($this) {
       self::ملك => 'yellow',
-      self::ايجار => 'success',
+      self::إيجار => 'success',
         self::ملك_ورثة => 'info',
 
 

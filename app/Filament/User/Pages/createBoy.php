@@ -29,7 +29,7 @@ class createBoy extends Page implements HasForms
 
     protected static string $view = 'filament.user.pages.create-boy';
     protected static ?string $navigationLabel='بيانات عن الحالة';
-    protected ?string $heading='بيانات عن الحالة';
+    protected ?string $heading=' ';
     protected static ?int $navigationSort=3;
     public static function getNavigationIcon(): string|Htmlable|null
     {
@@ -74,23 +74,36 @@ class createBoy extends Page implements HasForms
                     ->schema([
                         Section::make()
                             ->schema([
+
                                         self::getCheck('how_past')
+                                            ->label(fn()=>self::ret_html('كيف كان وضع الحالة في بداية ظهور الأعراض ? ','my-yellow text-xl font-bold'))
                                             ->live()
                                             ->afterStateUpdated(function ($state,Set $set){
                                                 $this->showPast=false;
                                                 foreach ($state as $s) if ($s==10) $this->showPast=true;
-                                                if (!$this->showPast) $set('oter_past',null);
+                                                if (!$this->showPast) $set('other_past',null);
                                             }),
                                         self::getArea('other_past','يرجي توضيح الاعراض الأخري التي ظهرت ')->required(false)
                                             ->visible(function (){
                                                 return $this->showPast;
                                             }),
+                                        Fieldset::make(self::ret_html('مدى تأثير الإضطراب على الحالة','my-yellow text-xl font-bold'))
+                                         ->schema([
+                                             self::getSelectEnum('with_people'),
+                                             self::getSelectEnum('with_motion'),
+                                             self::getSelectEnum('with_language'),
+                                             self::getSelectEnum('with_personal'),
+                                             self::getSelectEnum('with_mind'),
 
-                                        self::getSelect('ambitious_id'),
+                                         ])->columns(1),
+
+                                        self::getSelect('ambitious_id')
+                                            ->label(fn()=>self::ret_html('ما هو طموح الأسرة بالنسبة للحالة ? ','my-yellow text-xl font-bold'))
+                                            ->inlineLabel(false),
                                         self::getArea('other_boy_info','معلومات اخري عن الحالة')
                                             ->required(false),
 
-                                        Fieldset::make('ما أساليب التعامل مع الحالة')
+                                        Fieldset::make(fn()=>self::ret_html('ما أساليب التعامل مع الحالة','my-yellow text-xl font-bold'))
                                             ->schema([
                                                 self::getSelectEnum('father_procedure'),
                                                 self::getSelectEnum('mother_procedure'),
@@ -113,9 +126,9 @@ class createBoy extends Page implements HasForms
                                             $this->redirect(Dashboard::getUrl());
 
                                         })
-                                        ->label('تخزين'),
+                                        ->label('حفظ ومتابعة'),
                                     Action::make('cancel')
-                                        ->label('خروج بدون تخزين')
+                                        ->label('حفظ وخروج')
                                 ])->alignCenter(),
 
 

@@ -36,7 +36,7 @@ class createFamily extends Page implements HasForms
     protected static string $view = 'filament.user.pages.create-family';
 
     protected static ?string $navigationLabel='بيانات عن الأسرة';
-    protected ?string $heading='بيانات عن الأسرة';
+    protected ?string $heading=' ';
     protected static ?int $navigationSort=2;
     public static function getNavigationIcon(): string|Htmlable|null
     {
@@ -83,14 +83,14 @@ class createFamily extends Page implements HasForms
                     ->schema([
                         Section::make()
                             ->schema([
-                                Fieldset::make(fn()=>self::ret_html('الاب','my-yellow text-lg'))
+                                Fieldset::make(fn()=>self::ret_html('الأب','my-yellow text-xl font-bold'))
                                     ->schema([
                                         self::getInput('father_name'),
                                         self::getSelect('father_city'),
                                         self::getDate('father_date'),
                                         self::getSelectEnum('father_academic'),
-                                        self::getInput('father_job'),
-                                        self::getRadio('is_father_life','هل الأب علي قيد الحياة ؟')
+                                        self::getInput('father_job','مهنة الأب'),
+                                        self::getSelectEnum('is_father_life','هل الأب على قيد الحياة ؟')
                                             ->afterStateUpdated(function ($state,Set $set){
 
                                                 if ($state) {
@@ -103,14 +103,14 @@ class createFamily extends Page implements HasForms
                                         self::getDate('father_dead_date')
                                             ->visible(function (Get $get){return $get('is_father_life')==0 && $get('is_father_life')!=null;}),
                                     ])->columns(1),
-                                Fieldset::make(fn()=>self::ret_html('الأم','my-yellow text-lg'))
+                                Fieldset::make(fn()=>self::ret_html('الأم','my-yellow text-xl font-bold'))
                                     ->schema([
                                         self::getInput('mother_name'),
                                         self::getSelect('mother_city'),
                                         self::getDate('mother_date'),
                                         self::getSelectEnum('mother_academic'),
-                                        self::getInput('mother_job'),
-                                        self::getRadio('is_mother_life','هل الأم علي قيد الحياة ؟')
+                                        self::getInput('mother_job','مهنة الأم'),
+                                        self::getSelectEnum('is_mother_life','هل الأم على قيد الحياة ؟')
                                             ->afterStateUpdated(function ($state,Set $set){
                                                 if ($state) {
                                                     $set('mother_dead_reason',null);
@@ -126,24 +126,8 @@ class createFamily extends Page implements HasForms
                                         self::getInput('number_of_pregnancies')->numeric()->minValue(1),
                                         self::getInput('number_of_miscarriages')->numeric()->minValue(0),
                                     ])->columns(1),
-                                Fieldset::make(fn()=>self::ret_html('هل تعرض أحد الوالدين لامراض مزمنة او اصابات اخري ?','my-yellow'))
-                                    ->schema([
-                                        self::getRadio('is_father_chronic_diseases','الأب')
-                                         ->afterStateUpdated(function ($state,Set $set){
-                                             if (!$state) $set('father_chronic_diseases',null);
-                                         }),
-                                        self::getInput('father_chronic_diseases','أمراض الأب المزمنة')
-                                            ->visible(function (Get $get){return $get('is_father_chronic_diseases') ;}),
 
-                                        self::getRadio('is_mother_chronic_diseases','الأم')
-                                            ->afterStateUpdated(function ($state,Set $set){
-                                                if (!$state) $set('mother_chronic_diseases',null);
-                                            }),
-                                        self::getInput('mother_chronic_diseases','أمراض الأم المزمنة')
-                                            ->visible(function (Get $get){return $get('is_mother_chronic_diseases') ;}),
-
-                                    ])->columns(1),
-                                self::getRadio('is_parent_relationship','هل هناك صلة قرابة بين الاب والام ? '),
+                                self::getSelectEnum('is_parent_relationship','هل هناك صلة قرابة بين الأب والأم ? '),
                                 self::getSelect('father_blood_type','فصيلة دم الأب'),
                                 self::getSelect('mother_blood_type','فصيلة دم الأم'),
                                 self::getSelectEnum('parent_relationship_nature','ما هي طبيعة العلاقة بين الأب والأم '),
@@ -151,25 +135,25 @@ class createFamily extends Page implements HasForms
                                 self::getInput('brothers_count','عدد الإخوة والأخوات')->numeric()->minValue(0),
                                 self::getInput('male_count','عدد الذكور')->numeric()->minValue(0),
                                 self::getInput('female_count','عدد الإناث')->numeric()->minValue(0),
-                                self::getInput('ser_in_brothers','تسلل الحالة في الأسرة')->numeric()->minValue(1),
-                                Fieldset::make('هل أصيب أحد أفراد الأسرة بمرض أو حادث معين ؟')
+                                self::getInput('ser_in_brothers','ترتيب الحالة بين إخوته')->numeric()->minValue(1),
+                                Fieldset::make(fn()=>self::ret_html('هل تعرض أحد الوالدين لأمراض مزمنة أو إصابات اخرى ?','my-yellow text-xl font-bold'))
                                     ->schema([
                                         self::getDiseaseSelect(),
-                                        self::getInput('other_diseases','أمراض أخري')->required(false)
+                                        self::getInput('other_diseases','أمراض أخرى')->required(false)
                                     ])
                                     ->columns(1),
 
                                 self::getSelectEnum('family_salary'),
                                 self::getSelectEnum('family_sources'),
-                                self::getRadio('house_type'),
-                                self::getRadio('house_narrow'),
-                                self::getRadio('house_health'),
-                                self::getRadio('house_old'),
-                                self::getRadio('house_own'),
-                                self::getRadio('is_house_good'),
+                                self::getSelectEnum('house_type'),
+                                self::getSelectEnum('house_narrow'),
+                                self::getSelectEnum('house_health'),
+                                self::getSelectEnum('house_old'),
+                                self::getSelectEnum('house_own'),
+                                self::getSelectEnum('is_house_good'),
                                 self::getInput('house_rooms','عدد الحجرات')->numeric()->minValue(1),
-                                self::getRadio('is_room_single'),
-                                self::getRadio('has_salary','هل يتقاضي الحالة معاش اساسي ؟')
+                                self::getSelectEnum('is_room_single'),
+                                self::getSelectEnum('has_salary','هل يتقاضي الحالة معاش أساسى ؟')
                                     ->afterStateUpdated(function ($state,Set $set){
                                         if ($state==1) $set('why_not_has_salary',null);
                                     }),
@@ -192,9 +176,9 @@ class createFamily extends Page implements HasForms
                                             $this->redirect(Dashboard::getUrl());
 
                                         })
-                                        ->label('تخزين'),
+                                        ->label('حفظ ومتابعة'),
                                     Action::make('cancel')
-                                        ->label('خروج بدون تخزين')
+                                        ->label('حفظ وخروج')
                                 ])->alignCenter(),
                             ])
                             ->columns(1)

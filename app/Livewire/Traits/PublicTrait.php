@@ -157,13 +157,13 @@ trait PublicTrait {
         if ($name=='father_name') $l='اسم الأب';
         if ($name=='father_job') $l='مهنة الاب';
         if ($name=='father_dead_reason') $l='سبب الوفاة';
-        if ($name=='mother_name') $l='اسم الام';
+        if ($name=='mother_name') $l='اسم الأم';
         if ($name=='mother_job') $l='مهنة الام';
         if ($name=='mother_dead_reason') $l='سبب الوفاة';
         if ($name=='number_of_marriages') $l='عدد مرات الزواج';
-        if ($name=='number_of_separation') $l='عدد مرات الانفصال';
+        if ($name=='number_of_separation') $l='عدد مرات الإنفصال';
         if ($name=='number_of_pregnancies') $l='عدد مرات الحمل';
-        if ($name=='number_of_miscarriages') $l='عدد مرات الاجهاض';
+        if ($name=='number_of_miscarriages') $l='عدد مرات الإجهاض';
 
         if ($label) $l=$label;
 
@@ -217,22 +217,40 @@ trait PublicTrait {
         if ($name=='academic' || $name=='father_academic' || $name=='mother_academic' || $name=='brother_academic')
         {$l='المستوي الدراسي';$option=Academic::class;}
 
+
+        if ($name=='is_parent_relationship') {$l='هل هناك صلة قرابة بين الاب والام ? ';$option=YesNo::class;}
+
+        if ($name=='brother_health' ) {$l='الحالة الصحية';$option=Health::class;}
+        if ($name=='house_type' ) {$l='نوع السكن';$option=HouseType::class;}
+        if ($name=='house_narrow' ) {$l='مساحة السكن';$option=HouseNarrow::class;}
+        if ($name=='house_health' ) {$l='الحالة الصحية للسكن';$option=HouseHealth::class;}
+        if ($name=='house_old' ) {$l='حالة السكن';$option=HouseOld::class;}
+        if ($name=='house_own' ) {$l='ملكية السكن';$option=HouseOwn::class;}
+        if ($name=='is_house_good' ) {$l='هل تتوفر داخل السكن متطلبات الحياة الأساسية ?';$option=YesNo::class;}
+        if ($name=='is_room_single' ) {$l='هل حجرة الحالة فردية ?';$option=YesNo::class;}
+        if ($name=='mother_p_d_health' ) {$l='حالة الام الصحية اثناء الحمل';$option=Health::class;}
+        if ($name=='is_breastfeeding_natural' ) {$l='هل كانت الرضاعة طبيعية ?';$option=BreastfeedingNatural::class;}
+        if ($name=='is_child_food_good' ) {$l='كيف كانت تغذية الحالة ?';$option=Food::class;}
+        if ($name=='sleep_habit' ) {$l='ما عادات الحالة في النوم ؟';$option=Sleap::class;}
+        if ($name=='weekly_therapeutic' ) {$option=Weekly::class;}
+
+        if ($name=='sex' ) {$l='النوع';$option=Sex::class;}
         if ($name=='parent_relationship_nature') {$l='ما هي طبيعة العلاقة بين الأب والأم ';$option=Relationship_nature::class;}
 
-        if ($name=='with_people' ) {$l='في الجانب الاجتماعي';$option=With_people::class;}
+        if ($name=='with_people' ) {$l='في الجانب الإجتماعي';$option=With_people::class;}
         if ($name=='with_motion' ) {$l='في الجانب الحركي';$option=With_motion::class;}
         if ($name=='with_language' ) {$l='في الجانب اللغوي';$option=With_language::class;}
         if ($name=='with_personal' ) {$l='في جانب العناية الشخصية';$option=With_personal::class;}
         if ($name=='with_mind' ) {$l='في الجانب المعرفي العقلي';$option=With_mind::class;}
 
-        if ($name=='father_procedure' ) {$l='الاب';$option=procedures::class;}
-        if ($name=='mother_procedure' ) {$l='الام';$option=procedures::class;}
-        if ($name=='brother_procedure' ) {$l='الاخوة';$option=procedures::class;}
+        if ($name=='father_procedure' ) {$l='الأب';$option=procedures::class;}
+        if ($name=='mother_procedure' ) {$l='الأم';$option=procedures::class;}
+        if ($name=='brother_procedure' ) {$l='الإخوة';$option=procedures::class;}
 
         if ($name=='boy_response' ) {$l='مدي استجابة الحالة لأسلوب التعامل';$option=Boy_response::class;}
 
         if ($name=='is_pregnancy_normal' ) {$l='هل كانت الولادة طبيعية';$option=PregnancyNormal::class;}
-        if ($name=='where_pregnancy_done' ) {$l='اين تمت عملية الولادة';$option=WherePregnancy::class;}
+        if ($name=='where_pregnancy_done' ) {$l='أين تمت عملية الولادة';$option=WherePregnancy::class;}
         if ($name=='pregnancy_time' ) {$l='ما الوقت الذي استغرقته عملية الولادة';$option=PregnancyTime::class;}
 
 
@@ -293,7 +311,7 @@ trait PublicTrait {
                     ->unique(ignoreRecord: true)
                     ->label('المرض'),
             ])
-            ->label(fn()=>self::ret_html('أمراض من القائمة'))
+            ->label(fn()=>self::ret_html('قائمة بالأمراض'))
             ->multiple();
     }
     protected static function getSelect($name,$label=null): Select

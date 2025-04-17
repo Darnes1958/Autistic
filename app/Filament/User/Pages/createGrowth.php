@@ -31,7 +31,7 @@ class createGrowth extends Page implements HasForms
     protected static string $view = 'filament.user.pages.create-growth';
 
     protected static ?string $navigationLabel='تاريخ النمو';
-    protected ?string $heading='تاريخ النمو';
+    protected ?string $heading=' ';
     protected static ?int $navigationSort=4;
     public static function getNavigationIcon(): string|Htmlable|null
     {
@@ -220,7 +220,7 @@ class createGrowth extends Page implements HasForms
 
                                 self::getInput('slookea_other','مظاهر سلوكية اخري'),
 
-                                Fieldset::make(fn()=>self::ret_html(' أذكر أبرز الأعراض الظاهرة على الحالة','my-blue font-extrabold '))
+                                Fieldset::make(fn()=>self::ret_html(' أذكر أبرز الأعراض الظاهرة على الحالة','my-yellow font-extrabold text-xl'))
                                     ->schema([
                                         self::getCheck('social_communication','صعوبات في التواصل الاجتماعي'),
                                         self::getCheck('behaviors','سلوكيات نمطية ومتكررة'),
@@ -355,9 +355,9 @@ class createGrowth extends Page implements HasForms
                             $this->redirect(Dashboard::getUrl());
 
                         })
-                        ->label('تخزين'),
+                        ->label('حفظ ومتابعة'),
                     Action::make('cancel')
-                        ->label('خروج بدون تخزين')
+                        ->label('حفظ وخروج')
                 ])->alignCenter(),
 
 

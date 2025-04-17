@@ -35,7 +35,7 @@ class createAutistic extends Page implements HasForms
 
     protected static string $view = 'filament.user.pages.create-autistic';
     protected static ?string $navigationLabel='بيانات أولية';
-    protected ?string $heading='بيانات أولية';
+    protected ?string $heading=' ';
     protected static ?int $navigationSort=1;
 
     public static function getNavigationIcon(): string|Htmlable|null
@@ -76,7 +76,7 @@ class createAutistic extends Page implements HasForms
                    ->schema([
                        Section::make()
                        ->schema([
-                           Fieldset::make(fn()=>self::ret_html('الإسم','my-yellow text-lg'))
+                           Fieldset::make(fn()=>self::ret_html('اسم الحالة رباعي','my-yellow text-xl font-bold'))
                                ->schema([
                                    self::getInput('name',' ')
                                        ->inlineLabel(false)
@@ -87,14 +87,14 @@ class createAutistic extends Page implements HasForms
                                ])
                                ->columns(3),
 
-                           self::getRadio('sex','النوع'),
+                           self::getSelectEnum('sex','النوع'),
                            self::getDate('birthday')
 
                                ,
                            self::getSelect('birth_city')
                            ,
 
-                           Fieldset::make(fn()=>self::ret_html('العنوان الحالي','my-yellow text-lg'))
+                           Fieldset::make(fn()=>self::ret_html('العنوان الحالي','my-yellow text-xl font-bold'))
                                ->schema([
                                    self::getSelect('city_id','المدينة')
                                        ->live()
@@ -102,7 +102,7 @@ class createAutistic extends Page implements HasForms
                                            $set('street_id',null);
 
                                        }),
-                                   self::getSelect('street_id','الحي')
+                                   self::getSelect('street_id','الحي السكني')
                                        ->live()
                                        ->options(fn (Get $get): Collection => Street::query()
                                            ->where('city_id', $get('city_id'))
@@ -113,7 +113,7 @@ class createAutistic extends Page implements HasForms
                                            return Street::create($data)->getKey();
                                        })
                                    ,
-                                   self::getSelect('near_id','اقرب نقطة دالة')
+                                   self::getSelect('near_id','أقرب نقطة دالة')
                                        ->options(fn (Get $get): Collection => Near::query()
                                            ->where('street_id', $get('street_id'))
                                            ->pluck('name', 'id'))
@@ -125,8 +125,8 @@ class createAutistic extends Page implements HasForms
                                ])
                                ->columns(1)
                            ,
-                           self::getSelect('center_id','مركز التوحد (اذا كان  ملتحقا بمركز)')
-                               ->label(fn()=>self::ret_html('مركز التوحد (اذا كان  ملتحقا بمركز)','text-black '))
+                           self::getSelect('center_id','مركز التوحد (إذا كان  ملتحقاً بمركز)')
+                               ->label(fn()=>self::ret_html('مركز التوحد (إذا كان  ملتحقاً بمركز)','text-black '))
                                ->required(false)
                                ->options(fn (Get $get): Collection => Center::query()
                                    ->where('city_id', $get('city_id'))
@@ -137,22 +137,22 @@ class createAutistic extends Page implements HasForms
                                    return Center::create($data)->getKey();
                                }),
                            self::getSelectEnum('academic')->columnSpanFull(),
-                           Fieldset::make(fn()=>self::ret_html('الشخص الذي قام بتعبئة البيانات','my-yellow text-lg'))
+                           Fieldset::make(fn()=>self::ret_html('الشخص الذي قام بتعبئة البيانات','my-yellow text-xl font-bold'))
                                ->schema([
                                    self::getInput('person_name'),
                                    self::getSelectEnum('person_relationship'),
-                                   self::getInput('person_phone'),
-                                   self::getSelect('person_city'),
+                                   self::getInput('person_phone','رقم الهاتف'),
+                                   self::getSelect('person_city','محل الإقامة'),
                                    self::getDate('person_date'),
                                ])
                                ->columns(1),
-                           self::getInput('symptoms','الاعراض التي تمت ملاحظتها')
-                           ->label(fn()=>self::ret_html('الاعراض التي تمت ملاحظتها ','text-black ')),
+                           self::getInput('symptoms','الأعراض التي تمت ملاحظتها')
+                           ->label(fn()=>self::ret_html('الأعراض التي تمت ملاحظتها ','text-black ')),
                            self::getSelectEnum('sym_year')
-                               ->label(fn()=>self::ret_html(' تمت رؤية الأعراض في العام ','text-black ')),
+                               ->label(fn()=>self::ret_html(' تمت ملاحظة الأعراض في العام ','text-black ')),
                            FileUpload::make('image')
                                ->required()
-                               ->label(fn()=>self::ret_html('صورة شخصية للحالة ','my-yellow text-lg'))
+                               ->label(fn()=>self::ret_html('صورة شخصية للحالة ','my-yellow text-xl font-bold'))
                                ->multiple()
                                ->maxFiles(5)
                                ->directory('autistic-images'),
@@ -170,9 +170,9 @@ class createAutistic extends Page implements HasForms
 
                                         $this->redirect(Dashboard::getUrl());
                                     })
-                                    ->label('تخزين'),
+                                    ->label('حفظ ومتابعة'),
                                 Action::make('cancel')
-                                    ->label('خروج بدون تخزين')
+                                    ->label('حفظ وخروج')
                             ])->alignCenter(),
 
 
