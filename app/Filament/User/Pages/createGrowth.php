@@ -82,7 +82,7 @@ class createGrowth extends Page implements HasForms
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state>55 || $state<16) {
                                             $set('mother_old', null);
-                                            self::noti_danger('يجب أن يكون عمر الام عند الولادة من 16 الي 55');
+                                            self::noti_danger('يجب أن يكون عمر الأم عند الولادة من 16 الي 55');
                                         }
                                     })
                                     ->minValue(16)
@@ -98,32 +98,32 @@ class createGrowth extends Page implements HasForms
                                     })
                                     ->minValue(5)
                                     ->maxValue(12),
-                                self::getRadio('is_pregnancy_planned','هل كان الحمل مخططا له'),
-                                self::getRadio('mother_p_d_health','حالة الام الصحية اثناء الحمل')->live()
+                                self::getSelectEnum('is_pregnancy_planned','هل كان الحمل مخططا له'),
+                                self::getSelectEnum('mother_p_d_health','حالة الأم الصحية أثناء الحمل')->live()
                                 ->afterStateUpdated(function (Set $set, $state){
                                     if ($state=1) $set('p_d_why_not_health',null);
                                 }),
                                 self::getInput('p_d_why_not_health','لماذا كانت غير جيدة')
                                     ->visible(fn(Get $get): bool => $get('mother_p_d_health')!=null && $get('mother_p_d_health')==0)
                                     ->nullable(),
-                                self::getRadio('is_p_d_followed','هل تم الحمل بمتابعة طبية'),
-                                self::getRadio('is_p_d_good_food','هل غذاء الام اثناء الحمل جيد'),
-                                self::getRadio('is_child_wanted','هل كان الحالة مرغوب فيه'),
-                                self::getRadio('is_p_d_disease','هل تعرضت الام لأي أمراض أو حوادث')
+                                self::getSelectEnum('is_p_d_followed','هل تم الحمل بمتابعة طبية'),
+                                self::getSelectEnum('is_p_d_good_food','هل غذاء الأم اثناء الحمل جيد'),
+                                self::getSelectEnum('is_child_wanted','هل كان الحالة مرغوب فيه'),
+                                self::getSelectEnum('is_p_d_disease','هل تعرضت الأم لأي أمراض أو حوادث')
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state!=1) $set('p_d_disease',null);
                                     }),
-                                self::getInput('p_d_disease',' ماهي الامراض او الحوادث')
+                                self::getInput('p_d_disease',' ماهي الأمراض أو الحوادث')
                                     ->nullable()->visible(fn(Get $get): bool =>$get('is_p_d_disease')==1)
                                     ->nullable(),
                                 Grid::make()
                                     ->schema([
                                         self::getSelectEnum('is_pregnancy_normal','هل كانت الولادة طبيعية'),
-                                        self::getSelectEnum('where_pregnancy_done','اين تمت عملية الولادة'),
+                                        self::getSelectEnum('where_pregnancy_done','أين تمت عملية الولادة'),
                                         self::getSelectEnum('pregnancy_time','ما الوقت الذي استغرقته عملية الولادة'),
-                                        self::getSelectEnum('child_weight','وزن الحالة اثناء الولادة'),
-                                        self::getRadio('is_child_followed','هل احتاج الحالة بعد ولادته إلي رعاية خاصة')
+                                        self::getSelectEnum('child_weight','وزن الحالة أثناء الولادة'),
+                                        self::getSelectEnum('is_child_followed','هل احتاج الحالة بعد ولادته إلى رعاية خاصة')
                                             ->live()
                                             ->afterStateUpdated(function (Set $set, $state){
                                                 if ($state!=1) $set('why_child_followed',null);
@@ -135,9 +135,9 @@ class createGrowth extends Page implements HasForms
                                     ])->columns(1),
 
 
-                                self::getRadio('is_breastfeeding_natural','هل كانت الرضاعة طبيعية ?'),
+                                self::getSelectEnum('is_breastfeeding_natural','هل كانت الرضاعة طبيعية ?'),
                                 self::getSelectEnum('breastfeeding_period','مدة الرضاعة'),
-                                self::getRadio('difficulties_during_weaning','هل حدثت صعوبات اثناء الفطام')
+                                self::getSelectEnum('difficulties_during_weaning','هل حدثت صعوبات أثناء الفطام')
                                 ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state!=1) $set('what_is_the_defficulties',null);
@@ -153,21 +153,22 @@ class createGrowth extends Page implements HasForms
                                 self::getSelectEnum('could_walk','متى استطاع المشي'),
                                 self::getSelectEnum('when_try_speak','متى بدأت محاولة النطق'),
                                 self::getSelectEnum('when_speak','متى استطاع التحدث'),
-                                self::getSelectEnum('when_open_door','متى استطاع فتح الابواب'),
-                                self::getSelectEnum('when_set_export','متى ضبط عمليات الاخراج'),
-                                self::getSelectEnum('when_wear_shoes','متى استطاع ان يلبس الحذاء'),
+                                self::getSelectEnum('when_open_door','متى استطاع فتح الأبواب'),
+                                self::getSelectEnum('when_set_export','متى ضبط عمليات الإخراج'),
+                                self::getSelectEnum('when_wear_shoes','متى استطاع أن يلبس الحذاء'),
                                 self::getSelectEnum('when_use_spoon','متى استطاع استخدام الملعقة و الكوب'),
-                                self::getRadio('is_child_food_good','كيف كانت تغذية الحالة ?')->live()
+                                self::getSelectEnum('is_child_food_good','كيف كانت تغذية الحالة ?')->live()
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state==1) $set('why_food_not_good',null);
                                     }),
 
                                 self::getinput('why_food_not_good','اسباب التغذية الغير جيدة')
-                                    ->visible(fn(Get $get):bool => $get('is_child_food_good')!=null && $get('is_child_food_good')==0)->nullable(),
+                                    ->visible(fn(Get $get):bool =>  $get('is_child_food_good')==2)
+                                    ->nullable(),
 
-                                self::getRadio('sleep_habit','ما عادات الحالة في النوم ؟'),
-                                self::getRadio('is_disturbing_nightmares','هل يتعرض لكوابيس مزعجة'),
-                                self::getRadio('safety_of_senses','هل الحواس سليمة')
+                                self::getSelectEnum('sleep_habit','ما عادات الحالة في النوم ؟'),
+                                self::getSelectEnum('is_disturbing_nightmares','هل يتعرض لكوابيس مزعجة'),
+                                self::getSelectEnum('safety_of_senses','هل الحواس سليمة')
                                 ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state==1) $set('who_senses',null);
@@ -175,7 +176,7 @@ class createGrowth extends Page implements HasForms
 
                                 self::getinput('who_senses','ماهي الحواس المصابة')
                                     ->visible(fn(Get $get):bool => $get('safety_of_senses')!=null && $get('safety_of_senses')==0)->nullable(),
-                                self::getRadio('mental_health','هل الوظائف العقلية سليمة')
+                                self::getSelectEnum('mental_health','هل الوظائف العقلية سليمة')
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state==1) $set('who_mental',null);
@@ -183,7 +184,7 @@ class createGrowth extends Page implements HasForms
 
                                 self::getInput('who_mental','ماهي الوظائف المصابة')
                                     ->visible(fn(Get $get):bool => $get('mental_health')!=null && $get('mental_health')==0)->nullable(),
-                                self::getRadio('injuries_disabilities','هل توجد إصابات أو عاهات جسيمة')
+                                self::getSelectEnum('injuries_disabilities','هل توجد إصابات أو عاهات جسيمة')
                                 ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state!=1) $set('injuries_type',null);
@@ -195,7 +196,7 @@ class createGrowth extends Page implements HasForms
                                     ->nullable(),
 
 
-                                self::getRadio('is_child_play_toy','هل يمارس الحالة اللعب بالالعاب')
+                                self::getSelectEnum('is_child_play_toy','هل يمارس الحالة اللعب بالألعاب')
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state==1) $set('why_not_play_toy',null);
@@ -204,37 +205,34 @@ class createGrowth extends Page implements HasForms
                                     ->visible(fn(Get $get):bool => $get('is_child_play_toy')!=null
                                         && $get('is_child_play_toy')==0)
                                     ->nullable(),
-                                self::getCheck('is_play_with_other','هل يلعب'),
+                                self::getCheck('is_play_with_other','مع من يفضل الحالة اللعب ؟ '),
 
-                                self::getRadio('slookea_1','هل الحالة يستمتع بان يتأرجح ويتمايل'),
-                                self::getRadio('slookea_2','هل الحالة مهتم بالأخرين'),
-                                self::getRadio('slookea_3','هل الحالة يتسلق الاشياء مثل السلالم وما شابه'),
-                                self::getRadio('slookea_4','هل حالةك يمارس العاب الطفال مثل لعبة الاستغماية (التخفي)'),
-                                self::getRadio('slookea_5','هل يمارس الحالة (اللعب التخيلي) مثلاً انه يقوم بعمل الشاي باستخدام اكواب وأدوات من اللعب او غيرها '),
-                                self::getRadio('slookea_6','هل يستخدم الحالة اصبعه ليشير الي أشياء يريد أن يسألك عنها'),
-                                self::getRadio('slookea_7','هل يستخدم الحالة اصبعه ليشير الي أشياء هو مهتم بها'),
-                                self::getRadio('slookea_8','هل يحضر لك الحال اشياء لكي يريها لك'),
+                                self::getSelectEnum('slookea_1','هل الحالة يستمتع بأن يتأرجح ويتمايل'),
+                                self::getSelectEnum('slookea_2','هل الحالة مهتم بالآخرين'),
+                                self::getSelectEnum('slookea_3','هل الحالة يتسلق الأشياء مثل السلالم وما شابه'),
+                                self::getSelectEnum('slookea_4','هل الحالة يمارس ألعاب الأطفال مثل لعبة الإستغماية (التخفي)'),
+                                self::getSelectEnum('slookea_5','هل يمارس الحالة (اللعب التخيلي) كأن يقوم بعمل الشاي باستخدام أكواب وأدوات أثناء اللعب '),
+                                self::getSelectEnum('slookea_6','هل يستخدم الحالة إصبعه ليشير إلى أشياء يريد أن يسألك عنها'),
+                                self::getSelectEnum('slookea_7','هل يستخدم الحالة إصبعه ليشير إلى أشياء هو مهتم بها'),
+                                self::getSelectEnum('slookea_8','هل يُحضر لك الحال أشياء لكي يريها لك'),
 
-                                self::getRadio('slookea_9','هل يقوم الحالة بالدوران حول نفسه'),
-                                self::getRadio('slookea_10','هل يسير علي أطراف الاصابع'),
+                                self::getSelectEnum('slookea_9','هل يقوم الحالة بالدوران حول نفسه'),
+                                self::getSelectEnum('slookea_10','هل يسير علي أطراف الأصابع'),
 
-                                self::getInput('slookea_other','مظاهر سلوكية اخري'),
+                                self::getInput('slookea_other','مظاهر سلوكية أخرى'),
 
-                                Fieldset::make(fn()=>self::ret_html(' أذكر أبرز الأعراض الظاهرة على الحالة','my-yellow font-extrabold text-xl'))
+                                Fieldset::make(fn()=>self::ret_html(' أبرز الأعراض الظاهرة على الحالة','my-yellow font-extrabold text-xl'))
                                     ->schema([
                                         self::getCheck('social_communication','صعوبات في التواصل الاجتماعي'),
                                         self::getCheck('behaviors','سلوكيات نمطية ومتكررة'),
                                         self::getCheck('sensory','مشكلات حسية'),
                                         self::getCheck('behavioral_and_emotional','مشكلات سلوكية وعاطفية'),
+                                        self::getCheck('skills','مشكلات في المهارات المعرفية والتعلم'),
+                                        self::getArea('other_sym','أعراض أخرى'),
                                     ])->columns(1),
-
-
-
                             ])
                             ->columns(1)
                             ->extraAttributes(['class' => 'greanbackground']),
-
-
                     ])
                     ->columns(1)
                     ->columnSpan(3),

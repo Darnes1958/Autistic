@@ -12,7 +12,7 @@ enum TherapeuticDetails: int implements HasLabel
     case العلاج_الوظيفي = 2;
     case العلاج_الحسي = 3;
     case علاج_النطق = 4;
-    case تدخلات_اخري = 5;
+    case تدخلات_أخري = 5;
 
 
     public function getLabel(): ?string

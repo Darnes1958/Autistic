@@ -9,7 +9,7 @@ enum Sources: int implements HasLabel,HasColor
 {
   case العمل = 1;
   case عقارات = 2;
-    case اعمال_حرة_اخري = 3;
+    case أعمال_حرة_اخري = 3;
 
 
 

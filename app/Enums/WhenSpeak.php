@@ -8,8 +8,8 @@ use Filament\Support\Contracts\HasLabel;
 enum WhenSpeak: int implements HasLabel
 {
     case غير_ناطق = 0;
-    case اقل_من_سنه = 1;
-    case بعد_سنه = 2;
+    case أقل_من_سنة = 1;
+    case بعد_سنة = 2;
     case بعد_سنتين = 3;
     case بعد_ثلاث_سنوات = 4;
     case بعد_اربع_سنوات = 5;

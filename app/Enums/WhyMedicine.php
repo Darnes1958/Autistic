@@ -12,8 +12,8 @@ enum WhyMedicine: int implements HasLabel
     case تقليل_القلق  = 2;
     case التحكم_بالسلوكيات  = 3;
     case تثبيط_النشاط_الزائد  = 4;
-    case المساعدة_علي_النوم = 5;
-    case اخري = 6;
+    case المساعدة_على_النوم = 5;
+    case أخرى = 6;
 
 
 

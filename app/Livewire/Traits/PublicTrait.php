@@ -30,6 +30,7 @@ use App\Enums\Sym_year;
 use App\Enums\Symptoms\BehavioralAndEmotional;
 use App\Enums\Symptoms\Behaviors;
 use App\Enums\Symptoms\Sensory;
+use App\Enums\Symptoms\Skills;
 use App\Enums\Symptoms\SocialCommunication;
 use App\Enums\TherapeuticDetails;
 use App\Enums\Weekly;
@@ -87,6 +88,7 @@ trait PublicTrait {
         if ($name=='behaviors' ) {$option=Behaviors::class;}
         if ($name=='sensory' ) {$option=Sensory::class;}
         if ($name=='behavioral_and_emotional' ) {$option=BehavioralAndEmotional::class;}
+        if ($name=='skills' ) {$option=Skills::class;}
         if ($name=='is_play_with_other') {$l='هل يلعب';$option=\App\Enums\Play::class;}
 
         if ($name=='why_take_medicine' ) {$option=WhyMedicine::class;}
@@ -247,7 +249,7 @@ trait PublicTrait {
         if ($name=='mother_procedure' ) {$l='الأم';$option=procedures::class;}
         if ($name=='brother_procedure' ) {$l='الإخوة';$option=procedures::class;}
 
-        if ($name=='boy_response' ) {$l='مدي استجابة الحالة لأسلوب التعامل';$option=Boy_response::class;}
+        if ($name=='boy_response' ) {$l='مدى استجابة الحالة لأسلوب التعامل';$option=Boy_response::class;}
 
         if ($name=='is_pregnancy_normal' ) {$l='هل كانت الولادة طبيعية';$option=PregnancyNormal::class;}
         if ($name=='where_pregnancy_done' ) {$l='أين تمت عملية الولادة';$option=WherePregnancy::class;}

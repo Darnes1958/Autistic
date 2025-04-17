@@ -83,7 +83,7 @@ class createMedicine extends Page implements HasForms
                                Fieldset::make(' ')
                                 ->visible(fn(Get $get):bool=>$get('is_take_medicine')==1)
                                 ->schema([
-                                    self::getDate('when_take_medicine','متي بدأ تناول الدواء'),
+                                    self::getDate('when_take_medicine','متى بدأ تناول الدواء'),
                                     Textarea::make('medicine')
                                         ->label(self::ret_html('قائمة بالادوية التي يتناولها '))
                                         ->inlineLabel(),
@@ -95,7 +95,7 @@ class createMedicine extends Page implements HasForms
                                         ->visible(fn(Get $get):bool=>$get('is_still_take_medicine')!=null &&
                                             $get('is_still_take_medicine')==0),
                                     self::getRadio('is_there_symptoms','هل هناك آثار جانبية ملحوظة ؟ '),
-                                    self::getInput('what_are_symptoms','ما هي الأثار الجانبية ?')
+                                    self::getInput('what_are_symptoms','ما هي الآثار الجانبية ?')
                                         ->visible(fn(Get $get):bool=>$get('is_there_symptoms')==1),
                                     self::getRadio('is_medicine_change','هل تم تغيير نوع أو جرعة الدواء مؤخراً ؟ '),
                                     self::getInput('why_change','ما هي التغييرات ؟')
@@ -108,8 +108,7 @@ class createMedicine extends Page implements HasForms
                                     FileUpload::make('medical_reports')
                                         ->directory('medical-reports')
                                         ->multiple()
-                                        ->label(fn()=>self::ret_html('صور التقارير الطبية ان وجدت','my-yellow')),
-
+                                        ->label(fn()=>self::ret_html('صور التقارير الطبية إن وجدت','my-yellow')),
                                 ])->columns(1),
 
                           ])

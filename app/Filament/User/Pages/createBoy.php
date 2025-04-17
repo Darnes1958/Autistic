@@ -100,7 +100,7 @@ class createBoy extends Page implements HasForms
                                         self::getSelect('ambitious_id')
                                             ->label(fn()=>self::ret_html('ما هو طموح الأسرة بالنسبة للحالة ? ','my-yellow text-xl font-bold'))
                                             ->inlineLabel(false),
-                                        self::getArea('other_boy_info','معلومات اخري عن الحالة')
+                                        self::getArea('other_boy_info','معلومات أخرى عن الحالة')
                                             ->required(false),
 
                                         Fieldset::make(fn()=>self::ret_html('ما أساليب التعامل مع الحالة','my-yellow text-xl font-bold'))

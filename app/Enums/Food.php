@@ -8,8 +8,8 @@ use Filament\Support\Contracts\HasColor;
 enum Food: int implements HasLabel,HasColor
 {
   case جيدة = 1;
-  case ناقصة = 2;
-    case سيئة = 3;
+  case غير_جيدة = 2;
+
 
 
   public function getLabel(): ?string
@@ -20,8 +20,8 @@ enum Food: int implements HasLabel,HasColor
   {
     return match ($this) {
       self::جيدة => 'success',
-        self::ناقصة => 'info',
-      self::سيئة => 'danger',
+        self::غير_جيدة => 'info',
+
     };
   }
 

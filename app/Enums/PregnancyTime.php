@@ -7,7 +7,7 @@ use Filament\Support\Contracts\HasLabel;
 
 enum PregnancyTime: int implements HasLabel, HasColor
 {
-    case اقل_من_ساعة = 1;
+    case أقل_من_ساعة = 1;
     case ساعة = 2;
     case أكثر_من_ساعة = 3;
 
@@ -20,7 +20,7 @@ enum PregnancyTime: int implements HasLabel, HasColor
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::اقل_من_ساعة => 'yellow',
+            self::أقل_من_ساعة => 'yellow',
             self::ساعة => 'success',
             self::أكثر_من_ساعة => 'info',
 

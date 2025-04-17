@@ -7,12 +7,12 @@ use Filament\Support\Contracts\HasColor;
 
 enum Salary: int implements HasLabel,HasColor
 {
-  case اقل_من_1000_دينار = 1;
+  case أقل_من_1000_دينار = 1;
   case من_1000_الي_2000_دينار = 2;
   case من_2000_الي_3000_دينار = 3;
     case من_3000_الي_4000_دينار = 4;
     case من_4000_الي_5000_دينار = 5;
-  case اكثر_من_5000_دينار = 6;
+  case أكثر_من_5000_دينار = 6;
 
 
 
