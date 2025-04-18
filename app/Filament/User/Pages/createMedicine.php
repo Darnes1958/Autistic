@@ -70,7 +70,7 @@ class createMedicine extends Page implements HasForms
 
                           ->heading(self::ret_html(' العلاج الدوائي','my-yellow font-extrabold text-xl') )
                           ->schema([
-                               self::getRadio('is_take_medicine','هل يتناول الحالة دواء'),
+                               self::getSelectEnum('is_take_medicine','هل يتناول الحالة دواء'),
                                Fieldset::make(' ')
                                 ->visible(fn(Get $get):bool=>$get('is_take_medicine')==1)
                                 ->schema([
@@ -81,14 +81,14 @@ class createMedicine extends Page implements HasForms
                                     self::getCheck('why_take_medicine','الغرض من تناول الدواء'),
                                     self::getInput('other_reason_take_medicine','ماهي الاسباب الاخري')
                                         ->visible(fn(Get $get):bool=>$get('why_take_medicine')==6),
-                                    self::getRadio('is_still_take_medicine','هل مازال التدخل الدوائي مستمر ؟'),
+                                    self::getSelectEnum('is_still_take_medicine','هل مازال التدخل الدوائي مستمر ؟'),
                                     self::getInput('why_he_stop_medicine','لماذا توقف العلاج')
                                         ->visible(fn(Get $get):bool=>$get('is_still_take_medicine')!=null &&
                                             $get('is_still_take_medicine')==0),
-                                    self::getRadio('is_there_symptoms','هل هناك آثار جانبية ملحوظة ؟ '),
+                                    self::getSelectEnum('is_there_symptoms','هل هناك آثار جانبية ملحوظة ؟ '),
                                     self::getInput('what_are_symptoms','ما هي الآثار الجانبية ?')
                                         ->visible(fn(Get $get):bool=>$get('is_there_symptoms')==1),
-                                    self::getRadio('is_medicine_change','هل تم تغيير نوع أو جرعة الدواء مؤخراً ؟ '),
+                                    self::getSelectEnum('is_medicine_change','هل تم تغيير نوع أو جرعة الدواء مؤخراً ؟ '),
                                     self::getInput('why_change','ما هي التغييرات ؟')
                                         ->visible(fn(Get $get):bool=>$get('is_medicine_change')==1),
 
@@ -107,7 +107,7 @@ class createMedicine extends Page implements HasForms
                         Section::make()
                             ->heading(self::ret_html(' التدخلات السلوكية والعلاجية','my-yellow font-extrabold text-xl') )
                             ->schema([
-                                self::getRadio('is_take_therapeutic','هل تلقى الحالة أي تدخلات علاجية غير دوائية ؟ '),
+                                self::getSelectEnum('is_take_therapeutic','هل تلقى الحالة أي تدخلات علاجية غير دوائية ؟ '),
                                 Fieldset::make(' ')
                                     ->visible(fn(Get $get):bool=>$get('is_take_therapeutic')==1)
                                     ->schema([
@@ -118,12 +118,12 @@ class createMedicine extends Page implements HasForms
                                         self::getInput('age_therapeutic',' كم كان عمر الحالة عند تلقي التدخلات العلاجية ؟')
                                         ->numeric(),
                                         self::getDate('when_therapeutic','متي بدأ التدخل العلاجي ؟'),
-                                        self::getRadio('weekly_therapeutic','عدد الجلسات أسبوعياً ؟ '),
-                                        self::getRadio('is_stil_take_therapeutic','هل مازال التدخل العلاجي مستمر حتى الآن؟ '),
+                                        self::getSelectEnum('weekly_therapeutic','عدد الجلسات أسبوعياً ؟ '),
+                                        self::getSelectEnum('is_stil_take_therapeutic','هل مازال التدخل العلاجي مستمر حتى الآن؟ '),
                                         self::getInput('why_he_stop_therapeutic','لماذا توقف التدخل العلاجي ؟')
                                             ->visible(fn(Get $get):bool=>$get('is_stil_take_therapeutic')!=null &&
                                                 $get('is_stil_take_therapeutic')==0),
-                                        self::getRadio('is_there_any_improve','هل هناك تحسن ملحوظ ؟ '),
+                                        self::getSelectEnum('is_there_any_improve','هل هناك تحسن ملحوظ ؟ '),
                                         self::getInput('what_is_improve','ما هو التحسن ?')
                                             ->visible(fn(Get $get):bool=>$get('is_there_any_improve')==1),
 
@@ -143,10 +143,10 @@ class createMedicine extends Page implements HasForms
                         Section::make()
                             ->heading(self::ret_html('التوصيات المستقبلية','my-yellow font-extrabold text-xl') )
                          ->schema([
-                             self::getRadio('is_doctor_say','هل أوصى الطبيب أو المختص بتعديل الخطة العلاجية ؟ '),
+                             self::getSelectEnum('is_doctor_say','هل أوصى الطبيب أو المختص بتعديل الخطة العلاجية ؟ '),
                              self::getInput('what_doctor_say','بماذا أوصي ?')
                                  ->visible(fn(Get $get):bool=>$get('is_doctor_say')==1),
-                             self::getRadio('any_problems','هل هناك صعوبات في الالتزام بالعلاج سواء الدوائي أو السلوكي؟ '),
+                             self::getSelectEnum('any_problems','هل هناك صعوبات في الالتزام بالعلاج سواء الدوائي أو السلوكي؟ '),
                              self::getInput('what_is_problems','ماهي الصعوبات ?')
                                  ->visible(fn(Get $get):bool=>$get('any_problems')==1),
 
