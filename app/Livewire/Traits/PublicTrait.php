@@ -280,7 +280,7 @@ trait PublicTrait {
         if (!$option) $option=YesNo::class;
         return Select::make($name)
             ->options($option)
-
+            ->live()
             ->preload()
             ->searchable()
             ->label(fn()=>self::ret_html($l))
