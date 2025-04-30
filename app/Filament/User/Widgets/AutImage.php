@@ -7,10 +7,13 @@ use Filament\Widgets\Widget;
 use Illuminate\Support\Facades\Auth;
 
 class AutImage extends Widget
+
 {
     public $image;
     public $name;
     protected static string $view = 'filament.user.widgets.aut-image';
+    protected static ?int $sort = 2;
+    protected int | string | array $columnSpan = 1;
     public function mount(): void{
         $aut=autistic::where('user_id',Auth::id())->first();
       if ($aut) {

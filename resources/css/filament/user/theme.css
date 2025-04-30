@@ -31,19 +31,20 @@
     background-color: #EBBC4E  ;
 }
 .fi-main {
-    background-color: #EBBC4E  ;
+    @apply honeyyellow;
 }
 .fi-layout {
-    background-color: #EBBC4E  ;
+    @apply honeyyellow;
 }
 
 .burntorange
 {
     background: #cc5500;
 }
+
 .fi-sidebar-nav
 {
-    background: #cc5500;
+    @apply honeyyellow;
 }
 .greanbackground
 {
@@ -52,7 +53,7 @@
 }
 
 .fi-sidebar-item-active > a {
-    @apply honeyyellow;
+    @apply burntorange;
 
     & > svg, span {
         @apply text-2xl !important;
@@ -60,7 +61,13 @@
     }
 
     &:hover {
-        @apply honeyyellow;
+        @apply burntorange;
     }
 }
 
+.fi-wi-stats-overview-header-heading {
+    @apply text-2xl !important;
+}
+.fi-wi-stats-overview-header-description {
+    @apply text-lg !important;
+}
