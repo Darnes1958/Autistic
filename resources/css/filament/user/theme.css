@@ -1,5 +1,6 @@
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
 @import '/vendor/awcodes/filament-table-repeater/resources/css/plugin.css';
+
 @config 'tailwind.config.js';
 
 .fi-ta-ctn .py-4 {
@@ -41,6 +42,11 @@
 {
     background: #cc5500;
 }
+.burntorangecolor
+{
+    color: #cc5500;
+}
+
 
 .fi-sidebar-nav
 {
@@ -71,3 +77,5 @@
 .fi-wi-stats-overview-header-description {
     @apply text-lg !important;
 }
+
+

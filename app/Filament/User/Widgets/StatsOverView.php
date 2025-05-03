@@ -16,7 +16,10 @@ class StatsOverView extends BaseWidget
     {
         return 1;
     }
-
+    public static function canView(): bool
+    {
+        return false;
+    }
 
     protected function getStats(): array
     {

@@ -13,7 +13,7 @@ class AutImage extends Widget
     public $name;
     protected static string $view = 'filament.user.widgets.aut-image';
     protected static ?int $sort = 2;
-    protected int | string | array $columnSpan = 1;
+    protected int | string | array $columnSpan = 4;
     public function mount(): void{
         $aut=autistic::where('user_id',Auth::id())->first();
       if ($aut) {
