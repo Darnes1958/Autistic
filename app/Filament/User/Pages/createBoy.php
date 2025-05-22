@@ -66,7 +66,7 @@ class createBoy extends Page implements HasForms
                             ->schema([
 
                                         self::getCheck('how_past')
-                                            ->label(fn()=>self::ret_html('كيف كان وضع الحالة في بداية ظهور الأعراض ? ','my-yellow text-xl font-bold'))
+                                            ->label(fn()=>self::ret_html('كيف كان وضع الحالة في بداية ظهور الأعراض ? ','my-yellow text-2xl font-black'))
                                             ->live()
                                             ->afterStateUpdated(function ($state,Set $set){
                                                 $this->showPast=false;
@@ -77,7 +77,7 @@ class createBoy extends Page implements HasForms
                                             ->visible(function (){
                                                 return $this->showPast;
                                             }),
-                                        Fieldset::make(self::ret_html('مدى تأثير الإضطراب على الحالة','my-yellow text-xl font-bold'))
+                                        Fieldset::make(self::ret_html('مدى تأثير الإضطراب على الحالة','my-yellow text-2xl font-black'))
                                          ->schema([
                                              self::getSelectEnum('with_people'),
                                              self::getSelectEnum('with_motion'),
@@ -88,12 +88,12 @@ class createBoy extends Page implements HasForms
                                          ])->columns(1),
 
                                         self::getSelect('ambitious_id')
-                                            ->label(fn()=>self::ret_html('ما هو طموح الأسرة بالنسبة للحالة ? ','my-yellow text-xl font-bold'))
+                                            ->label(fn()=>self::ret_html('ما هو طموح الأسرة بالنسبة للحالة ? ','my-yellow text-2xl font-black'))
                                             ->inlineLabel(false),
                                         self::getArea('other_boy_info','معلومات أخرى عن الحالة')
                                             ->required(false),
 
-                                        Fieldset::make(fn()=>self::ret_html('ما أساليب التعامل مع الحالة','my-yellow text-xl font-bold'))
+                                        Fieldset::make(fn()=>self::ret_html('ما أساليب التعامل مع الحالة','my-yellow text-2xl font-black'))
                                             ->schema([
                                                 self::getSelectEnum('father_procedure'),
                                                 self::getSelectEnum('mother_procedure'),

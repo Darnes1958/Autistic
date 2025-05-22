@@ -67,7 +67,7 @@ class createAutistic extends Page implements HasForms
                    ->schema([
                        Section::make()
                        ->schema([
-                           Fieldset::make(fn()=>self::ret_html('اسم الحالة رباعي','my-yellow text-xl font-bold'))
+                           Fieldset::make(fn()=>self::ret_html('اسم الحالة رباعي','my-yellow text-2xl font-black'))
                                ->schema([
                                    self::getInput('name',' ')
                                        ->inlineLabel(false)
@@ -85,7 +85,7 @@ class createAutistic extends Page implements HasForms
                            self::getSelect('birth_city')
                            ,
 
-                           Fieldset::make(fn()=>self::ret_html('العنوان الحالي','my-yellow text-xl font-bold'))
+                           Fieldset::make(fn()=>self::ret_html('العنوان الحالي','my-yellow text-2xl font-black'))
                                ->schema([
                                    self::getSelect('city_id','المدينة')
                                        ->live()
@@ -128,7 +128,7 @@ class createAutistic extends Page implements HasForms
                                    return Center::create($data)->getKey();
                                }),
                            self::getSelectEnum('academic')->columnSpanFull(),
-                           Fieldset::make(fn()=>self::ret_html('الشخص الذي قام بتعبئة البيانات','my-yellow text-xl font-bold'))
+                           Fieldset::make(fn()=>self::ret_html('الشخص الذي قام بتعبئة البيانات','my-yellow text-2xl font-black'))
                                ->schema([
                                    self::getInput('person_name'),
                                    self::getSelectEnum('person_relationship'),
@@ -143,7 +143,7 @@ class createAutistic extends Page implements HasForms
                                ->label(fn()=>self::ret_html(' تمت ملاحظة الأعراض في العام ','text-black ')),
                            FileUpload::make('image')
                                ->required()
-                               ->label(fn()=>self::ret_html('صورة شخصية للحالة ','my-yellow text-xl font-bold'))
+                               ->label(fn()=>self::ret_html('صورة شخصية للحالة ','my-yellow text-2xl font-black'))
                                ->multiple()
                                ->maxFiles(5)
                                ->directory('autistic-images'),

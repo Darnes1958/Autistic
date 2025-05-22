@@ -31,8 +31,12 @@
 {
     background-color: #EBBC4E  ;
 }
+.morehoneyyellow
+{
+    background-color: #f1cc75;
+}
 .fi-main {
-    @apply honeyyellow;
+    @apply morehoneyyellow;
 }
 .fi-layout {
     @apply honeyyellow;
@@ -42,9 +46,17 @@
 {
     background: #cc5500;
 }
+.moreburntorange
+{
+    background: #f4a46c;
+}
 .burntorangecolor
 {
     color: #cc5500;
+}
+.moregreen
+{
+    color: #7eaa7a;
 }
 
 
@@ -59,7 +71,7 @@
 }
 
 .fi-sidebar-item-active > a {
-    @apply burntorange;
+    @apply moreburntorange;
 
     & > svg, span {
         @apply text-2xl !important;
@@ -67,7 +79,7 @@
     }
 
     &:hover {
-        @apply burntorange;
+        @apply moreburntorange;
     }
 }
 
@@ -76,6 +88,9 @@
 }
 .fi-wi-stats-overview-header-description {
     @apply text-lg !important;
+}
+.fi-sidebar-item-icon {
+    @apply text-green-300 !important;
 }
 
 

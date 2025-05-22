@@ -73,7 +73,7 @@ class createFamily extends Page implements HasForms
                     ->schema([
                         Section::make()
                             ->schema([
-                                Fieldset::make(fn()=>self::ret_html('الأب','my-yellow text-xl font-bold'))
+                                Fieldset::make(fn()=>self::ret_html('الأب','my-yellow text-2xl font-black'))
                                     ->schema([
                                         self::getInput('father_name'),
                                         self::getSelect('father_city'),
@@ -93,7 +93,7 @@ class createFamily extends Page implements HasForms
                                         self::getDate('father_dead_date')
                                             ->visible(function (Get $get){return $get('is_father_life')==0 && $get('is_father_life')!=null;}),
                                     ])->columns(1),
-                                Fieldset::make(fn()=>self::ret_html('الأم','my-yellow text-xl font-bold'))
+                                Fieldset::make(fn()=>self::ret_html('الأم','my-yellow text-2xl font-black'))
                                     ->schema([
                                         self::getInput('mother_name'),
                                         self::getSelect('mother_city'),
@@ -126,7 +126,7 @@ class createFamily extends Page implements HasForms
                                 self::getInput('male_count','عدد الذكور')->numeric()->minValue(0),
                                 self::getInput('female_count','عدد الإناث')->numeric()->minValue(0),
                                 self::getInput('ser_in_brothers','ترتيب الحالة بين إخوته')->numeric()->minValue(1),
-                                Fieldset::make(fn()=>self::ret_html('هل تعرض أحد الوالدين لأمراض مزمنة أو إصابات اخرى ?','my-yellow text-xl font-bold'))
+                                Fieldset::make(fn()=>self::ret_html('هل تعرض أحد الوالدين لأمراض مزمنة أو إصابات اخرى ?','my-yellow text-2xl font-black'))
                                     ->schema([
                                         self::getDiseaseSelect(),
                                         self::getInput('other_diseases','أمراض أخرى')->required(false)
@@ -150,7 +150,7 @@ class createFamily extends Page implements HasForms
                                 self::getInput('why_not_has_salary','ما هي الأسباب ؟')
                                     ->visible(function (Get $get){return $get('has_salary')!=1 &&  $get('has_salary')!=null;}),
                                 Textarea::make('other_family_notes')
-                                    ->label('معلومات أخري'),
+                                    ->label(fn()=>self::ret_html('معلومات أخري')),
                                 Hidden::make('user_id'),
 
                                 Actions::make([

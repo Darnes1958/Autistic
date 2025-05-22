@@ -211,7 +211,7 @@ class createGrowth extends Page implements HasForms
 
                                 self::getInput('slookea_other','مظاهر سلوكية أخرى'),
 
-                                Fieldset::make(fn()=>self::ret_html(' أبرز الأعراض الظاهرة على الحالة','my-yellow font-extrabold text-xl'))
+                                Fieldset::make(fn()=>self::ret_html(' أبرز الأعراض الظاهرة على الحالة','my-yellow text-2xl font-black'))
                                     ->schema([
                                         self::getCheck('social_communication','صعوبات في التواصل الاجتماعي'),
                                         self::getCheck('behaviors','سلوكيات نمطية ومتكررة'),

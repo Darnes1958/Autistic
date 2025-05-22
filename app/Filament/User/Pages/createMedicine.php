@@ -68,7 +68,7 @@ class createMedicine extends Page implements HasForms
                     ->schema([
                         Section::make()
 
-                          ->heading(self::ret_html(' العلاج الدوائي','my-yellow font-extrabold text-xl') )
+                          ->heading(self::ret_html(' العلاج الدوائي','my-yellow text-2xl font-black') )
                           ->schema([
                                self::getSelectEnum('is_take_medicine','هل يتناول الحالة دواء'),
                                Fieldset::make(' ')
@@ -95,17 +95,17 @@ class createMedicine extends Page implements HasForms
                                     FileUpload::make('prescription_image')
                                         ->directory('prescription-images')
                                         ->multiple()
-                                        ->label(fn()=>self::ret_html('صور وصفة الدواء إن وجدت','my-yellow')),
+                                        ->label(fn()=>self::ret_html('صور وصفة الدواء إن وجدت','my-yellow text-lg')),
                                     FileUpload::make('medical_reports')
                                         ->directory('medical-reports')
                                         ->multiple()
-                                        ->label(fn()=>self::ret_html('صور التقارير الطبية إن وجدت','my-yellow')),
+                                        ->label(fn()=>self::ret_html('صور التقارير الطبية إن وجدت','my-yellow text-lg')),
                                 ])->columns(1),
 
                           ])
                           ->extraAttributes(['class' => 'greanbackground']),
                         Section::make()
-                            ->heading(self::ret_html(' التدخلات السلوكية والعلاجية','my-yellow font-extrabold text-xl') )
+                            ->heading(self::ret_html(' التدخلات السلوكية والعلاجية','my-yellow text-2xl font-black') )
                             ->schema([
                                 self::getSelectEnum('is_take_therapeutic','هل تلقى الحالة أي تدخلات علاجية غير دوائية ؟ '),
                                 Fieldset::make(' ')
@@ -131,7 +131,7 @@ class createMedicine extends Page implements HasForms
                                         FileUpload::make('therapeutic_reports')
                                             ->directory('therapeutic-reports')
                                             ->multiple()
-                                            ->label(fn()=>self::ret_html('صور جلسات العلاج إن وجدت','my-yellow')),
+                                            ->label(fn()=>self::ret_html('صور جلسات العلاج إن وجدت','my-yellow text-lg')),
 
 
 
@@ -141,7 +141,7 @@ class createMedicine extends Page implements HasForms
                             ])
                             ->extraAttributes(['class' => 'greanbackground']),
                         Section::make()
-                            ->heading(self::ret_html('التوصيات المستقبلية','my-yellow font-extrabold text-xl') )
+                            ->heading(self::ret_html('التوصيات المستقبلية','my-yellow text-2xl font-black') )
                          ->schema([
                              self::getSelectEnum('is_doctor_say','هل أوصى الطبيب أو المختص بتعديل الخطة العلاجية ؟ '),
                              self::getInput('what_doctor_say','بماذا أوصي ?')
