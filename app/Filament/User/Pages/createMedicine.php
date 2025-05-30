@@ -77,9 +77,16 @@ class createMedicine extends Page implements HasForms
                                     self::getDate('when_take_medicine','متى بدأ تناول الدواء'),
                                     Textarea::make('medicine')
                                         ->label(self::ret_html('قائمة بالادوية التي يتناولها '))
+                                        ->required()
+                                        ->validationMessages([
+                                            'required' => 'يجب ادخال الأدوية التي يتناولها ',
+
+                                        ])
+
                                         ->inlineLabel(),
                                     self::getCheck('why_take_medicine','الغرض من تناول الدواء'),
-                                    self::getInput('other_reason_take_medicine','ماهي الاسباب الاخري')
+
+                                    self::getInput('other_reason_take_medicine','أرجو التوضيح')
                                         ->visible(fn(Get $get):bool=>$get('why_take_medicine')==6),
                                     self::getSelectEnum('is_still_take_medicine','هل مازال التدخل الدوائي مستمر ؟'),
                                     self::getInput('why_he_stop_medicine','لماذا توقف العلاج')
@@ -94,10 +101,13 @@ class createMedicine extends Page implements HasForms
 
                                     FileUpload::make('prescription_image')
                                         ->directory('prescription-images')
+                                        ->placeholder('انقر هنا لإدراج الوصفة')
+                                        ->label('take photo')
                                         ->multiple()
                                         ->label(fn()=>self::ret_html('صور وصفة الدواء إن وجدت','my-yellow text-lg')),
                                     FileUpload::make('medical_reports')
                                         ->directory('medical-reports')
+                                        ->placeholder('انقر هنا لإدراج التقرير')
                                         ->multiple()
                                         ->label(fn()=>self::ret_html('صور التقارير الطبية إن وجدت','my-yellow text-lg')),
                                 ])->columns(1),
@@ -144,10 +154,10 @@ class createMedicine extends Page implements HasForms
                             ->heading(self::ret_html('التوصيات المستقبلية','my-yellow text-2xl font-black') )
                          ->schema([
                              self::getSelectEnum('is_doctor_say','هل أوصى الطبيب أو المختص بتعديل الخطة العلاجية ؟ '),
-                             self::getInput('what_doctor_say','بماذا أوصي ?')
+                             self::getInput('what_doctor_say','بماذا أوصى ؟')
                                  ->visible(fn(Get $get):bool=>$get('is_doctor_say')==1),
                              self::getSelectEnum('any_problems','هل هناك صعوبات في الالتزام بالعلاج سواء الدوائي أو السلوكي؟ '),
-                             self::getInput('what_is_problems','ماهي الصعوبات ?')
+                             self::getInput('what_is_problems','ماهي الصعوبات ؟')
                                  ->visible(fn(Get $get):bool=>$get('any_problems')==1),
 
                          ])
@@ -171,6 +181,9 @@ class createMedicine extends Page implements HasForms
                                 })
                                 ->label('حفظ ومتابعة'),
                             Action::make('cancel')
+                                ->action(function (){
+                                    $this->redirect(Dashboard::getUrl());
+                                })
                                 ->label('حفظ وخروج')
                         ])
                             ->alignCenter(),

@@ -7,9 +7,9 @@ use Filament\Support\Contracts\HasLabel;
 
 enum Skills: int implements HasLabel
 {
-    case تفاوت_في_القدرات_العقلية = 1;
-    case ضعف_في_القدرة_على_حل_المشكلات_و_التخطيط = 2;
-    case صعوبة_في_فهم_التعليمات_متعددة_الخطوات = 3;
+    case تفاوت_القدرات_العقلية = 1;
+    case ضعف_القدرة_على_حل_المشكلات_و_التخطيط = 2;
+    case صعوبة_فهم_التعليمات_متعددة_الخطوات = 3;
 
 
     public function getLabel(): ?string

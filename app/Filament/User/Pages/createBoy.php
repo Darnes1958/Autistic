@@ -65,8 +65,9 @@ class createBoy extends Page implements HasForms
                         Section::make()
                             ->schema([
 
-                                        self::getCheck('how_past')
-                                            ->label(fn()=>self::ret_html('كيف كان وضع الحالة في بداية ظهور الأعراض ? ','my-yellow text-2xl font-black'))
+
+                                        self::getSelectEnumMulti('how_past',' ',false)
+                                            ->label(fn()=>self::ret_html('كيف كان وضع الحالة في بداية ظهور الأعراض ؟ ','my-yellow text-2xl font-black'))
                                             ->live()
                                             ->afterStateUpdated(function ($state,Set $set){
                                                 $this->showPast=false;
@@ -88,7 +89,7 @@ class createBoy extends Page implements HasForms
                                          ])->columns(1),
 
                                         self::getSelect('ambitious_id')
-                                            ->label(fn()=>self::ret_html('ما هو طموح الأسرة بالنسبة للحالة ? ','my-yellow text-2xl font-black'))
+                                            ->label(fn()=>self::ret_html('ما هو طموح الأسرة بالنسبة للحالة ؟ ','my-yellow text-2xl font-black'))
                                             ->inlineLabel(false),
                                         self::getArea('other_boy_info','معلومات أخرى عن الحالة')
                                             ->required(false),
@@ -118,6 +119,9 @@ class createBoy extends Page implements HasForms
                                         })
                                         ->label('حفظ ومتابعة'),
                                     Action::make('cancel')
+                                        ->action(function (){
+                                            $this->redirect(Dashboard::getUrl());
+                                        })
                                         ->label('حفظ وخروج')
                                 ])->alignCenter(),
 

@@ -104,16 +104,17 @@ class createGrowth extends Page implements HasForms
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state!=1) $set('p_d_disease',null);
                                     }),
-                                self::getInput('p_d_disease',' ماهي الأمراض أو الحوادث')
-                                    ->nullable()->visible(fn(Get $get): bool =>$get('is_p_d_disease')==1)
-                                    ->nullable(),
+                                self::getInput('p_d_disease',' ماهي الأمراض أو الحوادث التي نعرضت إليها الأم')
+                                    ->nullable()
+                                    ->requiredIf('is_p_d_disease', 1)
+                                    ->visible(fn(Get $get): bool =>$get('is_p_d_disease')==1),
                                 Grid::make()
                                     ->schema([
                                         self::getSelectEnum('is_pregnancy_normal','هل كانت الولادة طبيعية'),
                                         self::getSelectEnum('where_pregnancy_done','أين تمت عملية الولادة'),
                                         self::getSelectEnum('pregnancy_time','ما الوقت الذي استغرقته عملية الولادة'),
                                         self::getSelectEnum('child_weight','وزن الحالة أثناء الولادة'),
-                                        self::getSelectEnum('is_child_followed','هل احتاج الحالة بعد ولادته إلى رعاية خاصة')
+                                        self::getSelectEnum('is_child_followed','هل احتاج الحالة بعد الولادة إلى رعاية خاصة')
                                             ->live()
                                             ->afterStateUpdated(function (Set $set, $state){
                                                 if ($state!=1) $set('why_child_followed',null);
@@ -153,8 +154,7 @@ class createGrowth extends Page implements HasForms
                                     }),
 
                                 self::getinput('why_food_not_good','اسباب التغذية الغير جيدة')
-                                    ->visible(fn(Get $get):bool =>  $get('is_child_food_good')==2)
-                                    ->nullable(),
+                                    ->visible(fn(Get $get):bool =>  $get('is_child_food_good')==2),
 
                                 self::getSelectEnum('sleep_habit','ما عادات الحالة في النوم ؟'),
                                 self::getSelectEnum('is_disturbing_nightmares','هل يتعرض لكوابيس مزعجة'),
@@ -195,7 +195,7 @@ class createGrowth extends Page implements HasForms
                                     ->visible(fn(Get $get):bool => $get('is_child_play_toy')!=null
                                         && $get('is_child_play_toy')==0)
                                     ->nullable(),
-                                self::getCheck('is_play_with_other','مع من يفضل الحالة اللعب ؟ '),
+                                self::getSelectEnumMulti('is_play_with_other','مع من يفضل الحالة اللعب ؟ '),
 
                                 self::getSelectEnum('slookea_1','هل الحالة يستمتع بأن يتأرجح ويتمايل'),
                                 self::getSelectEnum('slookea_2','هل الحالة مهتم بالآخرين'),
@@ -204,7 +204,7 @@ class createGrowth extends Page implements HasForms
                                 self::getSelectEnum('slookea_5','هل يمارس الحالة (اللعب التخيلي) كأن يقوم بعمل الشاي باستخدام أكواب وأدوات أثناء اللعب '),
                                 self::getSelectEnum('slookea_6','هل يستخدم الحالة إصبعه ليشير إلى أشياء يريد أن يسألك عنها'),
                                 self::getSelectEnum('slookea_7','هل يستخدم الحالة إصبعه ليشير إلى أشياء هو مهتم بها'),
-                                self::getSelectEnum('slookea_8','هل يُحضر لك الحال أشياء لكي يريها لك'),
+                                self::getSelectEnum('slookea_8','هل يُحضر لك الحالة أشياء لكي يريها لك'),
 
                                 self::getSelectEnum('slookea_9','هل يقوم الحالة بالدوران حول نفسه'),
                                 self::getSelectEnum('slookea_10','هل يسير علي أطراف الأصابع'),
@@ -213,12 +213,12 @@ class createGrowth extends Page implements HasForms
 
                                 Fieldset::make(fn()=>self::ret_html(' أبرز الأعراض الظاهرة على الحالة','my-yellow text-2xl font-black'))
                                     ->schema([
-                                        self::getCheck('social_communication','صعوبات في التواصل الاجتماعي'),
-                                        self::getCheck('behaviors','سلوكيات نمطية ومتكررة'),
-                                        self::getCheck('sensory','مشكلات حسية'),
-                                        self::getCheck('behavioral_and_emotional','مشكلات سلوكية وعاطفية'),
-                                        self::getCheck('skills','مشكلات في المهارات المعرفية والتعلم'),
-                                        self::getArea('other_sym','أعراض أخرى'),
+                                        self::getSelectEnumMulti('social_communication','صعوبات في التواصل الاجتماعي')->inlineLabel(false)->required(false),
+                                        self::getSelectEnumMulti('behaviors','سلوكيات نمطية ومتكررة')->required(false)->inlineLabel(false),
+                                        self::getSelectEnumMulti('sensory','مشكلات حسية')->required(false)->inlineLabel(false),
+                                        self::getSelectEnumMulti('behavioral_and_emotional','مشكلات سلوكية وعاطفية')->required(false)->inlineLabel(false),
+                                        self::getSelectEnumMulti('skills','مشكلات في المهارات المعرفية والتعلم')->required(false)->inlineLabel(false),
+                                        self::getArea('other_sym','أعراض أخرى')->required(false),
                                     ])->columns(1),
                             ])
                             ->columns(1)
@@ -334,17 +334,22 @@ class createGrowth extends Page implements HasForms
                     Action::make('store')
                         ->requiresConfirmation()
                         ->action(function (){
+
                             if ($this->growth)
                                 $this->growth->update($this->form->getState());
 
                             else
                                 Growth::create($this->form->getState());
 
+
                             $this->redirect(Dashboard::getUrl());
 
                         })
                         ->label('حفظ ومتابعة'),
                     Action::make('cancel')
+                        ->action(function (){
+                            $this->redirect(Dashboard::getUrl());
+                        })
                         ->label('حفظ وخروج')
                 ])->alignCenter(),
 

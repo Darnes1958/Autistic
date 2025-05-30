@@ -12,6 +12,7 @@ use App\Enums\Sleap;
 use App\Enums\Symptoms\BehavioralAndEmotional;
 use App\Enums\Symptoms\Behaviors;
 use App\Enums\Symptoms\Sensory;
+use App\Enums\Symptoms\Skills;
 use App\Enums\Symptoms\SocialCommunication;
 use App\Enums\WhenSpeak;
 use App\Enums\WherePregnancy;
@@ -38,6 +39,7 @@ class Growth extends Model
             'behaviors' => AsEnumCollection::of(Behaviors::class),
             'sensory' => AsEnumCollection::of(Sensory::class),
             'behavioral_and_emotional' => AsEnumCollection::of(BehavioralAndEmotional::class),
+            'skills' =>AsEnumCollection::of(Skills::class),
 
             'mother_p_d_health' => Health::class,
             'is_pregnancy_planned' => YesNo::class,

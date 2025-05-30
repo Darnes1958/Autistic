@@ -18,6 +18,7 @@ use App\Enums\HouseOwn;
 use App\Enums\HouseType;
 use App\Enums\How_past;
 use App\Enums\Person_relationship;
+use App\Enums\Play;
 use App\Enums\PregnancyNormal;
 use App\Enums\PregnancyTime;
 use App\Enums\procedures;
@@ -84,12 +85,7 @@ trait PublicTrait {
         $option=null;
 
         if ($name=='how_past' ) {$l='كيف كان وضع الحالة في بداية ظهور الاعراض ?';$option=How_past::class;}
-        if ($name=='social_communication' ) {$option=SocialCommunication::class;}
-        if ($name=='behaviors' ) {$option=Behaviors::class;}
-        if ($name=='sensory' ) {$option=Sensory::class;}
-        if ($name=='behavioral_and_emotional' ) {$option=BehavioralAndEmotional::class;}
-        if ($name=='skills' ) {$option=Skills::class;}
-        if ($name=='is_play_with_other') {$l='هل يلعب';$option=\App\Enums\Play::class;}
+
 
         if ($name=='why_take_medicine' ) {$option=WhyMedicine::class;}
         if ($name=='therapeutic_details' ) {$option=TherapeuticDetails::class;}
@@ -99,6 +95,11 @@ trait PublicTrait {
 
         return  CheckboxList::make($name)
             ->options($option)
+            ->validationMessages([
+                'required' => 'يجب اختيار : '.$label,
+                'requiredif' => 'يجب اختيار : '.$label,
+            ])
+
             ->required()
             ->label(fn()=>self::ret_html($l));
 
@@ -172,6 +173,10 @@ trait PublicTrait {
         return TextInput::make($name)
             ->label(fn()=>self::ret_html($l))
             ->inlineLabel()
+            ->validationMessages([
+                'required' => 'يجب ادخال : '.$label,
+                'requiredif' => 'يجب ادخال : '.$label,
+            ])
             ->required();
 
     }
@@ -208,16 +213,47 @@ trait PublicTrait {
 
         return DatePicker::make($name)
             ->label(fn()=>self::ret_html($l))
+            ->validationMessages([
+                'required' => 'يجب ادخال : '.$label,
+                'requiredif' => 'يجب ادخال : '.$label,
+            ])
+
             ->inlineLabel()
             ->required();
 
     }
+    protected static function getSelectEnumMulti($name,$label=null,$inline=true): Select
+    {
+
+        if ($label) $l=$label;
+        if ($name=='how_past' ) {$l='كيف كان وضع الحالة في بداية ظهور الاعراض ?';$option=How_past::class;}
+        if ($name=='is_play_with_other') {$l='مع من يفضل الحالة اللعب ؟ ';$option=Play::class;}
+        if ($name=='social_communication' ) {$option=SocialCommunication::class;}
+        if ($name=='behaviors' ) {$option=Behaviors::class;}
+        if ($name=='sensory' ) {$option=Sensory::class;}
+        if ($name=='behavioral_and_emotional' ) {$option=BehavioralAndEmotional::class;}
+        if ($name=='skills' ) {$option=Skills::class;}
+
+        return Select::make($name)
+            ->options($option)
+            ->placeholder('بإمكانك اختيار أكثر من إجابة')
+            ->live()
+            ->preload()
+            ->searchable()
+            ->label(fn()=>self::ret_html($l))
+            ->inlineLabel($inline)
+            ->multiple()
+            ->required();
+    }
+
     protected static function getSelectEnum($name,$label=null): Select
     {
         $option=null;
 
         if ($name=='academic' || $name=='father_academic' || $name=='mother_academic' || $name=='brother_academic')
         {$l='المستوي الدراسي';$option=Academic::class;}
+
+
 
 
         if ($name=='is_parent_relationship') {$l='هل هناك صلة قرابة بين الاب والام ? ';$option=YesNo::class;}
@@ -280,6 +316,11 @@ trait PublicTrait {
         if (!$option) $option=YesNo::class;
         return Select::make($name)
             ->options($option)
+            ->validationMessages([
+                'required' => 'يجب اختيار : '.$label,
+                'requiredif' => 'يجب اختيار : '.$label,
+            ])
+
             ->live()
             ->preload()
             ->searchable()

@@ -117,7 +117,7 @@ class createFamily extends Page implements HasForms
                                         self::getInput('number_of_miscarriages')->numeric()->minValue(0),
                                     ])->columns(1),
 
-                                self::getSelectEnum('is_parent_relationship','هل هناك صلة قرابة بين الأب والأم ? '),
+                                self::getSelectEnum('is_parent_relationship','هل هناك صلة قرابة بين الأب والأم ؟ '),
                                 self::getSelect('father_blood_type','فصيلة دم الأب'),
                                 self::getSelect('mother_blood_type','فصيلة دم الأم'),
                                 self::getSelectEnum('parent_relationship_nature','ما هي طبيعة العلاقة بين الأب والأم '),
@@ -126,7 +126,7 @@ class createFamily extends Page implements HasForms
                                 self::getInput('male_count','عدد الذكور')->numeric()->minValue(0),
                                 self::getInput('female_count','عدد الإناث')->numeric()->minValue(0),
                                 self::getInput('ser_in_brothers','ترتيب الحالة بين إخوته')->numeric()->minValue(1),
-                                Fieldset::make(fn()=>self::ret_html('هل تعرض أحد الوالدين لأمراض مزمنة أو إصابات اخرى ?','my-yellow text-2xl font-black'))
+                                Fieldset::make(fn()=>self::ret_html('هل تعرض أحد الوالدين لأمراض مزمنة أو إصابات أخرى ؟','my-yellow text-2xl font-black'))
                                     ->schema([
                                         self::getDiseaseSelect(),
                                         self::getInput('other_diseases','أمراض أخرى')->required(false)
@@ -143,14 +143,14 @@ class createFamily extends Page implements HasForms
                                 self::getSelectEnum('is_house_good'),
                                 self::getInput('house_rooms','عدد الحجرات')->numeric()->minValue(1),
                                 self::getSelectEnum('is_room_single'),
-                                self::getSelectEnum('has_salary','هل يتقاضي الحالة معاش أساسى ؟')
+                                self::getSelectEnum('has_salary','هل يتقاضي الحالة معاش أساسي ؟')
                                     ->afterStateUpdated(function ($state,Set $set){
                                         if ($state==1) $set('why_not_has_salary',null);
                                     }),
                                 self::getInput('why_not_has_salary','ما هي الأسباب ؟')
                                     ->visible(function (Get $get){return $get('has_salary')!=1 &&  $get('has_salary')!=null;}),
                                 Textarea::make('other_family_notes')
-                                    ->label(fn()=>self::ret_html('معلومات أخري')),
+                                    ->label(fn()=>self::ret_html('معلومات أخرى')),
                                 Hidden::make('user_id'),
 
                                 Actions::make([
@@ -168,6 +168,9 @@ class createFamily extends Page implements HasForms
                                         })
                                         ->label('حفظ ومتابعة'),
                                     Action::make('cancel')
+                                        ->action(function (){
+                                            $this->redirect(Dashboard::getUrl());
+                                        })
                                         ->label('حفظ وخروج')
                                 ])->alignCenter(),
                             ])

@@ -163,6 +163,9 @@ class createAutistic extends Page implements HasForms
                                     })
                                     ->label('حفظ ومتابعة'),
                                 Action::make('cancel')
+                                    ->action(function (){
+                                        $this->redirect(Dashboard::getUrl());
+                                    })
                                     ->label('حفظ وخروج')
                             ])->alignCenter(),
 

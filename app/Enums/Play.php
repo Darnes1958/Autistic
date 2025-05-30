@@ -9,7 +9,7 @@ enum Play: int implements HasLabel,HasColor
 {
   case بمفرده = 1;
   case مع_إخوته = 2;
-    case مع_اطفال_أخرين = 3;
+    case مع_أطفال_آخرين = 3;
 
 
   public function getLabel(): ?string
@@ -21,7 +21,7 @@ enum Play: int implements HasLabel,HasColor
     return match ($this) {
       self::بمفرده => 'success',
         self::مع_إخوته => 'info',
-      self::مع_اطفال_أخرين => 'danger',
+      self::مع_أطفال_آخرين => 'danger',
     };
   }
 
