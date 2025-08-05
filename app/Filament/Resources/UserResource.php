@@ -18,6 +18,7 @@ use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -83,7 +84,7 @@ class UserResource extends Resource
                         if ($record->has_aut) return 'انقر هنا لعرض البيانات الاولية' ;
                           else return null;})
                     ->action(
-                        Tables\Actions\Action::make('aut_info')
+                        Action::make('aut_info')
                             ->visible(function ($record){return $record->has_aut;})
                             ->label('البيانات الأولية')
                             ->modalSubmitAction(false)
@@ -141,7 +142,7 @@ class UserResource extends Resource
                         if ($record->has_fam) return 'انقر هنا لعرض بيانات الأسرة' ;
                         else return null;})
                     ->action(
-                        Tables\Actions\Action::make('fam_info')
+                        Action::make('fam_info')
                             ->visible(function ($record){return $record->has_fam;})
                             ->label('بيانات عن الأسرة')
                             ->modalSubmitAction(false)
@@ -277,7 +278,7 @@ class UserResource extends Resource
                         if ($record->has_boy) return 'انقر هنا لعرض بيانات عن الحالة' ;
                         else return null;})
                     ->action(
-                        Tables\Actions\Action::make('boy_info')
+                        Action::make('boy_info')
                             ->visible(function ($record){return $record->has_boy;})
                             ->label(fn()=>self::ret_html('بيانات عن الحالة'))
                             ->modalSubmitAction(false)
@@ -314,7 +315,7 @@ class UserResource extends Resource
                 Tables\Columns\IconColumn::make('has_grow')
                     ->boolean()
                     ->action(
-                        Tables\Actions\Action::make('grow_info')
+                        Action::make('grow_info')
                             ->visible(function ($record){return $record->has_grow;})
                             ->label(fn()=>self::ret_html('تاريخ النمو'))
                             ->modalSubmitAction(false)
@@ -439,7 +440,7 @@ class UserResource extends Resource
                         if ($record->has_med) return 'انقر هنا لعرض التدخلات العلاجية والدوائية' ;
                         else return null;})
                     ->action(
-                        Tables\Actions\Action::make('show_med')
+                        Action::make('show_med')
                             ->visible(function ($record){return $record->has_med ;})
                             ->label(' التدخلات العلاجية والدوائية')
                             ->modalSubmitAction(false)
@@ -535,7 +536,7 @@ class UserResource extends Resource
                         if ($record->has_aut !=null) return 'انقر هنا لعرض الصور بحجم أكبر' ;
                         else return null;})
                     ->action(
-                        Tables\Actions\Action::make('show_images')
+                        Action::make('show_images')
                             ->visible(function ($record){return $record->Autistic->image !=null;})
                             ->label(' ')
                             ->modalSubmitAction(false)
