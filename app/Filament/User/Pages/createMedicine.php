@@ -44,7 +44,7 @@ class createMedicine extends Page implements HasForms
     }
 
     public ?array $data = [];
-    public Medicine $med;
+    public  $med;
 
     public function mount(): void
     {
@@ -61,7 +61,7 @@ class createMedicine extends Page implements HasForms
     public function form(Form $form): Form
     {
         return $form
-            ->model($this->med)
+            ->model(Medicine::class)
             ->statePath('data')
             ->schema([
                 Grid::make()
@@ -176,6 +176,7 @@ class createMedicine extends Page implements HasForms
                                     else
                                         Medicine::create($this->form->getState());
 
+                                    $this->form->model($this->med)->saveRelationships();
                                     $this->redirect(Dashboard::getUrl());
 
                                 })

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\Login;
 use App\Http\Middleware\RedirectToProperPanelMiddleware;
 use Filament\Http\Middleware\Authenticate;
@@ -26,6 +27,7 @@ class UserPanelProvider extends PanelProvider
     {
         return $panel
             ->darkMode(false)
+            ->profile(EditProfile::class)
             ->font('Amiri')
 
 

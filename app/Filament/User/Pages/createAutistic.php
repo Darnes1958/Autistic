@@ -48,10 +48,11 @@ class createAutistic extends Page implements HasForms
 
 
     public ?array $data = [];
-    public Autistic $aut;
+    public  $aut;
     public function mount(): void
     {
         $this->aut=Autistic::where('user_id',Auth::id())->first();
+
         if ($this->aut)
            $this->form->fill($this->aut->toArray());
         else
@@ -60,7 +61,7 @@ class createAutistic extends Page implements HasForms
     public function form(Form $form): Form
     {
         return $form
-            ->model($this->aut)
+            ->model(Autistic::class)
             ->statePath('data')
             ->schema([
                Grid::make()
@@ -157,8 +158,10 @@ class createAutistic extends Page implements HasForms
                                           $this->aut->update($this->form->getState());
 
                                         else
-                                            Autistic::create($this->form->getState());
+                                          $this->aut=  Autistic::create($this->form->getState());
 
+                                        $this->form->model($this->aut)->saveRelationships();
+                                        
                                         $this->redirect(Dashboard::getUrl());
                                     })
                                     ->label('حفظ ومتابعة'),

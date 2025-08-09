@@ -48,7 +48,7 @@ class createFamily extends Page implements HasForms
 
 
     public ?array $data = [];
-    public Family $fam;
+    public $fam;
     public function mount(): void
     {
         $this->fam=Family::where('user_id',Auth::id())->first();
@@ -66,7 +66,7 @@ class createFamily extends Page implements HasForms
     public function form(Form $form): Form
     {
         return $form
-            ->model($this->fam)
+            ->model(Family::class)
             ->statePath('data')
             ->schema([
                 Grid::make()
@@ -162,6 +162,7 @@ class createFamily extends Page implements HasForms
 
                                             else
                                                 Family::create($this->form->getState());
+                                            $this->form->model($this->fam)->saveRelationships();
 
                                             $this->redirect(Dashboard::getUrl());
 

@@ -46,14 +46,16 @@ class createGrowth extends Page implements HasForms
     }
 
     public ?array $data = [];
-    public Growth $growth;
+    public  $growth;
 
     public function mount(): void
     {
         $this->growth=Growth::where('user_id',Auth::id())->first();
 
         if ($this->growth)
-            $this->form->fill($this->growth->toArray());
+           $this->form->fill($this->growth->toArray());
+           // $this->form->fill($this->growth->attributesToArray());
+
         else
         {
 
@@ -64,7 +66,7 @@ class createGrowth extends Page implements HasForms
     public function form(Form $form): Form
     {
         return $form
-            ->model($this->growth)
+            ->model(Growth::class)
             ->statePath('data')
             ->schema([
                 Grid::make()
@@ -359,11 +361,11 @@ class createGrowth extends Page implements HasForms
 
                             else
                             {
-                                Growth::create($this->form->getState());
+                               $this->growth= Growth::create($this->form->getState());
                             }
 
 
-
+                            $this->form->model($this->growth)->saveRelationships();
                             $this->redirect(Dashboard::getUrl());
 
                         })
