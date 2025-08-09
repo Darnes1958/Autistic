@@ -20,6 +20,7 @@ class AmbitiousResource extends Resource
 {
     protected static ?string $model = Ambitious::class;
 
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel='طموح الأسرة بالنسبة للحالة';
     protected static ?string $navigationGroup='اعدادات';

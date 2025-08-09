@@ -22,6 +22,7 @@ class DiseaseMenuResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel='أبرز الأمراض';
+    protected static ?int $navigationSort=2;
     protected static ?string $navigationGroup='اعدادات';
 
     public static function form(Form $form): Form

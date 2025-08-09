@@ -23,8 +23,9 @@
     </div>
     <div class="w-1/4">
 
-            <img class=" w-70 " src="{{ asset('img/gov_11.png') }}"
-                 alt="image description">
+
+        <img class=" w-70 " src="{{ asset('img/natrac.png') }}"
+             alt="image description">
 
     </div>
     <div class="w-1/4">

@@ -4,6 +4,7 @@ namespace App\Filament\User\Pages;
 
 use App\Livewire\Traits\PublicTrait;
 use App\Models\Boy;
+use App\Models\GrowDifficult;
 use App\Models\Growth;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
@@ -19,8 +20,11 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 
 class createGrowth extends Page implements HasForms
@@ -42,11 +46,12 @@ class createGrowth extends Page implements HasForms
     }
 
     public ?array $data = [];
-    public $growth;
+    public Growth $growth;
 
     public function mount(): void
     {
         $this->growth=Growth::where('user_id',Auth::id())->first();
+
         if ($this->growth)
             $this->form->fill($this->growth->toArray());
         else
@@ -59,7 +64,7 @@ class createGrowth extends Page implements HasForms
     public function form(Form $form): Form
     {
         return $form
-            ->model(Growth::class)
+            ->model($this->growth)
             ->statePath('data')
             ->schema([
                 Grid::make()
@@ -235,7 +240,7 @@ class createGrowth extends Page implements HasForms
                                  ->label(fn()=>self::ret_html('صعوبات نمائية أخرى تذكر',' text-base'))
                                  ->streamlined()
                                  ->emptyLabel(false)
-                                 ->relationship()
+                                 ->relationship('GrowDifficult')
                                  ->headers([
                                      Header::make('الصعوبة')
                                          ->label(fn()=>self::ret_html('الصعوبة',' text-base my-yellow'))
@@ -252,7 +257,13 @@ class createGrowth extends Page implements HasForms
                                  ->defaultItems(0)
                                  ->addActionLabel('إضافة صعوبة')
                                  ->schema([
-                                     self::getSelect('grow_difficult_menu_id',' ')->inlineLabel(false),
+                                     self::getSelect('grow_difficult_menu_id',' ')
+                                         ->createOptionAction(
+                                             fn (Action $action) => $action
+                                                 ->color('success')
+                                                 ->tooltip('إضافة صعوبة معينة غير موجودة فالقائمة'),
+                                         )
+                                         ->inlineLabel(false),
                                      self::getInput('age',' ')->inlineLabel(false),
                                      self::getInput('procedures',' ')->inlineLabel(false),
 
@@ -265,10 +276,8 @@ class createGrowth extends Page implements HasForms
                                          }
                                      return $flag;
                                  }),
-
                          ])
                          ->extraAttributes(['class' => 'greanbackground']),
-
                  ])
                 ->columnSpanFull(),
 
@@ -280,7 +289,8 @@ class createGrowth extends Page implements HasForms
                                     ->streamlined()
                                     ->columnSpanFull()
                                     ->label(fn()=>self::ret_html('قائمة بأبرز الأمراض التي أصيب بها الحالة'))
-                                    ->relationship()
+                                    ->relationship('BoyDisease')
+
                                     ->headers([
                                         Header::make('المرض')
                                             ->label(fn()=>self::ret_html('المرض','text-sm my-yellow '))
@@ -305,7 +315,12 @@ class createGrowth extends Page implements HasForms
                                     ->defaultItems(0)
                                     ->addActionLabel('إضافة مرض')
                                     ->schema([
-                                        self::getSelect('disease_menu_id',' ')->inlineLabel(false),
+                                        self::getSelect('disease_menu_id',' ')
+                                            ->createOptionAction(
+                                                fn (Action $action) =>
+                                                $action->color('success')->tooltip('اضافة مرض غير موجود بالقائمة'),
+                                            )
+                                            ->inlineLabel(false),
                                         self::getInput('age',' ')->inlineLabel(false),
                                         self::getInput('period',' ')->inlineLabel(false),
                                         self::getInput('intensity',' ')->inlineLabel(false),
@@ -333,13 +348,20 @@ class createGrowth extends Page implements HasForms
                 Actions::make([
                     Action::make('store')
                         ->requiresConfirmation()
-                        ->action(function (){
+                        ->action(function (Get $get){
 
                             if ($this->growth)
+                            {
                                 $this->growth->update($this->form->getState());
 
+                            }
+
+
                             else
+                            {
                                 Growth::create($this->form->getState());
+                            }
+
 
 
                             $this->redirect(Dashboard::getUrl());

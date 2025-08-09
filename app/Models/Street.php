@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Street extends Model
 {
-    //
+    public function City(){
+        return $this->belongsTo(City::class);
+    }
 }

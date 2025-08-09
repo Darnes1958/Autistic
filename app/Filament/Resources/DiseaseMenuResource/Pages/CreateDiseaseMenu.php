@@ -9,4 +9,8 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateDiseaseMenu extends CreateRecord
 {
     protected static string $resource = DiseaseMenuResource::class;
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

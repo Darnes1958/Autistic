@@ -40,7 +40,7 @@ class createBoy extends Page implements HasForms
     }
 
     public ?array $data = [];
-    public $boy;
+    public Boy $boy;
     public $showPast=false;
     public function mount(): void
     {
@@ -57,7 +57,7 @@ class createBoy extends Page implements HasForms
     public function form(Form $form): Form
     {
         return $form
-            ->model(Boy::class)
+            ->model($this->boy)
             ->statePath('data')
             ->schema([
                 Grid::make()

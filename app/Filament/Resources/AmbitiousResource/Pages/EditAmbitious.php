@@ -17,7 +17,14 @@ class EditAmbitious extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->visible(!Boy::where('ambitious_id', $this->getRecord()->id)->exists()),
+            Actions\DeleteAction::make()
+                ->visible(!Boy::where('ambitious_id', $this->getRecord()->id)->exists())
+                ->modalHeading('حذف السجل')
+            ,
         ];
+    }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

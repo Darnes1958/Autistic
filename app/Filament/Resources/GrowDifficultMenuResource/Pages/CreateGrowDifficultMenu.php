@@ -9,4 +9,8 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateGrowDifficultMenu extends CreateRecord
 {
     protected static string $resource = GrowDifficultMenuResource::class;
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

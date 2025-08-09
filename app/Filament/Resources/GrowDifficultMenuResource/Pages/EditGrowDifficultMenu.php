@@ -17,7 +17,12 @@ class EditGrowDifficultMenu extends EditRecord
     {
         return [
             Actions\DeleteAction::make()
-                ->visible(!GrowDifficult::where('grow_difficult_menu_id', $this->getRecord()->id)->exists()),
+                ->visible(!GrowDifficult::where('grow_difficult_menu_id', $this->getRecord()->id)->exists())
+            ->modalHeading('حذف السجل'),
         ];
+    }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

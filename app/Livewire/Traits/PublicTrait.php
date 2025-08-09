@@ -140,6 +140,7 @@ trait PublicTrait {
         if ($name=='name') $label='الاسم';
         if ($name=='full_name') $label='الاسم';
         if ($name=='City.name') $label='المدينة';
+        if ($name=='Street.name') $label='الشارع';
         if ($name=='person_name') $label='تعبئة البيانات بمعرفة';
 
         return TextColumn::make($name)
@@ -393,12 +394,7 @@ trait PublicTrait {
                         Hidden::make('user_id')
                           ->default(Auth::id()),
             ])
-            ->editOptionForm([
-                        TextInput::make($att)
-                            ->required()
-                            ->unique(ignoreRecord: true)
-                            ->label($l),
-            ])
+
             ->required();
     }
 

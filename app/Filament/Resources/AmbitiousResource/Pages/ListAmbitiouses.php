@@ -14,7 +14,8 @@ class ListAmbitiouses extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label('إضافة'),
+            Actions\CreateAction::make()
+                ->label('إضافة'),
         ];
     }
 }

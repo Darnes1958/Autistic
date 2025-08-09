@@ -17,7 +17,12 @@ class EditDiseaseMenu extends EditRecord
     {
         return [
             Actions\DeleteAction::make()
-                ->visible(!BoyDisease::where('disease_menu_id', $this->getRecord()->id)->exists()),
+                ->visible(!BoyDisease::where('disease_menu_id', $this->getRecord()->id)->exists())
+            ->modalHeading('حذف السجل'),
         ];
+    }
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

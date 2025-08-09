@@ -44,7 +44,7 @@ class createMedicine extends Page implements HasForms
     }
 
     public ?array $data = [];
-    public $med;
+    public Medicine $med;
 
     public function mount(): void
     {
@@ -61,7 +61,7 @@ class createMedicine extends Page implements HasForms
     public function form(Form $form): Form
     {
         return $form
-            ->model(Boy::class)
+            ->model($this->med)
             ->statePath('data')
             ->schema([
                 Grid::make()
