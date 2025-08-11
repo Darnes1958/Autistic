@@ -48,8 +48,8 @@ class ShowContact extends Page implements HasTable
                     ->label('الاسم')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('title')
-                    ->label('العنوان')
+                TextColumn::make('contactType')
+                    ->label('التصنيف')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('message')

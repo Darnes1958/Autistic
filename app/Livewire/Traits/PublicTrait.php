@@ -321,7 +321,6 @@ trait PublicTrait {
                 'required' => 'يجب اختيار : '.$label,
                 'requiredif' => 'يجب اختيار : '.$label,
             ])
-
             ->live()
             ->preload()
             ->searchable()

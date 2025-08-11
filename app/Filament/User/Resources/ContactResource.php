@@ -2,11 +2,13 @@
 
 namespace App\Filament\User\Resources;
 
+use App\Enums\Contact\ContactType;
 use App\Filament\User\Resources\ContactResource\Pages;
 use App\Filament\User\Resources\ContactResource\RelationManagers;
 use App\Models\Contact;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -36,10 +38,12 @@ class ContactResource extends Resource
                 Forms\Components\Grid::make()
                 ->schema([
 
-                        TextInput::make('title')
+                        Select::make('contactType')
                             ->required()
+                            ->options(ContactType::class)
+                            ->preload()
                             ->columnSpanFull()
-                            ->label('العنوان'),
+                            ->label('تصنيف الطلب'),
                         Textarea::make('message')
                             ->required()
                             ->rows(3)
@@ -63,8 +67,8 @@ class ContactResource extends Resource
                     ->label('الاسم')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('title')
-                    ->label('العنوان')
+                TextColumn::make('contact_type')
+                    ->label('التصنيف')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('message')
@@ -88,9 +92,7 @@ class ContactResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                //
             ]);
     }
 

@@ -7,10 +7,12 @@ use App\Filament\Resources\UserResource\RelationManagers;
 
 use App\Livewire\Traits\PublicTrait;
 use App\Models\Autistic;
+use App\Models\Setting;
 use App\Models\User;
 use Filament\Actions\CreateAction;
 use Filament\Actions\StaticAction;
 use Filament\Forms;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\ImageEntry;
@@ -61,7 +63,15 @@ class UserResource extends Resource
                 TextInput::make('password')->required()->visibleOn('create'),
                 TextInput::make('phoneNumber')
                     ->tel()
-                    ->length(10)
+                    ->length(12)
+                    ->placeholder('2189XXXXXXXX')
+                    ->startsWith(['21891','21892','21893','21894'])
+                    ->validationMessages([
+                        'length' => 'يجب ان يتكون رقم الهاتف من 12 رقم',
+                        'startsWith' => 'بداية رقم الهاتف عير صحيحة .. 21891 .. 21892 ..... الخ ',
+                    ])
+
+
                     ->required()
                     ->label('رقم الهاتف'),
                 Forms\Components\Hidden::make('is_admin')->default(0),
@@ -86,7 +96,35 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('nat')->label('الرقم الوطني'),
                 TextColumn::make('name')->label('الاسم'),
-                TextColumn::make('phoneNumber')->label('رقم الهاتف'),
+                TextColumn::make('phoneNumber')
+                    ->action(
+                        Action::make('mod_phone')
+                          ->form([
+                              TextInput::make('phoneNumber')
+                               ->label('ادخل رقم الهاتف')
+                               ->tel()
+                               ->placeholder('2189XXXXXXXX')
+                               ->startsWith(['21891','21892','21893','21894'])
+                               ->length(12)
+                               ->validationMessages([
+                                      'length' => 'يجب ان يتكون رقم الهاتف من 12 رقم',
+                                      'startsWith' => 'بداية رقم الهاتف عير صحيحة .. 21891 .. 21892 ..... الخ ',
+                                  ])
+                               ->required()
+                          ])
+                            ->fillForm(fn (Model $record): array => ['phoneNumber'=>$record->phoneNumber])
+                            ->modalSubmitAction(fn (StaticAction $action) =>$action->label('تخزين'))
+                        ->action(function (array $data,Model $record) {
+                            $record->phoneNumber=$data['phoneNumber'];
+                            $record->save();
+                            Notification::make()->title('تم تعديل رقم الهاتف')
+                                ->icon('heroicon-m-check')
+                                ->success()
+                                ->color('success')
+                            ->send();
+                        })
+                    )
+                    ->label('رقم الهاتف'),
                 Tables\Columns\IconColumn::make('has_aut')
                     ->boolean()
                     ->tooltip(function ($record){
@@ -568,13 +606,18 @@ class UserResource extends Resource
                     ->icon('heroicon-o-envelope')
                     ->iconButton()
                     ->color('blue')
-                    ->action(function (Model $record){
-                         $apiUrl = 'https://client.almasafa.ly/api/sms/Send';
-                         $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkFsd2FzZWV0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0amp4ODM5MVhZIiwiZXhwIjoxNzg2NDQ2MTMxLCJpc3MiOiJodHRwczovL2NsaWVudC5hbG1hc2FmYS5seSIsImF1ZCI6Imh0dHBzOi8vY2xpZW50LmFsbWFzYWZhLmx5In0._qVYQTQ9wGW15V9Npb43VOewdr55Hu8oTMQHkJ-zsPM';
-                         $response = Http::withToken($token)
-                            ->post($apiUrl, [
+                    ->form([
+                        Textarea::make('message')
+                         ->label('النص')
+                         ->required()
+                    ])
+                    ->modalSubmitAction(fn (StaticAction $action) => $action->label('إرسال الرسالة'))
+                    ->modalCancelAction(fn (StaticAction $action) => $action->label('الغاء وعودة'))
+                    ->action(function (Model $record,array $data){
+                         $response = Http::withToken(Setting::first()->token)
+                            ->post(Setting::first()->url, [
                                 'phoneNumber' => $record->phoneNumber,
-                                'message' => $record->name,
+                                'message' => $data['message'],
                                 'senderID' => '13201'
                             ]);
                         if ($response->successful()) {
