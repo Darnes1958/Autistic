@@ -52,13 +52,18 @@ class UserResource extends Resource
         return $form
             ->schema([
                 TextInput::make('nat')->label('الرقم الوطني')
-                    ->live()
+                    ->live(onBlur: true)
                     ->afterStateUpdated(function ($state,Forms\Set $set) {
                         $set('password', $state);
                     })
                     ->unique(ignoreRecord: true)->required(),
                 TextInput::make('name')->label('الاسم')->unique(ignoreRecord: true)->required(),
                 TextInput::make('password')->required()->visibleOn('create'),
+                TextInput::make('phoneNumber')
+                    ->tel()
+                    ->length(10)
+                    ->required()
+                    ->label('رقم الهاتف'),
                 Forms\Components\Hidden::make('is_admin')->default(0),
                 Forms\Components\Hidden::make('is_employee')->default(0),
             ]);
@@ -81,6 +86,7 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('nat')->label('الرقم الوطني'),
                 TextColumn::make('name')->label('الاسم'),
+                TextColumn::make('phoneNumber')->label('رقم الهاتف'),
                 Tables\Columns\IconColumn::make('has_aut')
                     ->boolean()
                     ->tooltip(function ($record){
@@ -564,12 +570,12 @@ class UserResource extends Resource
                     ->color('blue')
                     ->action(function (Model $record){
                          $apiUrl = 'https://client.almasafa.ly/api/sms/Send';
-                         $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkFsd2FzZWV0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0amp4ODM5MVhZIiwiZXhwIjoxNzg2Mzc2OTQ1LCJpc3MiOiJodHRwczovL2NsaWVudC5hbG1hc2FmYS5seSIsImF1ZCI6Imh0dHBzOi8vY2xpZW50LmFsbWFzYWZhLmx5In0.l7DRv75vD3yQKd1aI7TRXjYdM_gMjBhnMxvxMAjQTzo';
+                         $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IkFsd2FzZWV0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJ0amp4ODM5MVhZIiwiZXhwIjoxNzg2NDQ2MTMxLCJpc3MiOiJodHRwczovL2NsaWVudC5hbG1hc2FmYS5seSIsImF1ZCI6Imh0dHBzOi8vY2xpZW50LmFsbWFzYWZhLmx5In0._qVYQTQ9wGW15V9Npb43VOewdr55Hu8oTMQHkJ-zsPM';
                          $response = Http::withToken($token)
                             ->post($apiUrl, [
                                 'phoneNumber' => $record->phoneNumber,
                                 'message' => $record->name,
-                                'senderID' => 'Alwaseet'
+                                'senderID' => '13201'
                             ]);
                         if ($response->successful()) {
                             Notification::make()

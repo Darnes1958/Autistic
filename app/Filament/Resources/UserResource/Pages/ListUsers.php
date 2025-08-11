@@ -4,7 +4,10 @@ namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
 use Filament\Actions;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Http;
 
 class ListUsers extends ListRecords
 {
@@ -13,7 +16,9 @@ protected ?string $heading=' ';
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label('اضافة حالة'),
+            Actions\CreateAction::make()
+
+                ->label('اضافة حالة'),
         ];
     }
 }
