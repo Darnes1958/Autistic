@@ -9,7 +9,10 @@ Route::get('/', function () {
 });
 Route::controller(\App\Http\Controllers\OtpController::class)->group(function () {
     Route::post('/sms/{phoneNumber?},{message?}',  'Sms')->name('sms');
+    Route::get('/viewcontact',  'ViewContact')->name('viewcontact');
 });
+
+
 
 
 

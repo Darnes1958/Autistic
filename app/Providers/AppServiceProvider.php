@@ -49,6 +49,12 @@ class AppServiceProvider extends ServiceProvider
         FilamentView::registerRenderHook(
             PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
             fn (): string => Blade::render('@livewire(\'top-bar\')'),
+
+        );
+        FilamentView::registerRenderHook(
+            PanelsRenderHook::GLOBAL_SEARCH_BEFORE,
+
+            fn (): string => Blade::render('@livewire(\'mail-bar\')'),
         );
         Table::$defaultNumberLocale = 'nl';
 

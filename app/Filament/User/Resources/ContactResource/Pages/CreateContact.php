@@ -22,7 +22,7 @@ class CreateContact extends CreateRecord
         return Notification::make()
             ->success()
             ->title('تم تحزين البيانات')
-            ->body('شكراً لكم ');
+            ->body('سيتم التواصل معكم قريباً ..... ');
     }
     protected function getFormActions(): array
     {

@@ -2,17 +2,30 @@
 
 namespace App\Filament\Pages;
 
+use App\Enums\Contact\ContactType;
+use App\Enums\Contact\Status;
 use App\Models\Contact;
+
+use App\Models\ContactProc;
+use App\Models\ContactTran;
+use App\Models\Sell;
 use Filament\Actions\StaticAction;
+use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Pages\Page;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
@@ -84,9 +97,91 @@ class ShowContact extends Page implements HasTable
                     ->sortable(),
                 TextColumn::make('status')
                     ->label('الحالة')
+                    ->action(
+                        CreateAction::make('createProc')
+                            ->disabled(function (Contact $record){
+                                return $record->status==Status::حفظت || $record->status==Status::تم_الإجراء;
+                            })
+                            ->modalHeading(false)
+                            ->createAnother(false)
+                            ->model(ContactProc::class)
+                            ->form([
+                                TextInput::make('proc')
+                                    ->required()
+                                    ->label('الإجراء'),
+                                Select::make('proc_type')
+                                    ->label('نوع الإجراء')
+                                    ->options([
+                                        2=> 'تحت الإجراء' ,
+                                        3=>   'تم الإجراء' ,
+                                        4=>   'حفظت' ,
+                                    ]),
+                                Hidden::make('user_id')->default(Auth::id()),
+                                Hidden::make('contact_id')->default(function (Contact $record) {return $record->id;})
+
+                            ])
+                            ->using(function (array $data, string $model): Model {
+                                Contact::find($data['contact_id'])->update(['status' => $data['proc_type']]);
+                                return $model::create($data);
+                            })
+                    )
                     ->searchable()
                     ->sortable(),
 
+            ])
+            ->actions([
+                Action::make('procs')
+
+                 //   ->visible(fn(Contact $record):bool =>ContactProc::where('contact_id',$record->id)->exists())
+                    ->modalHeading(false)
+                    ->modalSubmitAction(false)
+                    ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                    ->modalContent(fn (Contact $record): View => view(
+                        'filament.pages.views.view-contact-proc-widget',
+                        ['contact_id' => $record->id],
+                    ))
+                    ->badge(function (Contact $record){
+                        $count= ContactProc::where('contact_id',$record->id)->count();
+                        if ($count==0) return null; else return $count;
+
+                    } )
+                    ->color(function (Contact $record){
+                        if (ContactProc::where('contact_id',$record->id)->exists())
+                            return 'success'; else return 'gray';
+                    })
+                    ->icon('heroicon-o-eye')
+                    ->label('الإجراءات'),
+                Action::make('messages')
+
+                //    ->visible(fn(Contact $record):bool =>ContactTran::where('contact_id',$record->id)->exists())
+                    ->badge(function (Contact $record){
+                        $count= ContactTran::where('contact_id',$record->id)->count();
+                        if ($count==0) return null; else return $count;
+
+                } )
+                    ->modalHeading(false)
+                    ->modalSubmitAction(false)
+                    ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                    ->modalContent(fn (Contact $record): View => view(
+                        'filament.pages.views.view-contact-tran-widget',
+                        ['contact_id' => $record->id],
+                    ))
+                    ->icon('heroicon-o-envelope')
+                    ->color(function (Contact $record){
+                        if (ContactTran::where('contact_id',$record->id)->exists())
+                            return 'success'; else return 'gray';
+                    })
+                    ->label('الرسائل'),
+
+            ])
+
+            ->filters([
+                SelectFilter::make('status')
+                    ->label('الحالة')
+                    ->options(Status::class),
+                SelectFilter::make('contactType')
+                    ->label('التصنيف')
+                    ->options(ContactType::class),
             ]);
     }
 
