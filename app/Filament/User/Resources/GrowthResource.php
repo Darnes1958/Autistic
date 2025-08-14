@@ -32,7 +32,7 @@ class GrowthResource extends Resource
     protected static ?string $model = Growth::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static bool $shouldRegisterNavigation = false;
     public static function form(Form $form): Form
     {
 
@@ -308,46 +308,12 @@ class GrowthResource extends Resource
                                                 }
                                             return $flag;
                                         }),
-
                                 ])
                                 ->extraAttributes(['class' => 'greanbackground']),
-
-
                         ])
                         ->columnSpanFull(),
 
                     Hidden::make('user_id'),
-
-                    Actions::make([
-                        Action::make('store')
-                            ->requiresConfirmation()
-                            ->action(function (Get $get){
-
-                                if ($this->growth)
-                                {
-                                    $this->growth->update($this->form->getState());
-
-                                }
-
-
-                                else
-                                {
-                                    $this->growth= Growth::create($this->form->getState());
-                                }
-
-
-                                $this->form->model($this->growth)->saveRelationships();
-                                $this->redirect(Dashboard::getUrl());
-
-                            })
-                            ->label('حفظ ومتابعة'),
-                        Action::make('cancel')
-                            ->action(function (){
-                                $this->redirect(Dashboard::getUrl());
-                            })
-                            ->label('حفظ وخروج')
-                    ])->alignCenter(),
-
 
                 ])->columns(5) ;
     }
@@ -384,6 +350,7 @@ class GrowthResource extends Resource
             'index' => Pages\ListGrowths::route('/'),
             'create' => Pages\CreateGrowth::route('/create'),
             'edit' => Pages\EditGrowth::route('/{record}/edit'),
+            'upd'=>Pages\UpdGrowth::route('/upd'),
         ];
     }
 }

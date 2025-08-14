@@ -23,7 +23,6 @@ class MailBar extends Component implements HasForms,HasActions
     #[On('refreshContact')]
     public function refreshContact()
     {
-        info('yes');
         $this->mount();
     }
     public function mount()

@@ -10,10 +10,5 @@ class EditGrowth extends EditRecord
 {
     protected static string $resource = GrowthResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            Actions\DeleteAction::make(),
-        ];
-    }
+    protected ?string $heading='';
 }

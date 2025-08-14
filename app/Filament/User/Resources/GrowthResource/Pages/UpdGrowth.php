@@ -1,79 +1,57 @@
 <?php
 
-namespace App\Filament\User\Pages;
+namespace App\Filament\User\Resources\GrowthResource\Pages;
 
+use App\Filament\User\Resources\GrowthResource;
 use App\Livewire\Traits\PublicTrait;
-use App\Models\Boy;
-use App\Models\GrowDifficult;
 use App\Models\Growth;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
-use Filament\Forms\Components\Actions;
+use Filament\Actions;
 use Filament\Forms\Components\Actions\Action;
 use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
-use Filament\Notifications\Notification;
-use Filament\Pages\Page;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
+use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
 
-class createGrowth extends Page implements HasForms
+class UpdGrowth extends EditRecord
 {
-    use InteractsWithForms,PublicTrait;
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string $resource = GrowthResource::class;
+    use PublicTrait;
 
-    protected static string $view = 'filament.user.pages.create-growth';
 
-    protected static ?string $navigationLabel='تاريخ النمو';
-    protected ?string $heading=' ';
-    protected static ?int $navigationSort=4;
-    public static function shouldRegisterNavigation(): bool
+    protected ?string $heading='';
+
+
+    public static function shouldRegisterNavigation(array $parameters = []): bool
     {
-        return !Growth::where('user_id',Auth::id())->first();
+        return Growth::where('user_id',Auth::id())->first();
     }
 
-    public static function getNavigationIcon(): string|Htmlable|null
+    public function mount(string|int $record=0):void
     {
-        if (Auth::user()->has_grow)
-            return 'heroicon-o-check';
-        return 'heroicon-o-x-mark';
 
+        $this->record = $this->resolveRecord(Growth::where('user_id',Auth::id())->first()->id);
+
+        $this->authorizeAccess();
+
+        $this->fillForm();
+
+        $this->previousUrl = url()->previous();
     }
 
-    public ?array $data = [];
-    public  $growth;
-
-    public function mount(): void
+    public  function form(Form $form): Form
     {
-        $this->growth=Growth::where('user_id',Auth::id())->first();
 
-        if ($this->growth)
-           $this->form->fill($this->growth->toArray());
-           // $this->form->fill($this->growth->attributesToArray());
-
-        else
-        {
-
-            $this->form->fill(['user_id'=>Auth::id()]);
-        }
-
-    }
-    public function form(Form $form): Form
-    {
         return $form
-            ->model(Growth::class)
-            ->statePath('data')
+
             ->schema([
+                Hidden::make('user_id')->default(Auth::id()),
                 Grid::make()
                     ->schema([
                         Section::make()
@@ -102,9 +80,9 @@ class createGrowth extends Page implements HasForms
                                     ->maxValue(12),
                                 self::getSelectEnum('is_pregnancy_planned','هل كان الحمل مخططا له'),
                                 self::getSelectEnum('mother_p_d_health','حالة الأم الصحية أثناء الحمل')->live()
-                                ->afterStateUpdated(function (Set $set, $state){
-                                    if ($state=1) $set('p_d_why_not_health',null);
-                                }),
+                                    ->afterStateUpdated(function (Set $set, $state){
+                                        if ($state=1) $set('p_d_why_not_health',null);
+                                    }),
                                 self::getInput('p_d_why_not_health','لماذا كانت غير جيدة')
                                     ->visible(fn(Get $get): bool => $get('mother_p_d_health')!=null && $get('mother_p_d_health')==0)
                                     ->nullable(),
@@ -141,7 +119,7 @@ class createGrowth extends Page implements HasForms
                                 self::getSelectEnum('is_breastfeeding_natural','هل كانت الرضاعة طبيعية ?'),
                                 self::getSelectEnum('breastfeeding_period','مدة الرضاعة'),
                                 self::getSelectEnum('difficulties_during_weaning','هل حدثت صعوبات أثناء الفطام')
-                                ->live()
+                                    ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state!=1) $set('what_is_the_defficulties',null);
                                     }),
@@ -171,7 +149,7 @@ class createGrowth extends Page implements HasForms
                                 self::getSelectEnum('sleep_habit','ما عادات الحالة في النوم ؟'),
                                 self::getSelectEnum('is_disturbing_nightmares','هل يتعرض لكوابيس مزعجة'),
                                 self::getSelectEnum('safety_of_senses','هل الحواس سليمة')
-                                ->live()
+                                    ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state==1) $set('who_senses',null);
                                     }),
@@ -187,7 +165,7 @@ class createGrowth extends Page implements HasForms
                                 self::getInput('who_mental','ماهي الوظائف المصابة')
                                     ->visible(fn(Get $get):bool => $get('mental_health')!=null && $get('mental_health')==0)->nullable(),
                                 self::getSelectEnum('injuries_disabilities','هل توجد إصابات أو عاهات جسيمة')
-                                ->live()
+                                    ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
                                         if ($state!=1) $set('injuries_type',null);
                                     }),
@@ -239,54 +217,54 @@ class createGrowth extends Page implements HasForms
                     ->columns(1)
                     ->columnSpan(3),
                 Grid::make()
-                 ->schema([
-                     Section::make()
-                         ->schema([
-                             TableRepeater::make('GrowDifficult')
-                                 ->columnSpanFull()
-                                 ->label(fn()=>self::ret_html('صعوبات نمائية أخرى تذكر',' text-base'))
-                                 ->streamlined()
-                                 ->emptyLabel(false)
-                                 ->relationship('GrowDifficult')
-                                 ->headers([
-                                     Header::make('الصعوبة')
-                                         ->label(fn()=>self::ret_html('الصعوبة',' text-base my-yellow'))
-                                         ->width('30%'),
-                                     Header::make('العمر')
-                                         ->label(fn()=>self::ret_html('العمر',' text-base my-yellow'))
-                                         ->width('10%'),
-                                     Header::make('الاجراءات التي اتخذت')
-                                         ->label(fn()=>self::ret_html('الاجراءات التي اتخذت',' text-base my-yellow'))
-                                         ->width('60%'),
+                    ->schema([
+                        Section::make()
+                            ->schema([
+                                TableRepeater::make('GrowDifficult')
+                                    ->columnSpanFull()
+                                    ->label(fn()=>self::ret_html('صعوبات نمائية أخرى تذكر',' text-base'))
+                                    ->streamlined()
+                                    ->emptyLabel(false)
+                                    ->relationship('GrowDifficult')
+                                    ->headers([
+                                        Header::make('الصعوبة')
+                                            ->label(fn()=>self::ret_html('الصعوبة',' text-base my-yellow'))
+                                            ->width('30%'),
+                                        Header::make('العمر')
+                                            ->label(fn()=>self::ret_html('العمر',' text-base my-yellow'))
+                                            ->width('10%'),
+                                        Header::make('الاجراءات التي اتخذت')
+                                            ->label(fn()=>self::ret_html('الاجراءات التي اتخذت',' text-base my-yellow'))
+                                            ->width('60%'),
 
-                                 ])
-                                 ->live()
-                                 ->defaultItems(0)
-                                 ->addActionLabel('إضافة صعوبة')
-                                 ->schema([
-                                     self::getSelect('grow_difficult_menu_id',' ')
-                                         ->createOptionAction(
-                                             fn (Action $action) => $action
-                                                 ->color('success')
-                                                 ->tooltip('إضافة صعوبة معينة غير موجودة فالقائمة'),
-                                         )
-                                         ->inlineLabel(false),
-                                     self::getInput('age',' ')->inlineLabel(false),
-                                     self::getInput('procedures',' ')->inlineLabel(false),
+                                    ])
+                                    ->live()
+                                    ->defaultItems(0)
+                                    ->addActionLabel('إضافة صعوبة')
+                                    ->schema([
+                                        self::getSelect('grow_difficult_menu_id',' ')
+                                            ->createOptionAction(
+                                                fn (Action $action) => $action
+                                                    ->color('success')
+                                                    ->tooltip('إضافة صعوبة معينة غير موجودة فالقائمة'),
+                                            )
+                                            ->inlineLabel(false),
+                                        self::getInput('age',' ')->inlineLabel(false),
+                                        self::getInput('procedures',' ')->inlineLabel(false),
 
-                                 ])
-                                 ->addable(function ($state){
-                                     $flag=true;
-                                     if ($state!=null)
-                                         foreach ($state as $item) {
-                                             if (!$item['grow_difficult_menu_id'] || !$item['age']  || !$item['procedures']) {$flag=false; break;}
-                                         }
-                                     return $flag;
-                                 }),
-                         ])
-                         ->extraAttributes(['class' => 'greanbackground']),
-                 ])
-                ->columnSpanFull(),
+                                    ])
+                                    ->addable(function ($state){
+                                        $flag=true;
+                                        if ($state!=null)
+                                            foreach ($state as $item) {
+                                                if (!$item['grow_difficult_menu_id'] || !$item['age']  || !$item['procedures']) {$flag=false; break;}
+                                            }
+                                        return $flag;
+                                    }),
+                            ])
+                            ->extraAttributes(['class' => 'greanbackground']),
+                    ])
+                    ->columnSpanFull(),
 
                 Grid::make()
                     ->schema([
@@ -342,49 +320,13 @@ class createGrowth extends Page implements HasForms
                                             }
                                         return $flag;
                                     }),
-
                             ])
                             ->extraAttributes(['class' => 'greanbackground']),
-
-
                     ])
                     ->columnSpanFull(),
 
                 Hidden::make('user_id'),
 
-                Actions::make([
-                    Action::make('store')
-                        ->requiresConfirmation()
-                        ->action(function (Get $get){
-
-                            if ($this->growth)
-                            {
-                                $this->growth->update($this->form->getState());
-
-                            }
-
-
-                            else
-                            {
-                               $this->growth= Growth::create($this->form->getState());
-                            }
-
-
-                            $this->form->model($this->growth)->saveRelationships();
-                            $this->redirect(Dashboard::getUrl());
-
-                        })
-                        ->label('حفظ ومتابعة'),
-                    Action::make('cancel')
-                        ->action(function (){
-                            $this->redirect(Dashboard::getUrl());
-                        })
-                        ->label('حفظ وخروج')
-                ])->alignCenter(),
-
-
             ])->columns(5) ;
-
     }
 }
-
