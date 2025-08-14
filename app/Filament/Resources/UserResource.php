@@ -74,6 +74,19 @@ class UserResource extends Resource
 
                     ->required()
                     ->label('رقم الهاتف'),
+                TextInput::make('whatsNumber')
+                    ->tel()
+                    ->length(12)
+                    ->placeholder('2189XXXXXXXX')
+                    ->startsWith(['21891','21892','21893','21894'])
+                    ->validationMessages([
+                        'length' => 'يجب ان يتكون رقم الهاتف من 12 رقم',
+                        'startsWith' => 'بداية رقم الهاتف عير صحيحة .. 21891 .. 21892 ..... الخ ',
+                    ])
+
+
+                    ->required()
+                    ->label('رقم الواتس'),
                 Forms\Components\Hidden::make('is_admin')->default(0),
                 Forms\Components\Hidden::make('is_employee')->default(0),
             ]);
