@@ -4,21 +4,27 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\EditProfile;
 use App\Filament\Pages\Auth\Login;
+use App\Filament\User\Resources\GrowthResource;
 use App\Http\Middleware\RedirectToProperPanelMiddleware;
+use App\Models\Growth;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets;
+
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class UserPanelProvider extends PanelProvider
@@ -27,6 +33,18 @@ class UserPanelProvider extends PanelProvider
     {
         return $panel
             ->darkMode(false)
+            ->navigationItems([
+                NavigationItem::make('تاريخ النمو')
+               //     ->url('/user/growths/upd')
+                    ->url(fn (): string => GrowthResource::getUrl('upd'))
+                    ->visible(function (){
+                      return  Growth::where('user_id',Auth::id())->first();
+                    })
+                    ->icon('heroicon-o-check')
+                    ->sort(4)
+                    ->isActiveWhen(fn () => request()->routeIs('filament.user.resources.growths.upd'))
+                    ,
+            ])
             ->profile(EditProfile::class)
             ->font('Amiri')
 
