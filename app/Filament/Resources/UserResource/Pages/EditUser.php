@@ -3,6 +3,12 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
+use App\Models\Autistic;
+use App\Models\Boy;
+use App\Models\Family;
+use App\Models\Growth;
+use App\Models\Medicine;
+use App\Models\User;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
@@ -14,7 +20,15 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()
+             ->modalHeading('حذف السجل')
+             ->before(function (User $record) {
+                 autistic::where('user_id',$record->id)->delete();
+                 Family::where('user_id',$record->id)->delete();
+                 Growth::where('user_id',$record->id)->delete();
+                 Boy::where('user_id',$record->id)->delete();
+                 Medicine::where('user_id',$record->id)->delete();
+             }),
         ];
     }
 }

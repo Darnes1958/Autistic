@@ -641,7 +641,29 @@ class UserResource extends Resource
                         Notification::make()
                                 ->title('فشل')
                                 ->send();
-                    })
+                    }),
+                Action::make('sms2')
+
+                    ->label('رسالة الترحيب')
+                    ->requiresConfirmation()
+                    ->color('success')
+                    ->action(function (Model $record){
+                        $response = Http::withToken(Setting::first()->token)
+                            ->post(Setting::first()->url, [
+                                'phoneNumber' => $record->phoneNumber,
+                                'message' => 'المشترك الكريم .. '.$record->name.'.. '.Setting::first()->register_message,
+                                'senderID' => '13201'
+                            ]);
+                        if ($response->successful()) {
+                            Notification::make()
+                                ->color('success')
+                                ->title('تم ارسال الرسالة بنجاح')
+                                ->send();
+                        } else
+                            Notification::make()
+                                ->title('فشل')
+                                ->send();
+                    }),
             ])
             ->bulkActions([
                 //
