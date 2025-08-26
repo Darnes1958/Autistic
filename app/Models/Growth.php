@@ -7,6 +7,7 @@ use App\Enums\ChildWeight;
 use App\Enums\Food;
 use App\Enums\Health;
 use App\Enums\Play;
+use App\Enums\PregnancyNormal;
 use App\Enums\PregnancyTime;
 use App\Enums\Sleap;
 use App\Enums\Symptoms\BehavioralAndEmotional;
@@ -47,7 +48,7 @@ class Growth extends Model
             'is_p_d_good_food' => YesNo::class,
             'is_child_wanted' => YesNo::class,
             'is_p_d_disease' => YesNo::class,
-            'is_pregnancy_normal' => YesNo::class,
+            'is_pregnancy_normal' => PregnancyNormal::class,
             'where_pregnancy_done' => WherePregnancy::class,
             'pregnancy_time'=>PregnancyTime::class,
             'child_weight'=>ChildWeight::class,
