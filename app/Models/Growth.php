@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\BreastfeedingNatural;
 use App\Enums\BreastPeriod;
 use App\Enums\ChildWeight;
 use App\Enums\Food;
@@ -53,7 +54,7 @@ class Growth extends Model
             'pregnancy_time'=>PregnancyTime::class,
             'child_weight'=>ChildWeight::class,
             'is_child_followed'=>YesNo::class,
-            'is_breastfeeding_natural'=>YesNo::class,
+            'is_breastfeeding_natural'=>BreastfeedingNatural::class,
             'breastfeeding_period'=>BreastPeriod::class,
             'difficulties_during_weaning'=>YesNo::class,
             'when_can_set'=>Year::class,
