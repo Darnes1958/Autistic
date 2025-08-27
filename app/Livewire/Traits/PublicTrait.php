@@ -121,8 +121,6 @@ trait PublicTrait {
         if ($name=='is_room_single' ) {$l='هل حجرة الحالة فردية ?';$option=YesNo::class;}
         if ($name=='mother_p_d_health' ) {$l='حالة الام الصحية اثناء الحمل';$option=Health::class;}
         if ($name=='is_breastfeeding_natural' ) {$l='هل كانت الرضاعة طبيعية ?';$option=BreastfeedingNatural::class;}
-        if ($name=='is_child_food_good' ) {$l='كيف كانت تغذية الحالة ?';$option=Food::class;}
-        if ($name=='sleep_habit' ) {$l='ما عادات الحالة في النوم ؟';$option=Sleap::class;}
         if ($name=='weekly_therapeutic' ) {$option=Weekly::class;}
 
         if ($label) $l=$label;
