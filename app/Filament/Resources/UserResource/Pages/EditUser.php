@@ -12,6 +12,7 @@ use App\Models\Medicine;
 use App\Models\User;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 
 class EditUser extends EditRecord
 {
@@ -32,4 +33,15 @@ class EditUser extends EditRecord
              }),
         ];
     }
+
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        $res=Autistic::where('user_id',$record->id)->first();
+        if ($res) {$res->center_id=$record->center_id;$res->save();}
+
+        $record->update($data);
+
+        return $record;
+    }
+
 }
