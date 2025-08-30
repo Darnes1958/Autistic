@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\CityResource\Pages;
+namespace App\Filament\Clusters\Places\Resources\Cites\Pages;
 
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\CityResource;
+use App\Filament\Clusters\Places\Resources\Cites\CityResource;
 use App\Models\Autistic;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditCity extends EditRecord

@@ -1,30 +1,23 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Clusters\Places\Resources\Streets;
 
-use Filament\Schemas\Schema;
-use Filament\Tables\Filters\SelectFilter;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\StreetResource\Pages\ListStreets;
-use App\Filament\Resources\StreetResource\Pages\CreateStreet;
-use App\Filament\Resources\StreetResource\Pages\EditStreet;
 use App\Filament\Clusters\Places;
-use App\Filament\Resources\StreetResource\Pages;
-use App\Filament\Resources\StreetResource\RelationManagers;
+use App\Filament\Clusters\Places\Resources\Streets\Pages\CreateStreet;
+use App\Filament\Clusters\Places\Resources\Streets\Pages\EditStreet;
+use App\Filament\Clusters\Places\Resources\Streets\Pages\ListStreets;
 use App\Livewire\Traits\PublicTrait;
 use App\Models\Autistic;
 use App\Models\Near;
 use App\Models\Street;
-use Filament\Forms;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Hidden;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
 class StreetResource extends Resource

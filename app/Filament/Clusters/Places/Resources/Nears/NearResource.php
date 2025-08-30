@@ -1,34 +1,29 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Clusters\Places\Resources\Nears;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Tables\Filters\Filter;
-use Filament\Schemas\Components\Utilities\Set;
-use Filament\Actions\EditAction;
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\NearResource\Pages\ListNears;
-use App\Filament\Resources\NearResource\Pages\CreateNear;
-use App\Filament\Resources\NearResource\Pages\EditNear;
 use App\Filament\Clusters\Places;
-use App\Filament\Resources\NearResource\Pages;
-use App\Filament\Resources\NearResource\RelationManagers;
+use App\Filament\Clusters\Places\Resources\Nears\Pages\CreateNear;
+use App\Filament\Clusters\Places\Resources\Nears\Pages\EditNear;
+use App\Filament\Clusters\Places\Resources\Nears\Pages\ListNears;
 use App\Livewire\Traits\PublicTrait;
 use App\Models\Autistic;
 use App\Models\City;
 use App\Models\Near;
 use App\Models\Street;
-use Filament\Forms;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 

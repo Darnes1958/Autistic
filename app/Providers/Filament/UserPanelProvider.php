@@ -32,6 +32,9 @@ class UserPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->resourceCreatePageRedirect('index')
+            ->resourceEditPageRedirect('index')
+
             ->darkMode(false)
             ->navigationItems([
                 NavigationItem::make('تاريخ النمو')

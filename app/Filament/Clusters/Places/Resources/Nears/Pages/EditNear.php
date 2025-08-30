@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\NearResource\Pages;
+namespace App\Filament\Clusters\Places\Resources\Nears\Pages;
 
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\NearResource;
+use App\Filament\Clusters\Places\Resources\Nears\NearResource;
 use App\Models\Autistic;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditNear extends EditRecord

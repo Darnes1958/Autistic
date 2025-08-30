@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\StreetResource\Pages;
+namespace App\Filament\Clusters\Places\Resources\Streets\Pages;
 
-use Filament\Actions\DeleteAction;
-use App\Filament\Resources\StreetResource;
+use App\Filament\Clusters\Places\Resources\Streets\StreetResource;
 use App\Models\Autistic;
-use Filament\Actions;
+use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditStreet extends EditRecord

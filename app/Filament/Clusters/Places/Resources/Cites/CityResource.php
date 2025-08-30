@@ -1,29 +1,24 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Clusters\Places\Resources\Cites;
 
-use Filament\Schemas\Schema;
-use Filament\Actions\EditAction;
-use App\Filament\Resources\CityResource\Pages\ListCities;
-use App\Filament\Resources\CityResource\Pages\CreateCity;
-use App\Filament\Resources\CityResource\Pages\EditCity;
 use App\Filament\Clusters\Places;
-use App\Filament\Resources\CityResource\Pages;
-use App\Filament\Resources\CityResource\RelationManagers;
+use App\Filament\Clusters\Places\Resources\Cites\Pages\CreateCity;
+use App\Filament\Clusters\Places\Resources\Cites\Pages\EditCity;
+use App\Filament\Clusters\Places\Resources\Cites\Pages\ListCities;
+
 use App\Livewire\Traits\PublicTrait;
 use App\Models\Autistic;
 use App\Models\Center;
 use App\Models\City;
 use App\Models\Street;
 use Filament\Actions\DeleteAction;
-use Filament\Forms;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Hidden;
 use Filament\Resources\Resource;
-use Filament\Tables;
+use Filament\Schemas\Schema;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
 class CityResource extends Resource

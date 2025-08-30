@@ -26,6 +26,9 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->resourceCreatePageRedirect('index')
+            ->resourceEditPageRedirect('index')
+
             ->darkMode(false)
             ->profile(EditProfile::class)
             ->font('Amiri')

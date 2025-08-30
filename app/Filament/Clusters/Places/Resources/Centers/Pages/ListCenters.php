@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\CenterResource\Pages;
+namespace App\Filament\Clusters\Places\Resources\Centers\Pages;
 
+use App\Filament\Clusters\Places\Resources\Centers\CenterResource;
 use Filament\Actions\CreateAction;
-use App\Filament\Resources\CenterResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListCenters extends ListRecords
@@ -14,7 +13,7 @@ class ListCenters extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('إضافة'),
+            CreateAction::make(),
         ];
     }
 }

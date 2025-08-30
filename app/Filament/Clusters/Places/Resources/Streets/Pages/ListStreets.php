@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\NearResource\Pages;
+namespace App\Filament\Clusters\Places\Resources\Streets\Pages;
 
+use App\Filament\Clusters\Places\Resources\Streets\StreetResource;
 use Filament\Actions\CreateAction;
-use App\Filament\Resources\NearResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListNears extends ListRecords
+class ListStreets extends ListRecords
 {
-    protected static string $resource = NearResource::class;
+    protected static string $resource = StreetResource::class;
 
     protected function getHeaderActions(): array
     {

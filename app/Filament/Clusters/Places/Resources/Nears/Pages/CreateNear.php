@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\NearResource\Pages;
+namespace App\Filament\Clusters\Places\Resources\Nears\Pages;
 
-use App\Filament\Resources\NearResource;
-use Filament\Actions;
+use App\Filament\Clusters\Places\Resources\Nears\NearResource;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 

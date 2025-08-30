@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\CityResource\Pages;
+namespace App\Filament\Clusters\Places\Resources\Cites\Pages;
 
-use App\Filament\Resources\CityResource;
-use Filament\Actions;
+use App\Filament\Clusters\Places\Resources\Cites\CityResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateCity extends CreateRecord

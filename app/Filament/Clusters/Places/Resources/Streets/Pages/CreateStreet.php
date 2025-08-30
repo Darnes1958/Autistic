@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\StreetResource\Pages;
+namespace App\Filament\Clusters\Places\Resources\Streets\Pages;
 
-use App\Filament\Resources\StreetResource;
-use Filament\Actions;
+use App\Filament\Clusters\Places\Resources\Streets\StreetResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateStreet extends CreateRecord

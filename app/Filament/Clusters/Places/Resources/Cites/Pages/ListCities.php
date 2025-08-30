@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\CityResource\Pages;
+namespace App\Filament\Clusters\Places\Resources\Cites\Pages;
 
+use App\Filament\Clusters\Places\Resources\Cites\CityResource;
 use Filament\Actions\CreateAction;
-use App\Filament\Resources\CityResource;
-use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListCities extends ListRecords
