@@ -10,12 +10,12 @@ use Filament\Resources\Pages\EditRecord;
 class EditCenter extends EditRecord
 {
     protected static string $resource = CenterResource::class;
-
+protected ?string $heading='تعديل مركز توحد';
     protected function getHeaderActions(): array
     {
         return [
             ViewAction::make(),
-            DeleteAction::make(),
+
         ];
     }
 }

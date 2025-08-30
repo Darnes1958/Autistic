@@ -12,10 +12,11 @@ class CenterInfolist
         return $schema
             ->components([
                 TextEntry::make('name'),
-                TextEntry::make('city_id')
-                    ->numeric(),
-                TextEntry::make('user_id')
-                    ->numeric(),
+                TextEntry::make('City.name')
+                    ->label('City'),
+
+                TextEntry::make('User.name')->label('User'),
+
                 TextEntry::make('created_at')
                     ->dateTime(),
                 TextEntry::make('updated_at')
