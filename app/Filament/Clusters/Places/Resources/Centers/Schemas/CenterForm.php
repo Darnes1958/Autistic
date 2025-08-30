@@ -2,8 +2,11 @@
 
 namespace App\Filament\Clusters\Places\Resources\Centers\Schemas;
 
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 
 class CenterForm
 {
@@ -13,12 +16,13 @@ class CenterForm
             ->components([
                 TextInput::make('name')
                     ->required(),
-                TextInput::make('city_id')
-                    ->required()
-                    ->numeric(),
-                TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
+                Select::make('city_id')
+                    ->relationship('City', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+                Hidden::make('user_id')
+                    ->default(Auth::id()),
             ]);
     }
 }
