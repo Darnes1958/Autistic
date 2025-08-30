@@ -3,6 +3,8 @@ namespace App\Livewire\Traits;
 
 
 
+use App\Enums\Salary;
+use App\Enums\Sources;
 use App\Enums\Academic;
 
 use App\Enums\Boy_response;
@@ -76,7 +78,7 @@ use Symfony\Component\Console\Input\Input;
 
 trait PublicTrait {
 
-    protected static function  ret_html($text,$c='text-lg text-black')
+    protected static function  ret_html($text,$c='text-lg text-black ')
     {
         return  new HtmlString('<span class="   '.$c.'">'.$text.'</span>');
     }
@@ -172,6 +174,7 @@ trait PublicTrait {
         return TextInput::make($name)
             ->label(fn()=>self::ret_html($l))
             ->inlineLabel()
+
             ->validationMessages([
                 'required' => 'يجب ادخال : '.$label,
                 'requiredif' => 'يجب ادخال : '.$label,
@@ -239,6 +242,7 @@ trait PublicTrait {
             ->live()
             ->preload()
             ->searchable()
+
             ->label(fn()=>self::ret_html($l))
             ->inlineLabel($inline)
             ->multiple()
@@ -294,8 +298,8 @@ trait PublicTrait {
         if ($name=='brother_relation') {$l='اتجاه وعلاقته بالحالة ';$option=RelationsTypes::class;}
         if ($name=='sym_year') {$l=' تمت رؤية الأعراض في العام ';$option=Sym_year::class;}
         if ($name=='person_relationship') {$l='علاقته بالحالة';$option=Person_relationship::class;}
-        if ($name=='family_salary') {$l='الدخل الشهري';$option=\App\Enums\Salary::class;}
-        if ($name=='family_sources') {$l='مصادر دخل الأسرة';$option=\App\Enums\Sources::class;}
+        if ($name=='family_salary') {$l='الدخل الشهري';$option=Salary::class;}
+        if ($name=='family_sources') {$l='مصادر دخل الأسرة';$option=Sources::class;}
 
         if ($name=='child_weight' ) {$l='وزن الحالة اثناء الولادة';$option=ChildWeight::class;}
         if ($name=='breastfeeding_period' ) {$l='مدة الرضاعة';$option=BreastPeriod::class;}

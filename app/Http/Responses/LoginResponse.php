@@ -6,7 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Features\SupportRedirects\Redirector;
 
-class LoginResponse extends \Filament\Http\Responses\Auth\LoginResponse
+class LoginResponse extends \Filament\Auth\Http\Responses\LoginResponse
 {
   public function toResponse($request): RedirectResponse|Redirector
   {

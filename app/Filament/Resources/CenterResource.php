@@ -2,6 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\CenterResource\Pages\ListCenters;
+use App\Filament\Resources\CenterResource\Pages\CreateCenter;
+use App\Filament\Resources\CenterResource\Pages\EditCenter;
 use App\Filament\Clusters\Places;
 use App\Filament\Resources\CenterResource\Pages;
 use App\Filament\Resources\CenterResource\RelationManagers;
@@ -11,7 +18,6 @@ use App\Models\Center;
 use App\Models\Near;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,17 +31,17 @@ class CenterResource extends Resource
     use PublicTrait;
     protected static ?string $model = Center::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $cluster=Places::class;
     protected static ?string $navigationLabel='مراكز التوحد';
     protected static ?string $pluralLabel='مراكز التوحد';
     protected static ?int $navigationSort=4;
 
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 self::getSelect('city_id')->inlineLabel(false),
                 self::getInput('name','اسم المركز')->unique(ignoreRecord: true)->inlineLabel(false),
                 Hidden::make('user_id')->default(Auth::id())
@@ -52,18 +58,18 @@ class CenterResource extends Resource
 
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('city_id')->label('المدينه')
+                SelectFilter::make('city_id')->label('المدينه')
                     ->relationship('City', 'name'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make()
                     ->visible(function (Model $record){
                         return !Autistic::where('center_id',$record->id)->exists()
                            ;
                     }),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                //
             ]);
     }
@@ -78,9 +84,9 @@ class CenterResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCenters::route('/'),
-            'create' => Pages\CreateCenter::route('/create'),
-            'edit' => Pages\EditCenter::route('/{record}/edit'),
+            'index' => ListCenters::route('/'),
+            'create' => CreateCenter::route('/create'),
+            'edit' => EditCenter::route('/{record}/edit'),
         ];
     }
 }

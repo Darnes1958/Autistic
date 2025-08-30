@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\StreetResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\StreetResource;
 use App\Models\Autistic;
 use Filament\Actions;
@@ -14,7 +15,7 @@ class EditStreet extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->visible(!Autistic::where('street_id', $this->getRecord()->id)->exists())
+            DeleteAction::make()->visible(!Autistic::where('street_id', $this->getRecord()->id)->exists())
                 ->modalHeading('حذف السجل')
         ];
     }

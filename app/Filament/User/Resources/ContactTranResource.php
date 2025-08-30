@@ -2,13 +2,16 @@
 
 namespace App\Filament\User\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\Action;
+use App\Filament\User\Resources\ContactTranResource\Pages\ListContactTrans;
+use Filament\Schemas\Components\Section;
+use App\Filament\User\Resources\ContactTranResource\Pages\CreateContactTran;
+use App\Filament\User\Resources\ContactTranResource\Pages\EditContactTran;
 use App\Filament\User\Resources\ContactTranResource\Pages;
 use App\Filament\User\Resources\ContactTranResource\RelationManagers;
 use App\Models\ContactTran;
-use Filament\Actions\StaticAction;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -23,17 +26,17 @@ class ContactTranResource extends Resource
 {
     protected static ?string $model = ContactTran::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     public static function shouldRegisterNavigation(): bool
     {
         return false;
     }
 
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 //
             ]);
     }
@@ -70,19 +73,19 @@ class ContactTranResource extends Resource
 
                     })
                     ->action(
-                        Tables\Actions\Action::make('showTran')
+                        Action::make('showTran')
                             ->label('نص الرسالة')
                             ->modalSubmitAction(false)
-                            ->mountUsing(function (Model $record, Pages\ListContactTrans $livewire) {
+                            ->mountUsing(function (Model $record, ListContactTrans $livewire) {
                                 $record->isread=1;
                                 $record->save();
                                 $livewire->dispatch('refreshContact');
 
                             })
 
-                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة')
+                            ->modalCancelAction(fn (Action $action) => $action->label('عودة')
                             )
-                            ->infolist([
+                            ->schema([
                                 Section::make()
                                     ->schema([
                                         TextEntry::make('message')
@@ -99,10 +102,10 @@ class ContactTranResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
+            ->recordActions([
                 //
             ])
-            ->bulkActions([
+            ->toolbarActions([
                //
             ]);
     }
@@ -117,9 +120,9 @@ class ContactTranResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListContactTrans::route('/'),
-            'create' => Pages\CreateContactTran::route('/create'),
-            'edit' => Pages\EditContactTran::route('/{record}/edit'),
+            'index' => ListContactTrans::route('/'),
+            'create' => CreateContactTran::route('/create'),
+            'edit' => EditContactTran::route('/{record}/edit'),
         ];
     }
 }

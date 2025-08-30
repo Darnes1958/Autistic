@@ -5,9 +5,13 @@ namespace App\Providers;
 
 
 
+use Filament\Auth\Http\Responses\Contracts\LogoutResponse;
+use Filament\Forms\Components\FileUpload;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Support\Colors\Color;
 use Filament\Support\Facades\FilamentColor;
 use Filament\Support\Facades\FilamentView;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
 use Filament\View\PanelsRenderHook;
 use Illuminate\Database\Eloquent\Model;
@@ -20,8 +24,8 @@ class AppServiceProvider extends ServiceProvider
      * Register any application services.
      */
     public $singletons = [
-        \Filament\Http\Responses\Auth\Contracts\LoginResponse::class => \App\Http\Responses\LoginResponse::class,
-        \Filament\Http\Responses\Auth\Contracts\LogoutResponse::class => \App\Http\Responses\LogoutResponse::class,
+        \Filament\Auth\Http\Responses\Contracts\LoginResponse::class => \App\Http\Responses\LoginResponse::class,
+        LogoutResponse::class => \App\Http\Responses\LogoutResponse::class,
     ];
 
     public function register(): void
@@ -56,7 +60,7 @@ class AppServiceProvider extends ServiceProvider
 
             fn (): string => Blade::render('@livewire(\'mail-bar\')'),
         );
-        Table::$defaultNumberLocale = 'nl';
+        Table::configureUsing(fn(Table $table) => $table->defaultNumberLocale('nl'));
 
     }
 

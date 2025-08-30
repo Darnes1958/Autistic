@@ -2,20 +2,20 @@
 
 namespace App\Filament\User\Resources\GrowthResource\Pages;
 
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Actions\Action;
 use App\Filament\User\Resources\GrowthResource;
 use App\Livewire\Traits\PublicTrait;
 use App\Models\Growth;
-use Awcodes\TableRepeater\Components\TableRepeater;
-use Awcodes\TableRepeater\Header;
 use Filament\Actions;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,12 +45,13 @@ class UpdGrowth extends EditRecord
         $this->previousUrl = url()->previous();
     }
 
-    public  function form(Form $form): Form
+    public  function form(Schema $schema): Schema
     {
 
-        return $form
+        return $schema
 
-            ->schema([
+            ->components([
+
                 Hidden::make('user_id')->default(Auth::id()),
                 Grid::make()
                     ->schema([
@@ -80,11 +81,11 @@ class UpdGrowth extends EditRecord
                                     ->maxValue(12),
                                 self::getSelectEnum('is_pregnancy_planned','هل كان الحمل مخططا له'),
                                 self::getSelectEnum('mother_p_d_health','حالة الأم الصحية أثناء الحمل')->live()
-                                    ->afterStateUpdated(function (Set $set, $state){
-                                        if ($state=1) $set('p_d_why_not_health',null);
+                                    ->afterStateUpdatedJs(function (Set $set, $state){
+                                        if ($state!=NULL && $state->value==1) $set('p_d_why_not_health',null);
                                     }),
                                 self::getInput('p_d_why_not_health','لماذا كانت غير جيدة')
-                                    ->visible(fn(Get $get): bool => $get('mother_p_d_health')!=null && $get('mother_p_d_health')==0)
+                                    ->visible(fn(Get $get): bool => $get('mother_p_d_health')!=NULL && $get('mother_p_d_health')->value==0)
                                     ->nullable(),
                                 self::getSelectEnum('is_p_d_followed','هل تم الحمل بمتابعة طبية'),
                                 self::getSelectEnum('is_p_d_good_food','هل غذاء الأم اثناء الحمل جيد'),
@@ -92,12 +93,12 @@ class UpdGrowth extends EditRecord
                                 self::getSelectEnum('is_p_d_disease','هل تعرضت الأم لأي أمراض أو حوادث')
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
-                                        if ($state!=1) $set('p_d_disease',null);
+                                        if ($state!=NULL && $state!=1) $set('p_d_disease',null);
                                     }),
                                 self::getInput('p_d_disease',' ماهي الأمراض أو الحوادث التي نعرضت إليها الأم')
                                     ->nullable()
                                     ->requiredIf('is_p_d_disease', 1)
-                                    ->visible(fn(Get $get): bool =>$get('is_p_d_disease')==1),
+                                    ->visible(fn(Get $get): bool =>$get('is_p_d_disease')!=NULL && $get('is_p_d_disease')->value==1),
                                 Grid::make()
                                     ->schema([
                                         self::getSelectEnum('is_pregnancy_normal','هل كانت الولادة طبيعية'),
@@ -107,11 +108,11 @@ class UpdGrowth extends EditRecord
                                         self::getSelectEnum('is_child_followed','هل احتاج الحالة بعد الولادة إلى رعاية خاصة')
                                             ->live()
                                             ->afterStateUpdated(function (Set $set, $state){
-                                                if ($state!=1) $set('why_child_followed',null);
+                                                if ($state!=NULL && $state!=1) $set('why_child_followed',null);
                                             }),
 
                                         self::getinput('why_child_followed','لماذا احتاج لرعاية')
-                                            ->visible(fn(Get $get):bool =>$get('is_child_followed')==1)
+                                            ->visible(fn(Get $get):bool =>$get('is_child_followed')!=NULL && $get('is_child_followed')->value==1)
                                             ->nullable(),
                                     ])->columns(1),
 
@@ -121,11 +122,11 @@ class UpdGrowth extends EditRecord
                                 self::getSelectEnum('difficulties_during_weaning','هل حدثت صعوبات أثناء الفطام')
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
-                                        if ($state!=1) $set('what_is_the_defficulties',null);
+                                        if ($state!=NULL && $state!=1) $set('what_is_the_defficulties',null);
                                     }),
 
                                 self::getinput('what_is_the_defficulties','ما هي الصعوبات ؟')
-                                    ->visible(fn(Get $get):bool =>$get('difficulties_during_weaning')==1)
+                                    ->visible(fn(Get $get):bool =>$get('difficulties_during_weaning')!=NULL && $get('difficulties_during_weaning')->value==1)
                                     ->nullable(),
                                 self::getSelectEnum('when_can_set','متى استطاع الجلوس'),
                                 self::getSelectEnum('teeth_appear','متى بدأت الاسنان بالظهور'),
@@ -140,50 +141,49 @@ class UpdGrowth extends EditRecord
                                 self::getSelectEnum('when_use_spoon','متى استطاع استخدام الملعقة و الكوب'),
                                 self::getSelectEnum('is_child_food_good','كيف كانت تغذية الحالة ?')->live()
                                     ->afterStateUpdated(function (Set $set, $state){
-                                        if ($state==1) $set('why_food_not_good',null);
+                                        if ($state!=NULL && $state==1) $set('why_food_not_good',null);
                                     }),
 
                                 self::getinput('why_food_not_good','اسباب التغذية الغير جيدة')
-                                    ->visible(fn(Get $get):bool =>  $get('is_child_food_good')==2),
+                                    ->visible(fn(Get $get):bool =>  $get('is_child_food_good')!=NULL && $get('is_child_food_good')->value==2),
 
                                 self::getSelectEnum('sleep_habit','ما عادات الحالة في النوم ؟'),
                                 self::getSelectEnum('is_disturbing_nightmares','هل يتعرض لكوابيس مزعجة'),
                                 self::getSelectEnum('safety_of_senses','هل الحواس سليمة')
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
-                                        if ($state==1) $set('who_senses',null);
+                                        if ($state!=NULL && $state==1) $set('who_senses',null);
                                     }),
 
                                 self::getinput('who_senses','ماهي الحواس المصابة')
-                                    ->visible(fn(Get $get):bool => $get('safety_of_senses')!=null && $get('safety_of_senses')==0)->nullable(),
+                                    ->visible(fn(Get $get):bool =>$get('safety_of_senses')!=NULL  && $get('safety_of_senses')->value==0)->nullable(),
                                 self::getSelectEnum('mental_health','هل الوظائف العقلية سليمة')
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
-                                        if ($state==1) $set('who_mental',null);
+                                        if ($state!=NULL && $state==1) $set('who_mental',null);
                                     }),
 
                                 self::getInput('who_mental','ماهي الوظائف المصابة')
-                                    ->visible(fn(Get $get):bool => $get('mental_health')!=null && $get('mental_health')==0)->nullable(),
+                                    ->visible(fn(Get $get):bool =>$get('mental_health')!=NULL  && $get('mental_health')->value==0)->nullable(),
                                 self::getSelectEnum('injuries_disabilities','هل توجد إصابات أو عاهات جسيمة')
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
-                                        if ($state!=1) $set('injuries_type',null);
+                                        if ($state!=NULL && $state!=1) $set('injuries_type',null);
                                     }),
 
                                 self::getInput('injuries_type','ما نوع الاصابة ؟')
-                                    ->visible(fn(Get $get):bool
-                                    =>  $get('injuries_disabilities')==1)
+                                    ->visible(fn(Get $get):bool=>$get('injuries_disabilities')!=NULL && $get('injuries_disabilities')->value==1)
                                     ->nullable(),
 
 
                                 self::getSelectEnum('is_child_play_toy','هل يمارس الحالة اللعب بالألعاب')
                                     ->live()
                                     ->afterStateUpdated(function (Set $set, $state){
-                                        if ($state==1) $set('why_not_play_toy',null);
+                                        if ($state!=NULL && $state==1) $set('why_not_play_toy',null);
                                     }),
                                 self::getInput('why_not_play_toy','لماذا لا يمارس اللعب بالالعاب ؟')
-                                    ->visible(fn(Get $get):bool => $get('is_child_play_toy')!=null
-                                        && $get('is_child_play_toy')==0)
+                                    ->visible(fn(Get $get):bool =>$get('is_child_play_toy')!=NULL
+                                        && $get('is_child_play_toy')->value==0)
                                     ->nullable(),
                                 self::getSelectEnumMulti('is_play_with_other','مع من يفضل الحالة اللعب ؟ '),
 
@@ -220,24 +220,23 @@ class UpdGrowth extends EditRecord
                     ->schema([
                         Section::make()
                             ->schema([
-                                TableRepeater::make('GrowDifficult')
+                                Repeater::make('GrowDifficult')
                                     ->columnSpanFull()
                                     ->label(fn()=>self::ret_html('صعوبات نمائية أخرى تذكر',' text-base'))
-                                    ->streamlined()
-                                    ->emptyLabel(false)
-                                    ->relationship('GrowDifficult')
-                                    ->headers([
-                                        Header::make('الصعوبة')
-                                            ->label(fn()=>self::ret_html('الصعوبة',' text-base my-yellow'))
-                                            ->width('30%'),
-                                        Header::make('العمر')
-                                            ->label(fn()=>self::ret_html('العمر',' text-base my-yellow'))
-                                            ->width('10%'),
-                                        Header::make('الاجراءات التي اتخذت')
-                                            ->label(fn()=>self::ret_html('الاجراءات التي اتخذت',' text-base my-yellow'))
-                                            ->width('60%'),
 
+                                    ->relationship('GrowDifficult')
+                                    ->table([
+                                        TableColumn::make('الصعوبة')
+
+                                            ->width('30%'),
+                                        TableColumn::make('العمر')
+
+                                            ->width('10%'),
+                                        TableColumn::make('الاجراءات التي اتخذت')
+
+                                            ->width('60%'),
                                     ])
+
                                     ->live()
                                     ->defaultItems(0)
                                     ->addActionLabel('إضافة صعوبة')
@@ -264,39 +263,40 @@ class UpdGrowth extends EditRecord
                             ])
                             ->extraAttributes(['class' => 'greanbackground']),
                     ])
+                    ->columns(1)
                     ->columnSpanFull(),
 
                 Grid::make()
                     ->schema([
                         Section::make()
                             ->schema([
-                                TableRepeater::make('BoyDisease')
-                                    ->streamlined()
+                                Repeater::make('BoyDisease')
+
                                     ->columnSpanFull()
                                     ->label(fn()=>self::ret_html('قائمة بأبرز الأمراض التي أصيب بها الحالة'))
                                     ->relationship('BoyDisease')
 
-                                    ->headers([
-                                        Header::make('المرض')
-                                            ->label(fn()=>self::ret_html('المرض','text-sm my-yellow '))
+                                    ->table([
+                                        TableColumn::make('المرض')
+
                                             ->width('30%'),
-                                        Header::make('العمر عند الإصابة')
-                                            ->label(fn()=>self::ret_html('العمر عند الإصابة','text-sm my-yellow'))
+                                        TableColumn::make('العمر عند الإصابة')
+
                                             ->width('10%'),
-                                        Header::make('مدة المرض')
-                                            ->label(fn()=>self::ret_html('مدة المرض','text-sm my-yellow'))
+                                        TableColumn::make('مدة المرض')
+
                                             ->width('10%'),
-                                        Header::make('شدته')
-                                            ->label(fn()=>self::ret_html('شدته','text-sm my-yellow'))
+                                        TableColumn::make('شدته')
+
                                             ->width('20%'),
-                                        Header::make('العلاج')
-                                            ->label(fn()=>self::ret_html('العلاج','text-sm my-yellow'))
+                                        TableColumn::make('العلاج')
+
                                             ->width('25%'),
 
                                     ])
                                     ->live()
-                                    ->streamlined()
-                                    ->emptyLabel(false)
+
+
                                     ->defaultItems(0)
                                     ->addActionLabel('إضافة مرض')
                                     ->schema([
@@ -320,13 +320,18 @@ class UpdGrowth extends EditRecord
                                             }
                                         return $flag;
                                     }),
+
                             ])
                             ->extraAttributes(['class' => 'greanbackground']),
+
+
                     ])
+                    ->columns(1)
                     ->columnSpanFull(),
 
                 Hidden::make('user_id'),
 
-            ])->columns(5) ;
+            ])
+            ->columns(5) ;
     }
 }

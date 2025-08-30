@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CenterResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\CenterResource;
 use App\Models\Autistic;
 use Filament\Actions;
@@ -14,7 +15,7 @@ class EditCenter extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->visible(!Autistic::where('center_id', $this->getRecord()->id)->exists())
                 ->modalHeading('حذف السجل')
 

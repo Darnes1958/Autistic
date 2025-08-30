@@ -2,26 +2,25 @@
 
 namespace App\Filament\User\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
 use App\Livewire\Traits\PublicTrait;
 use App\Models\autistic;
 use App\Models\Center;
 use App\Models\Near;
 use App\Models\Street;
 use App\Models\Symptom;
-
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
@@ -31,9 +30,9 @@ use Illuminate\Support\HtmlString;
 class createAutistic extends Page implements HasForms
 {
     use InteractsWithForms,PublicTrait;
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string $view = 'filament.user.pages.create-autistic';
+    protected string $view = 'filament.user.pages.create-autistic';
     protected static ?string $navigationLabel='بيانات أولية';
     protected ?string $heading=' ';
     protected static ?int $navigationSort=1;
@@ -58,12 +57,12 @@ class createAutistic extends Page implements HasForms
         else
         $this->form->fill(['user_id'=>Auth::id()]);
     }
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->model(Autistic::class)
             ->statePath('data')
-            ->schema([
+            ->components([
                Grid::make()
                    ->schema([
                        Section::make()
@@ -117,17 +116,18 @@ class createAutistic extends Page implements HasForms
                                ])
                                ->columns(1)
                            ,
-                           self::getSelect('center_id','مركز التوحد (إذا كان  ملتحقاً بمركز)')
-                               ->label(fn()=>self::ret_html('مركز التوحد (إذا كان  ملتحقاً بمركز)','text-black '))
-                               ->required(false)
-                               ->options(fn (Get $get): Collection => Center::query()
-                                   ->where('city_id', $get('city_id'))
-                                   ->pluck('name', 'id'))
-                               ->disabled(function (Get $get){return !$get('city_id'); })
-                               ->createOptionUsing(function (array $data,Get $get) : int {
-                                   $data['city_id']=$get('city_id');
-                                   return Center::create($data)->getKey();
-                               }),
+               Hidden::make('center_id')->default(Auth::user()->center_id),
+               //          self::getSelect('center_id','مركز التوحد (إذا كان  ملتحقاً بمركز)')
+               //              ->label(fn()=>self::ret_html('مركز التوحد (إذا كان  ملتحقاً بمركز)','text-black '))
+               //              ->required(false)
+               //              ->options(fn (Get $get): Collection => Center::query()
+               //                  ->where('city_id', $get('city_id'))
+               //                  ->pluck('name', 'id'))
+               //              ->disabled(function (Get $get){return !$get('city_id'); })
+               //              ->createOptionUsing(function (array $data,Get $get) : int {
+               //                  $data['city_id']=$get('city_id');
+               //                  return Center::create($data)->getKey();
+               //              }),
                            self::getSelectEnum('academic')->columnSpanFull(),
                            Fieldset::make(fn()=>self::ret_html('الشخص الذي قام بتعبئة البيانات','my-yellow text-2xl font-black'))
                                ->schema([
@@ -146,6 +146,7 @@ class createAutistic extends Page implements HasForms
                                ->required()
                                ->label(fn()=>self::ret_html('صورة شخصية للحالة ','my-yellow text-2xl font-black'))
                                ->multiple()
+
                                ->maxFiles(5)
                                ->directory('autistic-images'),
                             Hidden::make('user_id'),
@@ -161,7 +162,7 @@ class createAutistic extends Page implements HasForms
                                           $this->aut=  Autistic::create($this->form->getState());
 
                                         $this->form->model($this->aut)->saveRelationships();
-                                        
+
                                         $this->redirect(Dashboard::getUrl());
                                     })
                                     ->label('حفظ ومتابعة'),

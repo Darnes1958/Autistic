@@ -2,6 +2,12 @@
 
 namespace App\Filament\User\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Actions\EditAction;
+use App\Filament\User\Resources\ContactResource\Pages\ListContacts;
+use App\Filament\User\Resources\ContactResource\Pages\CreateContact;
+use App\Filament\User\Resources\ContactResource\Pages\EditContact;
 use App\Enums\Contact\ContactType;
 use App\Filament\User\Resources\ContactResource\Pages;
 use App\Filament\User\Resources\ContactResource\RelationManagers;
@@ -11,7 +17,6 @@ use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Infolists\Components\Section;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -29,13 +34,13 @@ class ContactResource extends Resource
         return auth()->user()->is_admin;
     }
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\Grid::make()
+        return $schema
+            ->components([
+                Grid::make()
                 ->schema([
 
                         Select::make('contactType')
@@ -88,10 +93,10 @@ class ContactResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ]);
     }
@@ -106,9 +111,9 @@ class ContactResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListContacts::route('/'),
-            'create' => Pages\CreateContact::route('/create'),
-            'edit' => Pages\EditContact::route('/{record}/edit'),
+            'index' => ListContacts::route('/'),
+            'create' => CreateContact::route('/create'),
+            'edit' => EditContact::route('/{record}/edit'),
         ];
     }
 }

@@ -2,13 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\DiseaseMenuResource\Pages\ListDiseaseMenus;
+use App\Filament\Resources\DiseaseMenuResource\Pages\CreateDiseaseMenu;
+use App\Filament\Resources\DiseaseMenuResource\Pages\EditDiseaseMenu;
 use App\Filament\Resources\DiseaseMenuResource\Pages;
 use App\Filament\Resources\DiseaseMenuResource\RelationManagers;
 use App\Models\DiseaseMenu;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -20,15 +24,15 @@ class DiseaseMenuResource extends Resource
 {
     protected static ?string $model = DiseaseMenu::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel='أبرز الأمراض';
     protected static ?int $navigationSort=2;
-    protected static ?string $navigationGroup='اعدادات';
+    protected static string | \UnitEnum | null $navigationGroup='اعدادات';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                     ->required()
                     ->label('بيان المرض'),
@@ -47,10 +51,10 @@ class DiseaseMenuResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ]);
     }
@@ -65,9 +69,9 @@ class DiseaseMenuResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListDiseaseMenus::route('/'),
-            'create' => Pages\CreateDiseaseMenu::route('/create'),
-            'edit' => Pages\EditDiseaseMenu::route('/{record}/edit'),
+            'index' => ListDiseaseMenus::route('/'),
+            'create' => CreateDiseaseMenu::route('/create'),
+            'edit' => EditDiseaseMenu::route('/{record}/edit'),
         ];
     }
 }

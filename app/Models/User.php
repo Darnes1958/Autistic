@@ -100,5 +100,9 @@ class User extends Authenticatable implements FilamentUser
     public function Medicine(){
         return $this->hasOne(Medicine::class);
     }
+    public function Center()
+    {
+        return $this->belongsTo(Center::class);
+    }
 
 }

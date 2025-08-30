@@ -2,23 +2,23 @@
 
 namespace App\Filament\User\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
 use App\Livewire\Traits\PublicTrait;
 use App\Models\Boy;
 use App\Models\Medicine;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
@@ -27,9 +27,9 @@ use Illuminate\Support\Facades\Auth;
 class createMedicine extends Page implements HasForms
 {
     use InteractsWithForms,PublicTrait;
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string $view = 'filament.user.pages.create-medicine';
+    protected string $view = 'filament.user.pages.create-medicine';
 
     protected static ?string $navigationLabel='التدخلات العلاجية والأدوية';
     protected ?string $heading=' ';
@@ -58,21 +58,21 @@ class createMedicine extends Page implements HasForms
         }
 
     }
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->model(Medicine::class)
             ->statePath('data')
-            ->schema([
+            ->components([
                 Grid::make()
                     ->schema([
                         Section::make()
 
-                          ->heading(self::ret_html(' العلاج الدوائي','my-yellow text-2xl font-black') )
+                          ->heading(self::ret_html(' العلاج الدوائي','my-yellow text-2xl font-black  ') )
                           ->schema([
                                self::getSelectEnum('is_take_medicine','هل يتناول الحالة دواء'),
                                Fieldset::make(' ')
-                                ->visible(fn(Get $get):bool=>$get('is_take_medicine')==1)
+                                ->visible(fn(Get $get):bool=> $get('is_take_medicine')!=NULL && $get('is_take_medicine')->value==1)
                                 ->schema([
                                     self::getDate('when_take_medicine','متى بدأ تناول الدواء'),
                                     Textarea::make('medicine')
@@ -87,17 +87,17 @@ class createMedicine extends Page implements HasForms
                                     self::getCheck('why_take_medicine','الغرض من تناول الدواء'),
 
                                     self::getInput('other_reason_take_medicine','أرجو التوضيح')
-                                        ->visible(fn(Get $get):bool=>$get('why_take_medicine')==6),
+                                        ->visible(fn(Get $get):bool=>$get('why_take_medicine')!=NULL && $get('why_take_medicine')->value==6),
                                     self::getSelectEnum('is_still_take_medicine','هل مازال التدخل الدوائي مستمر ؟'),
                                     self::getInput('why_he_stop_medicine','لماذا توقف العلاج')
-                                        ->visible(fn(Get $get):bool=>$get('is_still_take_medicine')!=null &&
-                                            $get('is_still_take_medicine')==0),
+                                        ->visible(fn(Get $get):bool=>$get('is_still_take_medicine')!=NULL &&
+                                            $get('is_still_take_medicine')->value==0),
                                     self::getSelectEnum('is_there_symptoms','هل هناك آثار جانبية ملحوظة ؟ '),
                                     self::getInput('what_are_symptoms','ما هي الآثار الجانبية ?')
-                                        ->visible(fn(Get $get):bool=>$get('is_there_symptoms')==1),
+                                        ->visible(fn(Get $get):bool=>$get('is_there_symptoms')!=NULL && $get('is_there_symptoms')->value==1),
                                     self::getSelectEnum('is_medicine_change','هل تم تغيير نوع أو جرعة الدواء مؤخراً ؟ '),
                                     self::getInput('why_change','ما هي التغييرات ؟')
-                                        ->visible(fn(Get $get):bool=>$get('is_medicine_change')==1),
+                                        ->visible(fn(Get $get):bool=>$get('is_medicine_change')!=NULL && $get('is_medicine_change')->value==1),
 
                                     FileUpload::make('prescription_image')
                                         ->directory('prescription-images')
@@ -119,11 +119,11 @@ class createMedicine extends Page implements HasForms
                             ->schema([
                                 self::getSelectEnum('is_take_therapeutic','هل تلقى الحالة أي تدخلات علاجية غير دوائية ؟ '),
                                 Fieldset::make(' ')
-                                    ->visible(fn(Get $get):bool=>$get('is_take_therapeutic')==1)
+                                    ->visible(fn(Get $get):bool=>$get('is_take_therapeutic')!=NULL && $get('is_take_therapeutic')->value==1)
                                     ->schema([
                                         self::getCheck('therapeutic_details',' '),
                                         self::getInput('other_therapeutic','ماهي التدخلات الاخري')
-                                            ->visible(fn(Get $get):bool=>$get('therapeutic_details')==5),
+                                            ->visible(fn(Get $get):bool=>$get('therapeutic_details')!=NULL && $get('therapeutic_details')->value==5),
 
                                         self::getInput('age_therapeutic',' كم كان عمر الحالة عند تلقي التدخلات العلاجية ؟')
                                         ->numeric(),
@@ -131,11 +131,11 @@ class createMedicine extends Page implements HasForms
                                         self::getSelectEnum('weekly_therapeutic','عدد الجلسات أسبوعياً ؟ '),
                                         self::getSelectEnum('is_stil_take_therapeutic','هل مازال التدخل العلاجي مستمر حتى الآن؟ '),
                                         self::getInput('why_he_stop_therapeutic','لماذا توقف التدخل العلاجي ؟')
-                                            ->visible(fn(Get $get):bool=>$get('is_stil_take_therapeutic')!=null &&
-                                                $get('is_stil_take_therapeutic')==0),
+                                            ->visible(fn(Get $get):bool=>$get('is_stil_take_therapeutic')!=NULL &&
+                                                $get('is_stil_take_therapeutic')->value==0),
                                         self::getSelectEnum('is_there_any_improve','هل هناك تحسن ملحوظ ؟ '),
                                         self::getInput('what_is_improve','ما هو التحسن ?')
-                                            ->visible(fn(Get $get):bool=>$get('is_there_any_improve')==1),
+                                            ->visible(fn(Get $get):bool=>$get('is_there_any_improve')!=NULL && $get('is_there_any_improve')->value==1),
 
 
                                         FileUpload::make('therapeutic_reports')
@@ -155,10 +155,10 @@ class createMedicine extends Page implements HasForms
                          ->schema([
                              self::getSelectEnum('is_doctor_say','هل أوصى الطبيب أو المختص بتعديل الخطة العلاجية ؟ '),
                              self::getInput('what_doctor_say','بماذا أوصى ؟')
-                                 ->visible(fn(Get $get):bool=>$get('is_doctor_say')==1),
+                                 ->visible(fn(Get $get):bool=>$get('is_doctor_say')!=NULL &&  $get('is_doctor_say')->value==1),
                              self::getSelectEnum('any_problems','هل هناك صعوبات في الالتزام بالعلاج سواء الدوائي أو السلوكي؟ '),
                              self::getInput('what_is_problems','ماهي الصعوبات ؟')
-                                 ->visible(fn(Get $get):bool=>$get('any_problems')==1),
+                                 ->visible(fn(Get $get):bool=>$get('any_problems')!=NULL && $get('any_problems')->value==1),
 
                          ])
                          ->extraAttributes(['class' => 'greanbackground']),

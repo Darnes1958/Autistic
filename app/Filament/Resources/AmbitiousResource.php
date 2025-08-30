@@ -2,13 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\AmbitiousResource\Pages\ListAmbitiouses;
+use App\Filament\Resources\AmbitiousResource\Pages\CreateAmbitious;
+use App\Filament\Resources\AmbitiousResource\Pages\EditAmbitious;
 use App\Filament\Resources\AmbitiousResource\Pages;
 use App\Filament\Resources\AmbitiousResource\RelationManagers;
 use App\Models\Ambitious;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -21,14 +25,14 @@ class AmbitiousResource extends Resource
     protected static ?string $model = Ambitious::class;
 
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel='طموح الأسرة بالنسبة للحالة';
-    protected static ?string $navigationGroup='اعدادات';
+    protected static string | \UnitEnum | null $navigationGroup='اعدادات';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 TextInput::make('name')
                  ->required()
                 ->label('بيان طموح الأسرة'),
@@ -48,10 +52,10 @@ class AmbitiousResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                //
             ]);
     }
@@ -66,9 +70,9 @@ class AmbitiousResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAmbitiouses::route('/'),
-            'create' => Pages\CreateAmbitious::route('/create'),
-            'edit' => Pages\EditAmbitious::route('/{record}/edit'),
+            'index' => ListAmbitiouses::route('/'),
+            'create' => CreateAmbitious::route('/create'),
+            'edit' => EditAmbitious::route('/{record}/edit'),
         ];
     }
 }

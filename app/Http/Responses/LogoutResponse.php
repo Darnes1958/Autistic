@@ -2,13 +2,12 @@
 namespace App\Http\Responses;
 use Filament\Facades\Filament;
 use Illuminate\Http\RedirectResponse;
-use Filament\Http\Responses\Auth\LogoutResponse as BaseLogoutResponse;
 
-class LogoutResponse extends BaseLogoutResponse
+class LogoutResponse extends \Filament\Auth\Http\Responses\LogoutResponse
 {
     public function toResponse($request): RedirectResponse
     {
-        if (Filament::getCurrentPanel()->getId() === 'admin') {
+        if (Filament::getCurrentOrDefaultPanel()->getId() === 'admin') {
             return redirect()->to(Filament::getLoginUrl());
         }
         return parent::toResponse($request);

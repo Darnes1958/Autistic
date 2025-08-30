@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\DiseaseMenuResource\Pages;
 
+use Filament\Actions\CreateAction;
 use App\Filament\Resources\DiseaseMenuResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -14,7 +15,7 @@ class ListDiseaseMenus extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()->label('إضافة'),
+            CreateAction::make()->label('إضافة'),
         ];
     }
 }

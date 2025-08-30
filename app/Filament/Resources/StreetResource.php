@@ -2,6 +2,13 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\StreetResource\Pages\ListStreets;
+use App\Filament\Resources\StreetResource\Pages\CreateStreet;
+use App\Filament\Resources\StreetResource\Pages\EditStreet;
 use App\Filament\Clusters\Places;
 use App\Filament\Resources\StreetResource\Pages;
 use App\Filament\Resources\StreetResource\RelationManagers;
@@ -11,7 +18,6 @@ use App\Models\Near;
 use App\Models\Street;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -30,12 +36,12 @@ class StreetResource extends Resource
     protected static ?int $navigationSort=2;
     protected static ?string $pluralLabel='أحياء';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 self::getSelect('city_id'),
                 self::getInput('name','اسم الحي'),
 
@@ -52,18 +58,18 @@ class StreetResource extends Resource
                 self::getColumn('name'),
             ])
             ->filters([
-                Tables\Filters\SelectFilter::make('city_id')->label('المدينه')
+                SelectFilter::make('city_id')->label('المدينه')
                 ->relationship('City', 'name'),
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make()
                     ->visible(function (Model $record){
                         return !Autistic::where('street_id',$record->id)->exists()
                             && !Near::where('street_id',$record->id)->exists();
                     }),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ]);
     }
@@ -78,9 +84,9 @@ class StreetResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListStreets::route('/'),
-            'create' => Pages\CreateStreet::route('/create'),
-            'edit' => Pages\EditStreet::route('/{record}/edit'),
+            'index' => ListStreets::route('/'),
+            'create' => CreateStreet::route('/create'),
+            'edit' => EditStreet::route('/{record}/edit'),
         ];
     }
 }

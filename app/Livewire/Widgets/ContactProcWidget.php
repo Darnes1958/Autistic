@@ -2,14 +2,13 @@
 
 namespace App\Livewire\Widgets;
 
+use Filament\Actions\DeleteAction;
+use Filament\Actions\Action;
 use App\Models\Contact;
 use App\Models\ContactProc;
 
 use Faker\Provider\Text;
-use Filament\Actions\StaticAction;
 use Filament\Forms\Components\TextInput;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -25,9 +24,9 @@ class ContactProcWidget extends BaseWidget
     {
         return $table
             ->query(
-                function (ContactProc $query ) {
-                    $query=ContactProc::where('contact_id',$this->contact_id);
-                    return $query;
+                function ( ) {
+                     return ContactProc::where('contact_id',$this->contact_id);
+
                 }
             )
             ->columns([
@@ -42,7 +41,7 @@ class ContactProcWidget extends BaseWidget
                 TextColumn::make('User.name')
                     ->label('بواسطة'),
             ])
-            ->actions([
+            ->recordActions([
                 DeleteAction::make()
                     ->modalHeading('حذف السجل')
                  ->after(function (){
@@ -55,9 +54,9 @@ class ContactProcWidget extends BaseWidget
                  ->iconButton()
                  ->color('primary')
                     ->modalHeading('')
-                    ->modalSubmitAction(fn(StaticAction $action)=>$action->label('تخزين'))
+                    ->modalSubmitAction(fn(Action $action)=>$action->label('تخزين'))
                  ->fillForm(fn(ContactProc $record):array => ['proc'=>$record->proc])
-                 ->form([
+                 ->schema([
                      TextInput::make('proc')
                       ->required()
                       ->label('الإجراء')

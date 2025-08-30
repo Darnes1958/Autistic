@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\GrowDifficultMenuResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\GrowDifficultMenuResource;
 use App\Models\GrowDifficult;
 use Filament\Actions;
@@ -16,7 +17,7 @@ class EditGrowDifficultMenu extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->visible(!GrowDifficult::where('grow_difficult_menu_id', $this->getRecord()->id)->exists())
             ->modalHeading('حذف السجل'),
         ];

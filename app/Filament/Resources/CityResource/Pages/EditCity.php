@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CityResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\CityResource;
 use App\Models\Autistic;
 use Filament\Actions;
@@ -14,7 +15,7 @@ class EditCity extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->visible(!Autistic::where('city_id', $this->getRecord()->id)->exists())
+            DeleteAction::make()->visible(!Autistic::where('city_id', $this->getRecord()->id)->exists())
                 ->modalHeading('حذف السجل')
         ];
     }

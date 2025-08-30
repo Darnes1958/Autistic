@@ -2,6 +2,9 @@
 
 namespace App\Filament\Pages;
 
+use Filament\Actions\Action;
+use Filament\Schemas\Components\Section;
+use Filament\Actions\CreateAction;
 use App\Enums\Contact\ContactType;
 use App\Enums\Contact\Status;
 use App\Models\Contact;
@@ -9,17 +12,13 @@ use App\Models\Contact;
 use App\Models\ContactProc;
 use App\Models\ContactTran;
 use App\Models\Sell;
-use Filament\Actions\StaticAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\Fieldset;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Pages\Page;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
@@ -35,9 +34,9 @@ use function Livewire\after;
 class ShowContact extends Page implements HasTable
 {
     use InteractsWithTable;
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string $view = 'filament.pages.show-contact';
+    protected string $view = 'filament.pages.show-contact';
     protected static ?string $navigationLabel='صندوق الوارد';
     protected ?string $heading='';
     public static function getNavigationBadge(): ?string
@@ -52,7 +51,7 @@ class ShowContact extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(function (Contact $contact){
+            ->query(function (){
                 return Contact::query();
             })
 
@@ -71,8 +70,8 @@ class ShowContact extends Page implements HasTable
                     ->action(
                         Action::make('contact_info')
                             ->label('نص الرسالة')
-                            ->modalSubmitAction(fn (StaticAction $action) => $action->label('تمت القراءة'))
-                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->modalSubmitAction(fn (Action $action) => $action->label('تمت القراءة'))
+                            ->modalCancelAction(fn (Action $action) => $action->label('عودة'))
                             ->after(function (Model $record) {
                                 $record->status=1;
 
@@ -81,7 +80,7 @@ class ShowContact extends Page implements HasTable
                             ->action(function (Model $record) {
 
                             })
-                            ->infolist([
+                            ->schema([
                                 Section::make()
                                     ->schema([
                                         TextEntry::make('message')
@@ -105,7 +104,7 @@ class ShowContact extends Page implements HasTable
                             ->modalHeading(false)
                             ->createAnother(false)
                             ->model(ContactProc::class)
-                            ->form([
+                            ->schema([
                                 TextInput::make('proc')
                                     ->required()
                                     ->label('الإجراء'),
@@ -129,13 +128,13 @@ class ShowContact extends Page implements HasTable
                     ->sortable(),
 
             ])
-            ->actions([
+            ->recordActions([
                 Action::make('procs')
 
                  //   ->visible(fn(Contact $record):bool =>ContactProc::where('contact_id',$record->id)->exists())
                     ->modalHeading(false)
                     ->modalSubmitAction(false)
-                    ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                    ->modalCancelAction(fn (Action $action) => $action->label('عودة'))
                     ->modalContent(fn (Contact $record): View => view(
                         'filament.pages.views.view-contact-proc-widget',
                         ['contact_id' => $record->id],
@@ -161,7 +160,7 @@ class ShowContact extends Page implements HasTable
                 } )
                     ->modalHeading(false)
                     ->modalSubmitAction(false)
-                    ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                    ->modalCancelAction(fn (Action $action) => $action->label('عودة'))
                     ->modalContent(fn (Contact $record): View => view(
                         'filament.pages.views.view-contact-tran-widget',
                         ['contact_id' => $record->id],

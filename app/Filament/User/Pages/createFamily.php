@@ -2,6 +2,14 @@
 
 namespace App\Filament\User\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
 use App\Livewire\Traits\PublicTrait;
 use App\Models\autistic;
 use App\Models\Center;
@@ -10,19 +18,11 @@ use App\Models\Near;
 use App\Models\Street;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Collection;
@@ -31,9 +31,9 @@ use Illuminate\Support\Facades\Auth;
 class createFamily extends Page implements HasForms
 {
     use InteractsWithForms,PublicTrait;
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string $view = 'filament.user.pages.create-family';
+    protected string $view = 'filament.user.pages.create-family';
 
     protected static ?string $navigationLabel='بيانات عن الأسرة';
     protected ?string $heading=' ';
@@ -63,12 +63,12 @@ class createFamily extends Page implements HasForms
         }
 
     }
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->model(Family::class)
             ->statePath('data')
-            ->schema([
+            ->components([
                 Grid::make()
                     ->schema([
                         Section::make()
@@ -83,15 +83,15 @@ class createFamily extends Page implements HasForms
                                         self::getSelectEnum('is_father_life','هل الأب على قيد الحياة ؟')
                                             ->afterStateUpdated(function ($state,Set $set){
 
-                                                if ($state) {
+                                                if ($state==NULL || $state->value==1) {
                                                     $set('father_dead_reason',null);
                                                     $set('father_dead_date',null);
                                                 }
                                             }),
                                         self::getInput('father_dead_reason')
-                                            ->visible(function (Get $get){return $get('is_father_life')==0 && $get('is_father_life')!=null;}),
+                                            ->visible(function (Get $get){return !$get('is_father_life')==NULL && $get('is_father_life')->value==0 ;}),
                                         self::getDate('father_dead_date')
-                                            ->visible(function (Get $get){return $get('is_father_life')==0 && $get('is_father_life')!=null;}),
+                                            ->visible(function (Get $get){return !$get('is_father_life')==NULL && $get('is_father_life')->value==0 ;}),
                                     ])->columns(1),
                                 Fieldset::make(fn()=>self::ret_html('الأم','my-yellow text-2xl font-black'))
                                     ->schema([
@@ -102,15 +102,15 @@ class createFamily extends Page implements HasForms
                                         self::getInput('mother_job','مهنة الأم'),
                                         self::getSelectEnum('is_mother_life','هل الأم على قيد الحياة ؟')
                                             ->afterStateUpdated(function ($state,Set $set){
-                                                if ($state) {
+                                                if ($state==NULL || $state->value==1) {
                                                     $set('mother_dead_reason',null);
                                                     $set('mother_dead_date',null);
                                                 }
                                             }),
                                         self::getInput('mother_dead_reason')
-                                            ->visible(function (Get $get){return $get('is_mother_life')!=null && $get('is_mother_life')==0;}),
+                                            ->visible(function (Get $get){return $get('is_mother_life')!=NULL && $get('is_mother_life')->value==0;}),
                                         self::getDate('mother_dead_date')
-                                            ->visible(function (Get $get){return $get('is_mother_life')!=null && $get('is_mother_life')==0;}),
+                                            ->visible(function (Get $get){return $get('is_mother_life')!=NULL && $get('is_mother_life')->value==0;}),
                                         self::getInput('number_of_marriages')->numeric()->minValue(1),
                                         self::getInput('number_of_separation')->numeric()->minValue(0),
                                         self::getInput('number_of_pregnancies')->numeric()->minValue(1),
@@ -145,14 +145,14 @@ class createFamily extends Page implements HasForms
                                 self::getSelectEnum('is_room_single'),
                                 self::getSelectEnum('has_salary','هل يتقاضي الحالة معاش أساسي ؟')
                                     ->afterStateUpdated(function ($state,Set $set){
-                                        if ($state==1) $set('why_not_has_salary',null);
+                                        if ($state==NULL || $state->value==1) $set('why_not_has_salary',null);
+
                                     }),
                                 self::getInput('why_not_has_salary','ما هي الأسباب ؟')
-                                    ->visible(function (Get $get){return $get('has_salary')!=1 &&  $get('has_salary')!=null;}),
+                                    ->visible(function (Get $get){ return !$get('has_salary')==NULL && $get('has_salary')->value!=1 ;}),
                                 Textarea::make('other_family_notes')
                                     ->label(fn()=>self::ret_html('معلومات أخرى')),
                                 Hidden::make('user_id'),
-
                                 Actions::make([
                                     Action::make('store')
                                         ->requiresConfirmation()

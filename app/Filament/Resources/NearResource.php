@@ -2,6 +2,15 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Filters\Filter;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use App\Filament\Resources\NearResource\Pages\ListNears;
+use App\Filament\Resources\NearResource\Pages\CreateNear;
+use App\Filament\Resources\NearResource\Pages\EditNear;
 use App\Filament\Clusters\Places;
 use App\Filament\Resources\NearResource\Pages;
 use App\Filament\Resources\NearResource\RelationManagers;
@@ -13,9 +22,6 @@ use App\Models\Street;
 use Filament\Forms;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
@@ -32,14 +38,14 @@ class NearResource extends Resource
     protected static ?string $model = Near::class;
     protected static ?string $cluster=Places::class;
     protected static ?string $navigationLabel='نقاط دالة';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?int $navigationSort=3;
 protected static ?string $pluralLabel='نقاط دالة';
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
                 Select::make('city_id')
                     ->options(City::all()->pluck('name','id'))
                     ->preload()
@@ -72,8 +78,8 @@ protected static ?string $pluralLabel='نقاط دالة';
 
             ])
             ->filters([
-                Tables\Filters\Filter::make('byAll')
-                ->form([
+                Filter::make('byAll')
+                ->schema([
                     Select::make('city_id')
                         ->label('المدينة')
                         ->preload()
@@ -110,16 +116,16 @@ protected static ?string $pluralLabel='نقاط دالة';
                             );
                     })
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()->modalHeading('حذف السجل')
+            ->recordActions([
+                EditAction::make(),
+                DeleteAction::make()->modalHeading('حذف السجل')
 
                     ->visible(function (Model $record){
                         return !Autistic::where('near_id',$record->id)->exists();
                     }),
 
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ]);
     }
@@ -134,9 +140,9 @@ protected static ?string $pluralLabel='نقاط دالة';
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListNears::route('/'),
-            'create' => Pages\CreateNear::route('/create'),
-            'edit' => Pages\EditNear::route('/{record}/edit'),
+            'index' => ListNears::route('/'),
+            'create' => CreateNear::route('/create'),
+            'edit' => EditNear::route('/{record}/edit'),
         ];
     }
 }

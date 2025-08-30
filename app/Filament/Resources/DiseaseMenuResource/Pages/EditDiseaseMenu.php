@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\DiseaseMenuResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\DiseaseMenuResource;
 use App\Models\BoyDisease;
 use Filament\Actions;
@@ -16,7 +17,7 @@ class EditDiseaseMenu extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->visible(!BoyDisease::where('disease_menu_id', $this->getRecord()->id)->exists())
             ->modalHeading('حذف السجل'),
         ];

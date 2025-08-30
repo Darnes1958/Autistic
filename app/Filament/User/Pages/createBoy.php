@@ -2,21 +2,21 @@
 
 namespace App\Filament\User\Pages;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Actions;
+use Filament\Actions\Action;
 use App\Livewire\Traits\PublicTrait;
 use App\Models\Boy;
 use App\Models\Family;
-use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
 use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Auth;
@@ -24,10 +24,10 @@ use Illuminate\Support\Facades\Auth;
 class createBoy extends Page implements HasForms
 {
     use InteractsWithForms,PublicTrait;
-    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
 
 
-    protected static string $view = 'filament.user.pages.create-boy';
+    protected string $view = 'filament.user.pages.create-boy';
     protected static ?string $navigationLabel='بيانات عن الحالة';
     protected ?string $heading=' ';
     protected static ?int $navigationSort=3;
@@ -54,24 +54,23 @@ class createBoy extends Page implements HasForms
         }
 
     }
-    public function form(Form $form): Form
+    public function form(Schema $schema): Schema
     {
-        return $form
+        return $schema
             ->model(Boy::class)
             ->statePath('data')
-            ->schema([
+            ->components([
                 Grid::make()
                     ->schema([
                         Section::make()
                             ->schema([
-
-
                                         self::getSelectEnumMulti('how_past',' ',false)
                                             ->label(fn()=>self::ret_html('كيف كان وضع الحالة في بداية ظهور الأعراض ؟ ','my-yellow text-2xl font-black'))
                                             ->live()
+
                                             ->afterStateUpdated(function ($state,Set $set){
                                                 $this->showPast=false;
-                                                foreach ($state as $s) if ($s==10) $this->showPast=true;
+                                                foreach ($state as $s) if ($s->value==10) $this->showPast=true;
                                                 if (!$this->showPast) $set('other_past',null);
                                             }),
                                         self::getArea('other_past','يرجي توضيح الاعراض الأخري التي ظهرت ')->required(false)

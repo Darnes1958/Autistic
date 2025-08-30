@@ -2,18 +2,17 @@
 
 namespace App\Livewire\Widgets;
 
+use Filament\Actions\CreateAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\Action;
 use App\Models\Contact;
 use App\Models\ContactProc;
 
 use App\Models\ContactTran;
 use Faker\Provider\Text;
-use Filament\Actions\StaticAction;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\CreateAction;
-use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -30,9 +29,9 @@ class ContactTranWidget extends BaseWidget
     {
         return $table
             ->query(
-                function (ContactTran $query ) {
-                    $query=ContactTran::where('contact_id',$this->contact_id);
-                    return $query;
+                function () {
+                     return ContactTran::where('contact_id',$this->contact_id);
+
                 }
             )
             ->columns([
@@ -50,7 +49,7 @@ class ContactTranWidget extends BaseWidget
                         ->modalHeading(false)
                         ->createAnother(false)
                         ->model(ContactTran::class)
-                        ->form([
+                        ->schema([
                             Textarea::make('message')
                                 ->required()
                                 ->rows(3)
@@ -61,7 +60,7 @@ class ContactTranWidget extends BaseWidget
                         ]),
                 ]
             )
-            ->actions([
+            ->recordActions([
                 DeleteAction::make()
                     ->modalHeading('حذف السجل')
                     ->iconButton(),
@@ -70,9 +69,9 @@ class ContactTranWidget extends BaseWidget
                  ->iconButton()
                  ->color('primary')
                     ->modalHeading('')
-                    ->modalSubmitAction(fn(StaticAction $action)=>$action->label('تخزين'))
+                    ->modalSubmitAction(fn(Action $action)=>$action->label('تخزين'))
                  ->fillForm(fn(ContactTran $record):array => ['message'=>$record->message])
-                 ->form([
+                 ->schema([
                      Textarea::make('message')
                       ->required()
                       ->rows(3)

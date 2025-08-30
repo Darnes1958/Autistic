@@ -1,7 +1,14 @@
+@import "tailwindcss";
 @import '../../../../vendor/filament/filament/resources/css/theme.css';
-@import '/vendor/awcodes/filament-table-repeater/resources/css/plugin.css';
 
-@config 'tailwind.config.js';
+@source '../../../../app/Filament';
+@source '../../../../resources/views';
+@source '../../../../resources/views/filament';
+@source '../../../../app/Filament/User/**/*.php';
+@source '../../../../resources/views/filament/user/**/*.blade.php';
+@source '../../../../vendor/filament/**/*.blade.php';
+
+
 
 .fi-ta-ctn .py-4 {
     padding-top: .3rem !important;
@@ -19,19 +26,19 @@
 }
 
 .my-yellow {
-    @apply text-yellow-600 !important;
+    @apply text-yellow-600 ;
 }
 
 
 .fi-sidebar-item-label {
-    @apply text-lg !important;
+    @apply text-lg ;
 }
 
-.honeyyellow
+@utility honeyyellow
 {
     background-color: #EBBC4E  ;
 }
-.morehoneyyellow
+@utility morehoneyyellow
 {
     background-color: #f1cc75;
 }
@@ -42,19 +49,19 @@
     @apply morehoneyyellow;
 }
 
-.burntorange
+@utility burntorange
 {
     background: #cc5500;
 }
-.moreburntorange
+@utility moreburntorange
 {
     background: #f4a46c;
 }
-.burntorangecolor
+@utility burntorangecolor
 {
     color: #cc5500;
 }
-.moregreen
+@utility moregreen
 {
     color: #7eaa7a;
 }
@@ -64,17 +71,27 @@
 {
     @apply honeyyellow;
 }
-.greanbackground
+
+
+
+
+@utility greanbackground
 {
-    background-color: #B9C8BC  ;
-    @apply text-2xl !important;
+
+    .fi-section-content {
+        background-color: #B9C8BC;
+    }
+    .fi-section-header {
+        background-color: #B9C8BC;
+    }
+    @apply text-2xl ;
 }
 
 .fi-sidebar-item-active > a {
     @apply moreburntorange;
 
     & > svg, span {
-        @apply text-2xl !important;
+        @apply text-2xl ;
         @apply text-white ;
     }
 
@@ -84,13 +101,13 @@
 }
 
 .fi-wi-stats-overview-header-heading {
-    @apply text-2xl !important;
+    @apply text-2xl ;
 }
 .fi-wi-stats-overview-header-description {
-    @apply text-lg !important;
+    @apply text-lg ;
 }
 .fi-sidebar-item-icon {
-    @apply text-green-300 !important;
+    @apply text-green-300 ;
 }
 
 

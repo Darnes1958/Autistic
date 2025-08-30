@@ -2,6 +2,20 @@
 
 namespace App\Filament\Resources;
 
+use App\Models\Center;
+use Filament\Forms\Components\Radio;
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Forms\Components\Hidden;
+use Filament\Actions\Action;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Actions\EditAction;
+use App\Filament\Resources\UserResource\Pages\ListUsers;
+use App\Filament\Resources\UserResource\Pages\CreateUser;
+use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 
@@ -10,19 +24,17 @@ use App\Models\Autistic;
 use App\Models\Setting;
 use App\Models\User;
 use Filament\Actions\CreateAction;
-use Filament\Actions\StaticAction;
 use Filament\Forms;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Form;
-use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\ImageEntry;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -40,7 +52,7 @@ class UserResource extends Resource
     use PublicTrait;
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationLabel='ادخال وتعديل وعرض الحالات';
 
 
@@ -49,13 +61,65 @@ class UserResource extends Resource
      return auth()->user()->is_admin;
  }
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
+        return $schema
+            ->components([
+                Select::make('center_id')
+                 ->required()
+                ->relationship('Center', 'name')
+                ->searchable()
+                ->createOptionForm([
+                    Hidden::make('user_id')->default(Auth::id()),
+                    TextInput::make('name')
+                    ->required()
+                    ->label('الاسم'),
+                    Select::make('city_id')
+                    ->relationship('City', 'name')
+                    ->label('المدينة')
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        Hidden::make('user_id')->default(Auth::id()),
+                        TextInput::make('name')
+                        ->label('الاسم')
+                        ->required(),
+                    ])
+                    ->editOptionForm([
+                        TextInput::make('name')
+                            ->label('الاسم')
+                            ->required(),
+                    ])
+
+                ])
+                ->editOptionForm([
+
+                        TextInput::make('name')
+                            ->required()
+                            ->label('الاسم'),
+                        Select::make('city_id')
+                            ->relationship('City', 'name')
+                            ->label('المدينة')
+                            ->searchable()
+                            ->preload()
+                            ->createOptionForm([
+                                Hidden::make('user_id')->default(Auth::id()),
+                                TextInput::make('name')
+                                    ->label('الاسم')
+                                    ->required(),
+                            ])
+                            ->editOptionForm([
+                                TextInput::make('name')
+                                    ->label('الاسم')
+                                    ->required(),
+                            ])
+                    ])
+                ->preload()
+                ->label('مركز التوحد'),
+
                 TextInput::make('nat')->label('الرقم الوطني')
                     ->live(onBlur: true)
-                    ->afterStateUpdated(function ($state,Forms\Set $set) {
+                    ->afterStateUpdated(function ($state,Set $set) {
                         $set('password', $state);
                     })
                     ->unique(ignoreRecord: true)->required(),
@@ -87,8 +151,8 @@ class UserResource extends Resource
 
                     ->required()
                     ->label('رقم الواتس'),
-                Forms\Components\Hidden::make('is_admin')->default(0),
-                Forms\Components\Hidden::make('is_employee')->default(0),
+                Hidden::make('is_admin')->default(0),
+                Hidden::make('is_employee')->default(0),
             ]);
     }
 
@@ -96,23 +160,21 @@ class UserResource extends Resource
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-
                     return $query
-                        ->where('is_employee', 0)
-
-                        ;
+                        ->where('is_employee', 0);
 
             })
-            ->recordUrl(
-                false
-            )
+            ->recordUrl(false)
             ->columns([
-                TextColumn::make('nat')->label('الرقم الوطني'),
-                TextColumn::make('name')->label('الاسم'),
-                TextColumn::make('phoneNumber')
+                TextColumn::make('Center.name')->label('مركز التوحد')->searchable()->sortable(),
+                TextColumn::make('nat')->label('الرقم الوطني')
+                    ->toggleable()
+                 ->searchable()->sortable(),
+                TextColumn::make('name')->label('الاسم')->searchable()->sortable(),
+                TextColumn::make('phoneNumber')->searchable()
                     ->action(
                         Action::make('mod_phone')
-                          ->form([
+                          ->schema([
                               TextInput::make('phoneNumber')
                                ->label('ادخل رقم الهاتف')
                                ->tel()
@@ -126,7 +188,7 @@ class UserResource extends Resource
                                ->required()
                           ])
                             ->fillForm(fn (Model $record): array => ['phoneNumber'=>$record->phoneNumber])
-                            ->modalSubmitAction(fn (StaticAction $action) =>$action->label('تخزين'))
+                            ->modalSubmitAction(fn (Action $action) =>$action->label('تخزين'))
                         ->action(function (array $data,Model $record) {
                             $record->phoneNumber=$data['phoneNumber'];
                             $record->save();
@@ -138,7 +200,7 @@ class UserResource extends Resource
                         })
                     )
                     ->label('رقم الهاتف'),
-                Tables\Columns\IconColumn::make('has_aut')
+                IconColumn::make('has_aut')
                     ->boolean()
                     ->tooltip(function ($record){
                         if ($record->has_aut) return 'انقر هنا لعرض البيانات الاولية' ;
@@ -148,9 +210,9 @@ class UserResource extends Resource
                             ->visible(function ($record){return $record->has_aut;})
                             ->label('البيانات الأولية')
                             ->modalSubmitAction(false)
-                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->modalCancelAction(fn (Action $action) => $action->label('عودة'))
 
-                            ->infolist([
+                            ->schema([
                             Section::make()
                              ->schema([
                                TextEntry::make('Autistic.name')
@@ -196,7 +258,7 @@ class UserResource extends Resource
                         ])
                     )
                     ->label('بيانات أولية'),
-                Tables\Columns\IconColumn::make('has_fam')
+                IconColumn::make('has_fam')
                     ->boolean()
                     ->tooltip(function ($record){
                         if ($record->has_fam) return 'انقر هنا لعرض بيانات الأسرة' ;
@@ -206,11 +268,11 @@ class UserResource extends Resource
                             ->visible(function ($record){return $record->has_fam;})
                             ->label('بيانات عن الأسرة')
                             ->modalSubmitAction(false)
-                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->modalCancelAction(fn (Action $action) => $action->label('عودة'))
                             ->stickyModalHeader()
                             ->modalAutofocus(false)
 
-                            ->infolist([
+                            ->schema([
                                 Section::make()
                                     ->schema([
                                         Fieldset::make('الأب')
@@ -332,7 +394,7 @@ class UserResource extends Resource
                             ])
                     )
                     ->label('بيانات عن الأسرة'),
-                Tables\Columns\IconColumn::make('has_boy')
+                IconColumn::make('has_boy')
                     ->boolean()
                     ->tooltip(function ($record){
                         if ($record->has_boy) return 'انقر هنا لعرض بيانات عن الحالة' ;
@@ -342,9 +404,9 @@ class UserResource extends Resource
                             ->visible(function ($record){return $record->has_boy;})
                             ->label(fn()=>self::ret_html('بيانات عن الحالة'))
                             ->modalSubmitAction(false)
-                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->modalCancelAction(fn (Action $action) => $action->label('عودة'))
                             ->modalAutofocus(false)
-                            ->infolist([
+                            ->schema([
                                     Section::make()
                                         ->schema([
                                             self::getEntry('Boy.how_past','وضع الحالة في بداية ظهور الاعراض')
@@ -372,17 +434,17 @@ class UserResource extends Resource
                                 ])
                     )
                     ->label('بيانات عن الحالة'),
-                Tables\Columns\IconColumn::make('has_grow')
+                IconColumn::make('has_grow')
                     ->boolean()
                     ->action(
                         Action::make('grow_info')
                             ->visible(function ($record){return $record->has_grow;})
                             ->label(fn()=>self::ret_html('تاريخ النمو'))
                             ->modalSubmitAction(false)
-                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->modalCancelAction(fn (Action $action) => $action->label('عودة'))
                             ->stickyModalHeader()
                             ->modalAutofocus(false)
-                            ->infolist([
+                            ->schema([
                                 Section::make()
                                     ->schema([
                                         self::getEntry('Growth.mother_old','عمر الأم عند ولادة الحالة'),
@@ -493,7 +555,7 @@ class UserResource extends Resource
                         if ($record->has_grow) return 'انقر هنا لعرض تاريخ النمو' ;
                         else return null;})
                     ->label('تاريخ النمو'),
-                Tables\Columns\IconColumn::make('has_med')
+                IconColumn::make('has_med')
                     ->boolean()
 
                     ->tooltip(function ($record){
@@ -504,10 +566,10 @@ class UserResource extends Resource
                             ->visible(function ($record){return $record->has_med ;})
                             ->label(' التدخلات العلاجية والدوائية')
                             ->modalSubmitAction(false)
-                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
+                            ->modalCancelAction(fn (Action $action) => $action->label('عودة'))
                             ->stickyModalHeader()
                             ->modalAutofocus(false)
-                            ->infolist([
+                            ->schema([
                             Section::make()
                                 ->heading(self::ret_html(' العلاج الدوائي','my-yellow') )
                                 ->schema([
@@ -589,7 +651,7 @@ class UserResource extends Resource
                         ])
                     )
                     ->label('التدخلات العلاجية والدوائية'),
-                Tables\Columns\ImageColumn::make('Autistic.image')
+                ImageColumn::make('Autistic.image')
                     ->circular()
 
                     ->tooltip(function ($record){
@@ -600,10 +662,11 @@ class UserResource extends Resource
                             ->visible(function ($record){return $record->Autistic->image !=null;})
                             ->label(' ')
                             ->modalSubmitAction(false)
-                            ->modalCancelAction(fn (StaticAction $action) => $action->label('عودة'))
-                            ->infolist([
+                            ->modalCancelAction(fn (Action $action) => $action->label('عودة'))
+                            ->schema([
                                 ImageEntry::make('Autistic.image')
                                  ->label('')
+
                                  ->height(500)
                                  ->stacked()
                             ])
@@ -611,21 +674,58 @@ class UserResource extends Resource
                  ->label(' ')
             ])
             ->filters([
-                //
+               SelectFilter::make('center_id')
+
+                     ->label('المركز')
+                     ->searchable()
+                     ->preload()
+                    ->relationship('Center','name'),
+
+                Filter::make('fully')
+                    ->schema([
+                        Radio::make('fully')
+                            ->hiddenLabel()
+                            ->options([
+                                1=>'قام بالتعبئة بالكامل',
+                                2=>'قام بالتعبئة جزئيا',
+                                3=>'لم يبدأ',
+                            ])
+                    ])
+                    ->query(function (Builder $query,array $data){
+                        return $query
+                            ->when($data['fully'],
+                                function (Builder $query) use ($data){
+                                if ($data['fully']==1)
+                                    $query->whereHas('Autistic')->whereHas('Family')
+                                      ->whereHas('Boy')->whereHas('Growth')
+                                      ->whereHas('Medicine');
+                                if ($data['fully']==2)
+                                    $query->whereHas('Autistic')->orwhereHas('Family')
+                                        ->orwhereHas('Boy')->orwhereHas('Growth')
+                                        ->orwhereHas('Medicine');
+                                if ($data['fully']==3)
+                                    $query->whereDoesntHave('Autistic')->whereDoesntHave('Family')
+                                        ->whereDoesntHave('Boy')->whereDoesntHave('Growth')
+                                        ->whereDoesntHave('Medicine');
+
+                                }
+                            );
+                    })
+
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
                 Action::make('sms')
                     ->icon('heroicon-o-envelope')
                     ->iconButton()
                     ->color('blue')
-                    ->form([
+                    ->schema([
                         Textarea::make('message')
                          ->label('النص')
                          ->required()
                     ])
-                    ->modalSubmitAction(fn (StaticAction $action) => $action->label('إرسال الرسالة'))
-                    ->modalCancelAction(fn (StaticAction $action) => $action->label('الغاء وعودة'))
+                    ->modalSubmitAction(fn (Action $action) => $action->label('إرسال الرسالة'))
+                    ->modalCancelAction(fn (Action $action) => $action->label('الغاء وعودة'))
                     ->action(function (Model $record,array $data){
                          $response = Http::withToken(Setting::first()->token)
                             ->post(Setting::first()->url, [
@@ -665,7 +765,7 @@ class UserResource extends Resource
                                 ->send();
                     }),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 //
             ]);
     }
@@ -680,9 +780,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }

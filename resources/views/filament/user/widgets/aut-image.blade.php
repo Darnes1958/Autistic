@@ -30,7 +30,8 @@
     </div>
     <div class="w-1/4">
         @if($image)
-            <img class=" w-96 " src="{{ asset('storage/'.$image[0]) }}"
+            @php(info(storage_path('app\private\\'.$image[0])));
+            <img class=" w-96 " src="{{  asset('images/'.$image[0])   }}"
                  alt="image description">
         @endif
     </div>

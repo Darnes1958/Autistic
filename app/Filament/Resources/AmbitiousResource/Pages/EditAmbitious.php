@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\AmbitiousResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\AmbitiousResource;
 use App\Models\Autistic;
 use App\Models\Boy;
@@ -17,7 +18,7 @@ class EditAmbitious extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
                 ->visible(!Boy::where('ambitious_id', $this->getRecord()->id)->exists())
                 ->modalHeading('حذف السجل')
             ,

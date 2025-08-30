@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\UserResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\UserResource;
 use App\Models\Autistic;
 use App\Models\Boy;
@@ -20,7 +21,7 @@ class EditUser extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()
+            DeleteAction::make()
              ->modalHeading('حذف السجل')
              ->before(function (User $record) {
                  autistic::where('user_id',$record->id)->delete();

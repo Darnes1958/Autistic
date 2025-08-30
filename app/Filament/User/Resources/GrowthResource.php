@@ -2,6 +2,20 @@
 
 namespace App\Filament\User\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Actions\Action;
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\User\Resources\GrowthResource\Pages\ListGrowths;
+use App\Filament\User\Resources\GrowthResource\Pages\CreateGrowth;
+use App\Filament\User\Resources\GrowthResource\Pages\EditGrowth;
+use App\Filament\User\Resources\GrowthResource\Pages\UpdGrowth;
 use App\Filament\User\Pages\Dashboard;
 use App\Filament\User\Resources\GrowthResource\Pages;
 use App\Filament\User\Resources\GrowthResource\RelationManagers;
@@ -11,14 +25,7 @@ use Awcodes\TableRepeater\Components\TableRepeater;
 use Awcodes\TableRepeater\Header;
 use Filament\Forms;
 use Filament\Forms\Components\Actions;
-use Filament\Forms\Components\Actions\Action;
-use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -31,14 +38,14 @@ class GrowthResource extends Resource
     use PublicTrait;
     protected static ?string $model = Growth::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static bool $shouldRegisterNavigation = false;
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
 
-            return $form
+            return $schema
 
-                ->schema([
+                ->components([
                     Hidden::make('user_id')->default(Auth::id()),
                     Grid::make()
                         ->schema([
@@ -327,12 +334,12 @@ class GrowthResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
+            ->recordActions([
+                EditAction::make(),
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -347,10 +354,10 @@ class GrowthResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGrowths::route('/'),
-            'create' => Pages\CreateGrowth::route('/create'),
-            'edit' => Pages\EditGrowth::route('/{record}/edit'),
-            'upd'=>Pages\UpdGrowth::route('/upd'),
+            'index' => ListGrowths::route('/'),
+            'create' => CreateGrowth::route('/create'),
+            'edit' => EditGrowth::route('/{record}/edit'),
+            'upd'=>UpdGrowth::route('/upd'),
         ];
     }
 }

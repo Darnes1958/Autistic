@@ -11,7 +11,7 @@ class AutImage extends Widget
 {
     public $image;
     public $name;
-    protected static string $view = 'filament.user.widgets.aut-image';
+    protected string $view = 'filament.user.widgets.aut-image';
     protected static ?int $sort = 2;
     protected int | string | array $columnSpan = 4;
     public function mount(): void{

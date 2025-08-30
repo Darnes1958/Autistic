@@ -2,17 +2,17 @@
 
 namespace App\Filament\Pages\Auth;
 
+use Filament\Auth\Pages\EditProfile;
+use Filament\Schemas\Schema;
 use App\Filament\User\Pages\Dashboard;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use Filament\Pages\Auth\EditProfile as BaseEditProfile;
 
-class EditUserProfile extends BaseEditProfile
+class EditUserProfile extends EditProfile
 {
-  public function form(Form $form): Form
+  public function form(Schema $schema): Schema
   {
-    return $form
-      ->schema([
+    return $schema
+      ->components([
         $this->getPasswordFormComponent(),
         $this->getPasswordConfirmationFormComponent(),
 

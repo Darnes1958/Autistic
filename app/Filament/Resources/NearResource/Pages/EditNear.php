@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\NearResource\Pages;
 
+use Filament\Actions\DeleteAction;
 use App\Filament\Resources\NearResource;
 use App\Models\Autistic;
 use Filament\Actions;
@@ -14,7 +15,7 @@ class EditNear extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\DeleteAction::make()->visible(!Autistic::where('near_id', $this->getRecord()->id)->exists())
+            DeleteAction::make()->visible(!Autistic::where('near_id', $this->getRecord()->id)->exists())
                 ->modalHeading('حذف السجل'),
         ];
     }
