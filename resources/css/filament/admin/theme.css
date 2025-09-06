@@ -26,6 +26,45 @@
     @apply text-yellow-600
 }
 
+@utility amber50 {
+    @apply bg-amber-50;
+}
+@utility amber200 {
+    @apply bg-amber-200;
+}
+@utility amber300 {
+    @apply bg-amber-300;
+}
+@utility amber100 {
+    @apply bg-amber-100;
+}
+
+.table_head_amber {
+    .fi-ta-header-cell {
+        @apply amber200;
+    }
+
+    .fi-ta-actions-header-cell {
+        @apply amber200;
+
+    }
+    .fi-striped {
+        @apply amber50;
+    }
+}
+
+.fi-sidebar-nav
+{
+    @apply amber200;
+}
+.fi-sidebar-item-icon {
+    @apply text-teal-700;
+}
+
+.fi-topbar {
+    @apply amber50;
+}
+
 
 
 

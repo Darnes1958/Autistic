@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
+    public function Autistic(){
+        return $this->hasMany(Autistic::class);
+    }
+
     public function Street(){
         return $this->hasMany(Street::class);
     }
