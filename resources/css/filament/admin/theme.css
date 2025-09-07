@@ -7,11 +7,14 @@
 @source '../../../../app/Filament/**/*.php';
 @source '../../../../resources/views/filament/**/*.blade.php';
 @source '../../../../vendor/filament/**/*.blade.php';
+@source '../../../../app/Livewire';
+@source '../../../../resources/views/livewire/**/*.blade.php';
 
 .fi-ta-ctn .py-4 {
     padding-top: .3rem !important;
     padding-bottom: .3rem !important;
 }
+
 .fi-sidebar-nav-groups  {
 
     @apply gap-y-2;
@@ -39,6 +42,11 @@
     @apply bg-amber-100;
 }
 
+.section_widget_amber {
+    .fi-section-header {
+        @apply amber200;
+    }
+}
 .table_head_amber {
     .fi-ta-header-cell {
         @apply amber200;
