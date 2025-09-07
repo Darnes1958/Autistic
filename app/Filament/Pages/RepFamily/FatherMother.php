@@ -7,11 +7,16 @@ use App\Livewire\FamilyWidget\FaMoGoodWidget;
 use App\Livewire\FamilyWidget\FaMoWidget;
 use App\Livewire\FamilyWidget\FatherMotherWidget;
 use Filament\Pages\Page;
+use UnitEnum;
 
 class FatherMother extends Page
 {
     protected string $view = 'filament.pages.rep-family.father-mother';
     protected ?string $heading='الأب والأم';
+    protected static ?string $navigationLabel='بيانات الأب والأم';
+
+    protected static string | UnitEnum | null $navigationGroup='بيانات عن الأسرة';
+
 
     public function getFooterWidgetsColumns(): int|array
     {
