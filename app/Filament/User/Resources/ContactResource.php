@@ -42,7 +42,6 @@ class ContactResource extends Resource
             ->components([
                 Grid::make()
                 ->schema([
-
                         Select::make('contactType')
                             ->required()
                             ->options(ContactType::class)
@@ -54,9 +53,7 @@ class ContactResource extends Resource
                             ->rows(3)
                             ->columnSpanFull()
                             ->label('النص'),
-
                 ])->columnSpan(1),
-
                 Hidden::make('user_id')->default(Auth::id()),
                 Hidden::make('status')->default(0),
             ])

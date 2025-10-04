@@ -170,7 +170,9 @@ class UserResource extends Resource
                 TextColumn::make('nat')->label('الرقم الوطني')
                     ->toggleable()
                  ->searchable()->sortable(),
-                TextColumn::make('name')->label('الاسم')->searchable()->sortable(),
+                TextColumn::make('name')->label('الاسم')
+                    ->searchable()
+                    ->sortable(),
                 TextColumn::make('phoneNumber')->searchable()
                     ->action(
                         Action::make('mod_phone')
@@ -199,6 +201,7 @@ class UserResource extends Resource
                             ->send();
                         })
                     )
+                    ->toggleable()
                     ->label('رقم الهاتف'),
                 IconColumn::make('has_aut')
                     ->boolean()
@@ -653,7 +656,7 @@ class UserResource extends Resource
                     ->label('التدخلات العلاجية والدوائية'),
                 ImageColumn::make('Autistic.image')
                     ->circular()
-
+                    ->toggleable()
                     ->tooltip(function ($record){
                         if ($record->has_aut !=null) return 'انقر هنا لعرض الصور بحجم أكبر' ;
                         else return null;})
@@ -671,7 +674,33 @@ class UserResource extends Resource
                                  ->stacked()
                             ])
                     )
-                 ->label(' ')
+                 ->label(' '),
+                IconColumn::make('confirmed')
+                 ->boolean()
+                 ->label('رسالة الإعتماد')
+                 ->action(
+                     Action::make('sms3')
+                     ->requiresConfirmation()
+                     ->color('info')
+                     ->action(function (Model $record){
+                         $response = Http::withToken(Setting::first()->token)
+                             ->post(Setting::first()->url, [
+                                 'phoneNumber' => $record->phoneNumber,
+                                 'message' => 'المشترك الكريم .. '.$record->name.'.. '.Setting::first()->confirm_message,
+                                 'senderID' => '13201'
+                             ]);
+                         if ($response->successful()) {
+                             $record->confirmed=1;
+                             $record->save();
+                             Notification::make()
+                                 ->color('success')
+                                 ->title('تم ارسال الرسالة بنجاح')
+                                 ->send();
+                         } else
+                             Notification::make()
+                                 ->title('فشل')
+                                 ->send();
+                     }),)
             ])
             ->filters([
                SelectFilter::make('center_id')
@@ -764,6 +793,7 @@ class UserResource extends Resource
                                 ->title('فشل')
                                 ->send();
                     }),
+
             ])
             ->toolbarActions([
                 //
