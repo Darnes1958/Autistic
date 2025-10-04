@@ -678,11 +678,17 @@ class UserResource extends Resource
                 IconColumn::make('confirmed')
                  ->boolean()
                  ->label('رسالة الإعتماد')
+
                  ->action(
                      Action::make('sms3')
+                     ->disabled(function (Model $record){
+                         return !$record->has_aut || !$record->has_fam || !$record->has_grow
+                             || !$record->has_boy || !$record->has_med;
+                     })
                      ->requiresConfirmation()
                      ->color('info')
                      ->action(function (Model $record){
+
                          $response = Http::withToken(Setting::first()->token)
                              ->post(Setting::first()->url, [
                                  'phoneNumber' => $record->phoneNumber,
